@@ -1,0 +1,15 @@
+:root {
+    --bs-primary: #98768e;
+    --bs-warning: #d3b8c5;
+    --bs-danger: #d8928b;
+    --bs-light: #f6d4cf;
+    --dark: #281e30;
+    --btn-primary: #98768e;
+}
+
+.dark{
+    background-color: var(--bs-primary);
+}
+.warning{
+    background-color: var(--bs-warning);
+}

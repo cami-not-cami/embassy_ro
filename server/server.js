@@ -11,16 +11,15 @@ async function startServer() {
     const { I18n } = await import("i18n-js");
 
     i18n = new I18n({
-        en: { home: "Home", search: "Search" },
-        ro: { home: "Acasă", search: "Căutare" },
-        de: { home: "Startseite", search: "Suche" }
+        ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne" },
+        de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt" }
     });
 
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, '../client/js')));
 
     app.get("/", (req, res) => {
-        const locale = req.query.lang || "en";
+        const locale = req.query.lang || "de";
         i18n.locale = locale;
 
         //reads html file and replaces the keywords with translated strings
