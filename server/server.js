@@ -16,13 +16,15 @@ async function startServer() {
         de: { home: "Startseite", search: "Suche" }
     });
 
-    app.use(express.static(path.join(__dirname, "client")));
+    // Serve only JS/CSS as static, NOT the html folder
+    app.use('/js', express.static(path.join(__dirname, '../client/js')));
 
     app.get("/", (req, res) => {
         const locale = req.query.lang || "en";
         i18n.locale = locale;
 
-        let html = fs.readFileSync(path.join(__dirname, "client/index.html"), "utf-8");
+        //reads html file and replaces the keywords with translated strings
+        let html = fs.readFileSync(path.join(__dirname, '../client/html/index.html'), "utf-8");
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
 
         res.send(html);
