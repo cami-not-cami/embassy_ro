@@ -7,11 +7,21 @@
     <title>Glory to Romania</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="../temp/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
+                <img src="../../temp/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
             </a>
+            <a href="?lang=en" class="btn btn-sm btn-outline-secondary">EN</a>
+            <a href="?lang=ro" class="btn btn-sm btn-outline-secondary">RO</a>
+            <a href="?lang=de" class="btn btn-sm btn-outline-secondary">DE</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                </ul>
+            </div>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
                 <button class="btn btn-outline-success" type="submit">Search</button>
@@ -24,5 +34,6 @@
         </div>
 
     </nav>
+<script type="module" src="../js/index.js"></script>
 </body>
 </html>
