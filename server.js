@@ -13,7 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const port = 8080;
-let env = require("dotenv").config();
 let i18n;
 // MySQL
 const con = mysql.createPool({
