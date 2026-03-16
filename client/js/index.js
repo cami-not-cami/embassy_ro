@@ -12,8 +12,8 @@ document.getElementById("search").addEventListener("click", createUser)
         body: JSON.stringify({
             firstname: "Cami",
             lastname: "Doe",
-            email: "john@gmail.com",
-            password: "password",
+            email: "Example@gmail.com",
+            password: "Password123.",
 
         })
     });

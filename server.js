@@ -65,7 +65,7 @@ async function startServer() {
     })
     app.post("/users", async (req, res) => {
         const { firstname, lastname, email, password,  } = req.body;
-        const hashed = password;
+        const hashed = HashPassword(password);
 
         con.query(
             'INSERT INTO user (UserFirstname, UserLastname, UserEmail, UserPassword) VALUES ( ?, ?, ?, ?)',
@@ -81,13 +81,11 @@ async function startServer() {
         console.log(`App listening at http://localhost:${port}`);
     });
 }
-function HashPassword(password,salt) {
-
+function HashPassword(password) {
 // Create a hash object
     const hash = crypto.createHash('sha3-512');
 
 // Update the hash with data
-
     hash.update(password);
 
 // Get the digest in hex format
@@ -95,6 +93,7 @@ function HashPassword(password,salt) {
 
     console.log('Data:', password);
     console.log('SHA-512 Hash:', digest);
+    return digest;
 }
 
 startServer();
