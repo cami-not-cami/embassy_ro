@@ -71,15 +71,18 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="d-flex align-items-center justify-content-between container-fluid">
-                            <h1>Glory to Romania</h1>
+                            <h1 id="staticTitle">Glory to Romania</h1>
                             <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
                                 </svg>
                             </button>
                         </div>
-
-                        
+                        <div class="text-start">
+                            <div id="staticContent">
+                                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -318,28 +321,31 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{signup}}</div>
-                        <form>
+                        <form class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your first name.</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
                             <div class="mb-3 mt-3">
-                                <input id="inputSignupEmail" placeholder="Email" type="text" class="form-control" required>
+                                <input id="inputSignupEmail" placeholder="Email" type="email" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputSignupPassword" placeholder="Password" type="text" class="form-control" required>
+                                <input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a password.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="text" class="form-control" required>
+                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="password" class="form-control" required>
+                                <div class="invalid-feedback">Passwords do not match.</div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
-                                <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">
-                                    {{clicklogin}}
-                                </a></p>
+                                <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">{{clicklogin}}</a></p>
                             </div>
-                            <button id="btnSignUp" class="btn btn-primary">Sign Up</button>
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>
                 </div>
@@ -354,9 +360,10 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{login}}</div>
-                        <form>
+                        <form class="needs-validation" novalidate>
                             <div class="mb-3 mt-3">
                                 <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLoginPassword" placeholder="{{password}}" type="text" class="form-control" required>
@@ -364,7 +371,7 @@
                             <div class="d-flex justify-content-center mt-3">
                                 <p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal" >{{clicksignup}}</a></p>
                             </div>
-                            <button class="btn btn-primary">{{login}}</button>
+                            <button type="submit" class="btn btn-primary">{{login}}</button>
                         </form>
                     </div>
                 </div>
