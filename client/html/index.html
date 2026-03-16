@@ -11,7 +11,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="../../images/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
+            <img src="../../temp/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
         </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -39,7 +39,7 @@
                     </svg>
                 </span>
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" id="search" type="submit">{{search}}</button>
+            <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
             <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
@@ -78,7 +78,7 @@
                     <div class="carousel-inner rounded">
                         <div class="carousel-item active" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/castle.png" class="w-50 object-fit-contain" style="object-fit:cover;" alt="Castle">
+                                <img src="../../temp/castle.png" class="w-50 object-fit-contain" style="object-fit:cover;" alt="Castle">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="carousel-item" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/town.png" style="width:50%; object-fit:cover;" alt="Town">
+                                <img src="../../temp/town.png" style="width:50%; object-fit:cover;" alt="Town">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="carousel-item" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/university.png" style="width:50%; object-fit:cover;" alt="University">
+                                <img src="../../temp/university.png" style="width:50%; object-fit:cover;" alt="University">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -120,7 +120,7 @@
     </div>
 </section>
 
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -137,23 +137,25 @@
     </div>
 </div>
 <div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="h3 text-center mt-5">Login</div>
+                        <div class="h3 text-center mt-3">Login</div>
                         <form>
-                            <div>
-                                <label></label>
-                                <input type="text" class="form-control">
+                            <div class="mb-3 mt-3">
+                                <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control">
                             </div>
-                            <div>
-                                <label></label>
-                                <input type="text" class="form-control">
+                            <div class="mb-3">
+                                <input id="inputLoginPassword" placeholder="Password" type="text" class="form-control">
                             </div>
                         </form>
-                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" >Login</button>
+                        <div class="d-flex justify-content-center mt-3">
+                            <p><a class="link-opacity-75 text-center" href="#modalSignup">You don’t have an account? Click here to sign up!</a></p>
+
+                        </div>
+                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Login</button>
                     </div>
                 </div>
             </div>
