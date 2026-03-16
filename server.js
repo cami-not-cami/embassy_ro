@@ -7,6 +7,16 @@ const url = require("url");
 const app = express();
 const port = 8080;
 let i18n;
+// MySQL
+const con = mysql.createPool({
+    host: "bucket-deny.with.playit.plus",
+    user: "cami_app",
+    password: "pass123",
+    port: 25770,
+    waitForConnections: true,
+    database:"romanianembassydb",
+    connectionLimit: 10,
+});
 async function startServer() {
     const { I18n } = await import("i18n-js");
 
@@ -19,6 +29,8 @@ async function startServer() {
 
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
+    app.use('/images', express.static(path.join(__dirname, 'client/images')));
+    app.use('/css', express.static(path.join(__dirname, 'client/css')));
 
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
@@ -31,12 +43,13 @@ async function startServer() {
     });
 
     app.get("/dbq", (req, res) => {
-
-        res.json({ result: "data" });
+        con.query('SELECT * FROM user;', (err, results) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json(results);
+        });
     });
 
     app.post("/db", (req, res) => {
-
         res.json({ success: true });
     });
 
@@ -45,17 +58,7 @@ async function startServer() {
     });
 }
 
-// MySQL
-const con = mysql.createConnection({
-    host: "bucket-deny.with.playit.plus",
-    user: "cami_app",
-    password: "pass123",
-    port: 25770
-});
 
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-});
 
-startServer().then();
+
+startServer();
