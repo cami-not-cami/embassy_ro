@@ -1,3 +1,3 @@
-fetch('/dbq?id=123')
+fetch('/dbq?id=1')
     .then(res => res.json())
     .then(data => console.log(data));
