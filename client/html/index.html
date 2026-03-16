@@ -120,7 +120,7 @@
     </div>
 </section>
 
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -137,22 +137,24 @@
     </div>
 </div>
 <div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="h3 text-center mt-5">Login</div>
+                        <div class="h3 text-center mt-3">Login</div>
                         <form>
-                            <div>
-                                <label></label>
-                                <input type="text" class="form-control">
+                            <div class="mb-3 mt-3">
+                                <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control">
                             </div>
-                            <div>
-                                <label></label>
-                                <input type="text" class="form-control">
+                            <div class="mb-3">
+                                <input id="inputLoginPassword" placeholder="Password" type="text" class="form-control">
                             </div>
                         </form>
+                        <div class="d-flex justify-content-center mt-3">
+                            <p><a class="link-opacity-75 text-center" href="#modalSignup">You don’t have an account? Click here to sign up!</a></p>
+
+                        </div>
                         <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Login</button>
                     </div>
                 </div>
