@@ -1,6 +1,10 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
 document.getElementById("search").addEventListener("click", createUser)
+document.getElementById("btnLogin").addEventListener("click", createUser)
+
+    document.getElementById("btnLogOut").addEventListener("click", createUser)
+    document.getElementById("btnSignUp").addEventListener("click", createUser)
 // fetch('/dbq?id=1')
 //     .then(res => res.json())
 //     .then(data => console.log(data));
@@ -12,8 +16,8 @@ document.getElementById("search").addEventListener("click", createUser)
         body: JSON.stringify({
             firstname: "Cami",
             lastname: "Doe",
-            email: "Example@gmail.com",
-            password: "Password123.",
+            email: "john@gmail.com",
+            password: "password",
 
         })
     });

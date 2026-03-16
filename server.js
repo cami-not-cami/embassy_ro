@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const port = 8080;
+let env = require("dotenv").config();
 let i18n;
 // MySQL
 const con = mysql.createPool({
@@ -29,7 +30,7 @@ async function startServer() {
 
     i18n = new I18n({
         ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne" },
-        de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt" }
+        de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt", FirstName:"Vorname", LastName:"Nachname" }
     });
 
 
