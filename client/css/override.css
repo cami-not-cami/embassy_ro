@@ -13,15 +13,16 @@
 .warning{
     background-color: var(--bs-warning);
 }
-
-
+.btn:focus, .btn:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
 
 header.masthead {
     padding-top: 10.5rem;
     padding-bottom: 6rem;
     text-align: center;
     color: #fff;
-    background-image: url("/images/castle.png");
     background-repeat: no-repeat;
     background-attachment: scroll;
     background-position: center center;

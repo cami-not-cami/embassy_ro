@@ -11,12 +11,15 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="../../images/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
+            <img src="../images/logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top">
         </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="?lang=ro">RO|</a>
+                    <a class="nav-link active" aria-current="page" href="?lang=ro">RO</a>
+                </li>
+                <li>
+                    <div class="border-start"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="?lang=de">DE</a>
@@ -42,9 +45,10 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <button id="btnPost" type="button" class="btn btn-primary invisible" data-bs-toggle="modal" data-bs-target="#modalLogin">{{post}}</button>
         </div>
-        <button class="btn">
+        <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
             </svg>
@@ -54,7 +58,7 @@
 </nav>
 
 
-<header class="masthead ">
+<header class="masthead" style="background-image: url('../images/castle.png')">
     <div class="masthead-heading text-uppercase">Glory to Romania</div>
 </header>
 
@@ -78,7 +82,7 @@
                     <div class="carousel-inner rounded">
                         <div class="carousel-item active" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/castle.png" class="w-50 object-fit-contain" style="object-fit:cover;" alt="Castle">
+                                <img src="../images/castle.png" class="w-50 object-fit-contain" style="object-fit:cover;" alt="Castle">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -90,7 +94,7 @@
                         </div>
                         <div class="carousel-item" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/town.png" style="width:50%; object-fit:cover;" alt="Town">
+                                <img src="../images/town.png" style="width:50%; object-fit:cover;" alt="Town">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -102,7 +106,7 @@
                         </div>
                         <div class="carousel-item" data-bs-interval="5000">
                             <div class="d-flex" style="min-height: 260px;">
-                                <img src="../../images/university.png" style="width:50%; object-fit:cover;" alt="University">
+                                <img src="../images/university.png" style="width:50%; object-fit:cover;" alt="University">
                                 <div class="p-4 card ms-2 warning">
                                     <div class="card-body">
                                         <h5 class="fw-bold">Card Title</h5>
@@ -120,42 +124,276 @@
     </div>
 </section>
 
-<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- DRAWER/OFFCANVAS -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="menuName">{{menu}}</h5>
+    </div>
+    <div class="offcanvas-body">
+        <div class="container-fluid">
+            <div class="row">
+                <img src="../images/logo.png" class="rounded mx-auto d-block object-fit-cover rounded-circle w-50" alt="...">
             </div>
-            <div class="modal-body">
-                Show a second modal and hide this one with the button below.
+            <div class="row">
+                <div id="userName" class="text-center fw-bold">
+                    Vorname Nachname
+                </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+            <div class="row">
+                <div id="userJob" class="text-center fw-normal">
+                    Job Title goes here!
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div id="userEmail" class="text-center fw-light">
+                    Email goes here!
+                </div>
+            </div>
+
+            <!-- LOG IN -->
+            <div class="row mt-5 invisible">
+                <button class="btn btn-primary">{{login}}</button>
+            </div>
+
+
+            <!-- ACCORDION -->
+            <div class="accordion" id="staticPageAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseTwo">
+                            {{romania}}
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{überblick}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{information}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{pictures}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            {{aboutus}}
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{Botschafter}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{Botschaftsteam}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{contact}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{actual}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            {{visa}}
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{konsular}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{haager}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{datenschutz}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{konsularform}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            {{wirtschaft}}
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{förderung}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{investieren}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{ausstellungen}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            {{bilaterale}}
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{übersicht}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{politischebeziehungen}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{wirtschaftlichezusammenarbeit}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{kulturelle}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            {{institut}}
+                        </button>
+                    </h2>
+                    <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
+                        <div class="accordion-body">
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{honorarkonsulate}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{kulturinstitut}}
+                                </button>
+                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center">
+                                <button class="fw-normal m-3 btn">
+                                    {{vertretungen}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOG OUT -->
+            <div class="row mt-5">
+                <button class="btn btn-primary">Log out</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<!-- MODALS -->
+<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="modalSignup" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="h3 text-center mt-3">Login</div>
+                        <div class="h3 text-center mt-3">{{signup}}</div>
+                        <form>
+                            <div class="mb-3">
+                                <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <input id="inputSignupEmail" placeholder="Email" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputSignupPassword" placeholder="Password" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="text" class="form-control">
+                            </div>
+                        </form>
+                        <div class="d-flex justify-content-center mt-3">
+                            <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">
+                                {{clicklogin}}
+                            </a></p>
+                        </div>
+                        <button class="btn btn-primary">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="modalLogin" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="h3 text-center mt-3">{{login}}</div>
                         <form>
                             <div class="mb-3 mt-3">
                                 <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <input id="inputLoginPassword" placeholder="Password" type="text" class="form-control">
+                                <input id="inputLoginPassword" placeholder="{{password}}" type="text" class="form-control">
                             </div>
                         </form>
                         <div class="d-flex justify-content-center mt-3">
-                            <p><a class="link-opacity-75 text-center" href="#modalSignup">You don’t have an account? Click here to sign up!</a></p>
-
+                            <p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal" >{{clicksignup}}</a></p>
                         </div>
-                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Login</button>
+                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">{{login}}</button>
                     </div>
                 </div>
             </div>

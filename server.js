@@ -6,15 +6,16 @@ const url = require("url");
 
 const app = express();
 const port = 8080;
+let env = require("dotenv").config();
 let i18n;
 // MySQL
 const con = mysql.createPool({
-    host: "bucket-deny.with.playit.plus",
-    user: "cami_app",
-    password: "pass123",
-    port: 25770,
+    host: env.parsed.HOST,
+    user:env.parsed.USER,
+    password: env.parsed.PASSWORD,
+    port: env.parsed.PORT,
     waitForConnections: true,
-    database:"romanianembassydb",
+    database: env.parsed.DBNAME,
     connectionLimit: 10,
 });
 async function startServer() {
@@ -22,7 +23,7 @@ async function startServer() {
 
     i18n = new I18n({
         ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne" },
-        de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt" }
+        de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt", FirstName:"Vorname", LastName:"Nachname" }
     });
 
     app.use(express.urlencoded({ extended: true }));
