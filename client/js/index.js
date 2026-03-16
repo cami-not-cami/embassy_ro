@@ -26,6 +26,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         })
     })
+    const emailField = document.getElementById("inputLoginEmail")
+    const passField = document.getElementById("inputLoginPassword")
+    fetch("/user/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ emailField, passField })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Login successful!");
+                // Redirect to dashboard
+                window.location.href = "/dashboard";
+            } else {
+                console.log("Error:", data.error);
+            }
+        })
+        .catch(err => console.log("Request failed:", err));
 })
 
 async function createUser() {

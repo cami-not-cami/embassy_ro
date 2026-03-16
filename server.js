@@ -60,9 +60,29 @@ async function startServer() {
     app.delete("/user/:id", (req, res) => {
 
     })
-    app.get("/user/:id", (req, res) => {
+    //login
+    app.post("/user/login", (req, res) => {
+        const {  email, password,  } = req.body;
+        const hashedPassword = HashPassword(password);
+
+       let result =  con.query('Select UserPassword From user WHERE UserEmail=?',[email],(err, results) => {
+
+            if (err) return res.status(500).json({ error: err.message });
+            if(results.length ===0)
+            {
+                return res.status(401).json({ error: "User not found" });
+            }
+            if(hashedPassword === results[0].password){
+                return res.json({ success: true, message: "Login successful" });
+            }
+            else {
+                return res.status(401).json({ error: "Passwords do not match" });
+            }
+
+        })
 
     })
+    //sign up
     app.post("/users", async (req, res) => {
         const { firstname, lastname, email, password,  } = req.body;
         const hashed = HashPassword(password);
