@@ -5,7 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/override.css">
-    <title>Post</title>
+    <title>Static</title>
 </head>
 <body>
 
@@ -59,43 +59,40 @@
 
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
 
+
+
+<!-- WORK HERE -->
+
 <div class="container-fluid mt-5 mb-5">
     <div class="row">
         <div class="col-2"></div>
         <div class="col">
-            <div class="card mt-3 ms-3  rounded-4" style="background-color: #f5f0f5;">
+            <div class="card ms-3">
                 <div class="card-body">
-                    <h4 class="ms-1">
-                        {{editpost}}
-                    </h4>
-                    <form class="needs-validation">
-                        <div class="mb-3 mt-3">
-                            <input id="inputTitle" placeholder="{{title}}" type="text" class="form-control">
-                            <div class="invalid-feedback">
-                                {{pleasevalidtitle}}
-                            </div>
+                    <div class="row">
+                        <div class="justify-content-end container-fluid">
+                            <h1>Glory to Romania</h1>
+                            <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                                </svg>
+                            </button>
                         </div>
-                        <div class="mb-3">
-                            <textarea rows="5" id="inputContent" placeholder="{{content}}" type="text" class="form-control"></textarea>
-                            <div class="invalid-feedback">
-                                {{pleasevalidcontent}}
-                            </div>
-                        </div>
-                    </form>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">{{imagehere}}</label>
-                        <input class="form-control" type="file" id="formFile">
-                    </div>
-                    <div class="d-flex justify-content-end">
-
-                        <button id="btnPost" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPost">{{post}}</button>
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="col-2"></div>
     </div>
 </div>
+
+
+
+
+
+<!-- WORK UP THERE -->
+
 
 <!-- DRAWER/OFFCANVAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
@@ -322,33 +319,18 @@
                         <form>
                             <div class="mb-3">
                                 <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidfirstname}}
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidlastname}}
-                                </div>
                             </div>
                             <div class="mb-3 mt-3">
                                 <input id="inputSignupEmail" placeholder="Email" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidemail}}
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputSignupPassword" placeholder="Password" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidpassword}}
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasesamepassword}}
-                                </div>
                             </div>
                         </form>
                         <div class="d-flex justify-content-center mt-3">
@@ -373,15 +355,9 @@
                         <form>
                             <div class="mb-3 mt-3">
                                 <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidemail}}
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLoginPassword" placeholder="{{password}}" type="text" class="form-control">
-                                <div class="invalid-feedback">
-                                    {{pleasevalidpassword}}
-                                </div>
                             </div>
                         </form>
                         <div class="d-flex justify-content-center mt-3">
@@ -410,6 +386,5 @@
     </div>
 </footer>
 
-<script type="module" src="../js/index.js"></script>
 </body>
 </html>
