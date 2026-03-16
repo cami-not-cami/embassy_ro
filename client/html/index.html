@@ -42,7 +42,7 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary">Login</button>
+            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
         </div>
         <button class="btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -119,6 +119,48 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Show a second modal and hide this one with the button below.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Open second modal</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="h3 text-center mt-5">Login</div>
+                        <form>
+                            <div>
+                                <label></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div>
+                                <label></label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </form>
+                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <footer class="footer py-4 dark ">
     <div class="container">
