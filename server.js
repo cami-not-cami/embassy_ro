@@ -18,40 +18,26 @@ async function startServer() {
     app.use(express.urlencoded({ extended: true }));
 
     // Serve only JS/CSS as static, NOT the html folder
-    app.use('/js', express.static(path.join(__dirname, '../client/js')));
+    app.use('/js', express.static(path.join(__dirname, 'client/js')));
 
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
         i18n.locale = locale;
 
-        //reads html file and replaces the keywords with translated strings
-        let html = fs.readFileSync(path.join(__dirname, '../client/html/index.html'), "utf-8");
+        let html = fs.readFileSync(path.join(__dirname, 'client/html/index.html'), "utf-8");
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
 
         res.send(html);
+    });
 
-        let pathQuery = url.parse(req.url, true);
-        console.log(path);
+    app.get("/dbq", (req, res) => {
 
-        switch (path.pathname) {
-            case "/dbq":{
+        res.json({ result: "data" });
+    });
 
-            }break;
-            case "/db":
-            {
+    app.post("/db", (req, res) => {
 
-            }break;
-            default: {
-                res.sendFile(__dirname + "/client"+ path.pathname, (err) => {
-                    if (err) {
-                        console.log(err);
-                        res.send(err.message);
-                    }
-                });
-            }
-                break;
-
-        }
+        res.json({ success: true });
     });
 
     app.listen(port, () => {
@@ -72,4 +58,4 @@ con.connect(function(err) {
     console.log("Connected!");
 });
 
-startServer();
+startServer().then();
