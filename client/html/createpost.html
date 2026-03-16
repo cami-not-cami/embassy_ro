@@ -319,28 +319,31 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{signup}}</div>
-                        <form>
+                        <form class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your first name.</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
                             <div class="mb-3 mt-3">
-                                <input id="inputSignupEmail" placeholder="Email" type="text" class="form-control" required>
+                                <input id="inputSignupEmail" placeholder="Email" type="email" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputSignupPassword" placeholder="Password" type="text" class="form-control" required>
+                                <input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a password.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="text" class="form-control" required>
+                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="password" class="form-control" required>
+                                <div class="invalid-feedback">Passwords do not match.</div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
-                                <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">
-                                    {{clicklogin}}
-                                </a></p>
+                                <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">{{clicklogin}}</a></p>
                             </div>
-                            <button id="btnSignUp" class="btn btn-primary">Sign Up</button>
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>
                 </div>
@@ -355,9 +358,10 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{login}}</div>
-                        <form>
+                        <form class="needs-validation" novalidate>
                             <div class="mb-3 mt-3">
                                 <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLoginPassword" placeholder="{{password}}" type="text" class="form-control" required>
@@ -365,7 +369,7 @@
                             <div class="d-flex justify-content-center mt-3">
                                 <p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal" >{{clicksignup}}</a></p>
                             </div>
-                            <button class="btn btn-primary">{{login}}</button>
+                            <button type="submit" class="btn btn-primary">{{login}}</button>
                         </form>
                     </div>
                 </div>
