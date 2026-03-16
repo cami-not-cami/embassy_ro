@@ -46,7 +46,7 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -321,7 +321,7 @@
                         <div class="h3 text-center mt-3">{{signup}}</div>
                         <form>
                             <div class="mb-3">
-                                <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control">
+                                <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
                                 <div class="invalid-feedback">
                                     {{pleasevalidfirstname}}
                                 </div>
@@ -356,7 +356,7 @@
                                 {{clicklogin}}
                             </a></p>
                         </div>
-                        <button id="btnSignUp" class="btn btn-primary">Sign Up</button>
+                        <button id="btnSignUp" class="btn btn-primary" type="submit">Sign Up</button>
                     </div>
                 </div>
             </div>
@@ -387,7 +387,7 @@
                         <div class="d-flex justify-content-center mt-3">
                             <p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal" >{{clicksignup}}</a></p>
                         </div>
-                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">{{login}}</button>
+                        <button id="btnLogin" class="btn btn-primary" type="submit">{{login}}</button>
                     </div>
                 </div>
             </div>
