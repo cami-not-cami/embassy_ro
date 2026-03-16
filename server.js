@@ -3,18 +3,25 @@ const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2');
 const url = require("url");
+const crypto = require("crypto");
+let env = require("dotenv").config();
+
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 const port = 8080;
 let i18n;
 // MySQL
 const con = mysql.createPool({
-    host: "bucket-deny.with.playit.plus",
-    user: "cami_app",
-    password: "pass123",
-    port: 25770,
+    host: env.parsed.HOST,
+    user:env.parsed.USER,
+    password: env.parsed.PASSWORD,
+    port: env.parsed.PORT,
     waitForConnections: true,
-    database:"romanianembassydb",
+    database: env.parsed.DBNAME,
     connectionLimit: 10,
 });
 async function startServer() {
@@ -25,7 +32,6 @@ async function startServer() {
         de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt" }
     });
 
-    app.use(express.urlencoded({ extended: true }));
 
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
@@ -42,23 +48,53 @@ async function startServer() {
         res.send(html);
     });
 
-    app.get("/dbq", (req, res) => {
+    app.get("/users", (req, res) => {
         con.query('SELECT * FROM user;', (err, results) => {
             if (err) return res.status(500).json({ error: err.message });
             res.json(results);
         });
     });
+    app.put("/user", (req, res) => {
 
-    app.post("/db", (req, res) => {
-        res.json({ success: true });
+    })
+    app.delete("/user/:id", (req, res) => {
+
+    })
+    app.get("/user/:id", (req, res) => {
+
+    })
+    app.post("/users", async (req, res) => {
+        const { firstname, lastname, email, password,  } = req.body;
+        const hashed = password;
+
+        con.query(
+            'INSERT INTO user (UserFirstname, UserLastname, UserEmail, UserPassword) VALUES ( ?, ?, ?, ?)',
+            [firstname, lastname, email, hashed],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.json({ id: result.insertId });
+            }
+        );
     });
 
     app.listen(port, () => {
         console.log(`App listening at http://localhost:${port}`);
     });
 }
+function HashPassword(password,salt) {
 
+// Create a hash object
+    const hash = crypto.createHash('sha3-512');
 
+// Update the hash with data
 
+    hash.update(password);
+
+// Get the digest in hex format
+    const digest = hash.digest('hex');
+
+    console.log('Data:', password);
+    console.log('SHA-512 Hash:', digest);
+}
 
 startServer();
