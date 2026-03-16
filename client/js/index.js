@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     document.getElementById("btnSignUp").addEventListener("click", createUser)
-
 })
  async function createUser() {
      let  firstname= document.getElementById("inputFirstName").value

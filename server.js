@@ -29,7 +29,7 @@ async function startServer() {
     const { I18n } = await import("i18n-js");
 
     i18n = new I18n({
-        ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne" },
+        ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne", FirstName:"Prenume", LastName:"Nume" },
         de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt", FirstName:"Vorname", LastName:"Nachname" }
     });
 
