@@ -1,6 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
 
-    const formSignup = document.getElementsByTagName("formSignUp");
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    const formSignup = document.getElementById("formSignup");
 
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
@@ -31,10 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const emailField = document.getElementById("inputLoginEmail").value
         const passField = document.getElementById("inputLoginPassword").value
         console.log(passField)
-        fetch("/auth/login", {
+        fetch("/user/login", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+
             },
             body: JSON.stringify({ email: emailField,password: passField })
         })
@@ -42,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     console.log("Login successful!");
+                    localStorage.setItem("token", data.token);
+                    window.location.href = "/html/createpost.html"
 
                 } else {
                     console.log("Error:", data.error);
