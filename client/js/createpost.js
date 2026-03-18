@@ -5,7 +5,5 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputContent = document.getElementById("inputContent");
     const inputImage = document.getElementById("inputImage");
 
-
-
 })
 

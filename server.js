@@ -71,6 +71,14 @@ async function startServer() {
             res.json(results);
         });
     });
+
+    app.get("/html/createpost.html", (req, res) => {
+        let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
+        html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
+        res.send(html);
+    });
+
+
     //only the admin gets to use this, gives the user his role
     app.put("/user", (req, res) => {
         con.query()
