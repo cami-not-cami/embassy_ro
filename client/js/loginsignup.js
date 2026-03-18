@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const emailField = document.getElementById("inputLoginEmail").value
         const passField = document.getElementById("inputLoginPassword").value
         console.log(passField)
-        fetch("/user/login", {
+        fetch("/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
