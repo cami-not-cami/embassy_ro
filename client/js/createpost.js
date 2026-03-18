@@ -1,3 +1,11 @@
-document.addEventListener("DOMContentLoaded", async function () {
-    document.getElementById("btnPost").addEventListener("click", createUser)
+
+document.addEventListener("DOMContentLoaded", () => {
+    const formPost = document.getElementById("formPost");
+    const inputTitle = document.getElementById("inputTitle");
+    const inputContent = document.getElementById("inputContent");
+    const inputImage = document.getElementById("inputImage");
+
+
+
 })
+

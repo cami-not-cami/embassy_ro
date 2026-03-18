@@ -68,28 +68,30 @@
                     <h4 class="ms-1">
                         {{editpost}}
                     </h4>
-                    <form class="needs-validation">
+                    <form id="formPost" class="needs-validation">
                         <div class="mb-3 mt-3">
                             <input id="inputTitle" placeholder="{{title}}" type="text" class="form-control">
+                            <label for="inputTitle" class="form-label">{{title}}</label>
                             <div class="invalid-feedback">
                                 {{pleasevalidtitle}}
                             </div>
                         </div>
                         <div class="mb-3">
                             <textarea rows="5" id="inputContent" placeholder="{{content}}" type="text" class="form-control"></textarea>
+                            <label for="inputContent" class="form-label">{{content}}</label>
                             <div class="invalid-feedback">
                                 {{pleasevalidcontent}}
                             </div>
                         </div>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="inputImage">
+                            <label class="input-group-text" for="inputImage">Upload</label>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit"  class="btn btn-primary">{{post}}</button>
+                        </div>
                     </form>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">{{imagehere}}</label>
-                        <input class="form-control" type="file" id="formFile">
-                    </div>
-                    <div class="d-flex justify-content-end">
 
-                        <button id="btnPost" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPost">{{post}}</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -393,6 +395,8 @@
     </div>
 </footer>
 
-<script type="module" src="../js/index.js"></script>
+<script type="module" src="../js/loginsignup.js"></script>
+<script type="module" src="../js/createpost.js"></script>
+
 </body>
 </html>

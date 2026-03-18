@@ -1,30 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const forms = document.querySelectorAll('.needs-validation')
+    const formSignup = document.getElementsByTagName("formSignUp");
 
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', async event => {
-            const password = document.getElementById("inputSignupPassword").value
-            const confirmField = document.getElementById("inputSignupConfirmPassword")
+    formSignup.addEventListener('submit', async event => {
+        const password = document.getElementById("inputSignupPassword").value
+        const confirmField = document.getElementById("inputSignupConfirmPassword")
 
-            if (password !== confirmField.value) {
-                confirmField.setCustomValidity("Passwords do not match")
-            } else {
-                confirmField.setCustomValidity("")
-            }
-            form.classList.add('was-validated')
+        if (password !== confirmField.value) {
+            confirmField.setCustomValidity("Passwords do not match")
+        } else {
+            confirmField.setCustomValidity("")
+        }
+        formSignup.classList.add('was-validated')
 
-            //FIX HERE PLS
-            if (form.checkValidity()) {
-                // await createUser()
-            }
-            else
-            {
-                event.preventDefault()
-                event.stopPropagation()
-            }
+        if (formSignup.checkValidity()) {
+            await createUser()
+        }
+        else
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
 
-        })
     })
     const modal= document.getElementById("formLogin")
 
