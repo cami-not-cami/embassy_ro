@@ -28,7 +28,7 @@ async function startServer() {
     const { I18n } = await import("i18n-js");
 
     i18n = new I18n({
-        ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne" },
+        ro: { home: "Acasă", search: "Căutare", romania:"România", contact:"Contactaţi-ne", FirstName:"Prenume", LastName:"Nume" },
         de: { home: "Startseite", search: "Suche", romania: "Romenien", contact:"Kontakt", FirstName:"Vorname", LastName:"Nachname" }
     });
 
@@ -60,9 +60,32 @@ async function startServer() {
     app.delete("/user/:id", (req, res) => {
 
     })
-    app.get("/user/:id", (req, res) => {
+    //login
+    app.post("/user/login", async (req, res) => {
+        const {  email, password,  } = req.body;
+        const hashedPassword = HashPassword(password);
+    console.log("Hashed oass"+hashedPassword);
+    console.log("Email" + email);
+    console.log(password);
+
+       let result =  con.query('Select UserPassword From user WHERE UserEmail=?',[email],(err, results) => {
+
+            if (err) return res.status(500).json({ error: err.message });
+            if(results.length ===0)
+            {
+                return res.status(401).json({ error: "User not found" });
+            }
+            if(hashedPassword === results[0].UserPassword){
+                return res.json({ success: true, message: "Login successful" });
+            }
+            else {
+                return res.status(401).json({ error: "Passwords do not match" });
+            }
+
+        })
 
     })
+    //sign up
     app.post("/users", async (req, res) => {
         const { firstname, lastname, email, password,  } = req.body;
         const hashed = HashPassword(password);
@@ -82,6 +105,9 @@ async function startServer() {
     });
 }
 function HashPassword(password) {
+    if (password ==="") {
+        throw new Error("Password cannot be empty");
+    }
 // Create a hash object
     const hash = crypto.createHash('sha3-512');
 
