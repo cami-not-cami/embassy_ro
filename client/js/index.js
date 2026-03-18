@@ -26,6 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         })
     })
+
+    const emailField = document.getElementById("inputLoginEmail").value
+    const password = document.getElementById("inputLoginPassword").value
+
+    console.log(password)
+    console.log(emailField)
 })
 
 async function createUser() {
