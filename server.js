@@ -61,9 +61,12 @@ async function startServer() {
 
     })
     //login
-    app.post("/user/login", (req, res) => {
+    app.post("/user/login", async (req, res) => {
         const {  email, password,  } = req.body;
         const hashedPassword = HashPassword(password);
+    console.log("Hashed oass"+hashedPassword);
+    console.log("Email" + email);
+    console.log(password);
 
        let result =  con.query('Select UserPassword From user WHERE UserEmail=?',[email],(err, results) => {
 
@@ -72,7 +75,7 @@ async function startServer() {
             {
                 return res.status(401).json({ error: "User not found" });
             }
-            if(hashedPassword === results[0].password){
+            if(hashedPassword === results[0].UserPassword){
                 return res.json({ success: true, message: "Login successful" });
             }
             else {
@@ -102,6 +105,9 @@ async function startServer() {
     });
 }
 function HashPassword(password) {
+    if (password ==="") {
+        throw new Error("Password cannot be empty");
+    }
 // Create a hash object
     const hash = crypto.createHash('sha3-512');
 

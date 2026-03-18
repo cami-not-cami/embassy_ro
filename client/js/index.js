@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    'use strict'
 
     const forms = document.querySelectorAll('.needs-validation')
 
@@ -15,8 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             form.classList.add('was-validated')
 
+            //FIX HERE PLS
             if (form.checkValidity()) {
-                await createUser()
+                // await createUser()
             }
             else
             {
@@ -26,26 +26,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         })
     })
-    const emailField = document.getElementById("inputLoginEmail")
-    const passField = document.getElementById("inputLoginPassword")
-    fetch("/user/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ emailField, passField })
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                console.log("Login successful!");
-                // Redirect to dashboard
-                window.location.href = "/dashboard";
-            } else {
-                console.log("Error:", data.error);
-            }
+    const modal= document.getElementById("formLogin")
+
+    modal.addEventListener("submit", async event => {
+        event.preventDefault()
+        console.log("IN MODAL")
+        const emailField = document.getElementById("inputLoginEmail").value
+        const passField = document.getElementById("inputLoginPassword").value
+        console.log(passField)
+        fetch("/user/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: emailField,password: passField })
         })
-        .catch(err => console.log("Request failed:", err));
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Login successful!");
+
+                } else {
+                    console.log("Error:", data.error);
+                }
+            })
+            .catch(err => console.log("Request failed:", err));
+    })
+
+
 })
 
 async function createUser() {
