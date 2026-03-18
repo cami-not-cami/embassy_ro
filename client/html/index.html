@@ -45,7 +45,7 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
             <a type="button" class="btn btn-primary d-none"  href="createpost.html">{{post}}</a>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
@@ -121,6 +121,45 @@
         </div>
     </div>
 </section>
+
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+            <div class="card rounded-4" style="background-color: #f6d4cf;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="d-flex align-items-center justify-content-between container-fluid">
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="../images/castle.png"
+                                     class="rounded-circle object-fit-cover flex-shrink-0"
+                                     style="width: 48px; height: 48px;"
+                                     alt="Castle">
+                                <div>
+                                    <div>Vorname Nachname</div>
+                                    <div>Job Title Here</div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <img src="../images/town.png" class="w-75 object-fit-cover" alt="Town">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
 
 <!-- DRAWER/OFFCANVAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
@@ -344,7 +383,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{signup}}</div>
-                        <form class="needs-validation" novalidate>
+                        <form id="formSignup" class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
                                 <div class="invalid-feedback">Please enter your first name.</div>
@@ -376,14 +415,14 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="modalLogin"  tabindex="-1">
+<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="modalLogin" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{login}}</div>
-                        <form class="needs-validation"  id="formLogin" novalidate>
+                        <form id="formLogin" class="needs-validation" novalidate>
                             <div class="mb-3 mt-3">
                                 <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control" required>
                                 <div class="invalid-feedback">Please enter a valid email.</div>
@@ -417,6 +456,6 @@
         </div>
     </div>
 </footer>
-<script type="module" src="../js/index.js"></script>
+<script type="module" src="../js/loginsignup.js"></script>
 </body>
 </html>
