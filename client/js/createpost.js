@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formPost = document.getElementById("formPost");
     const inputTitle = document.getElementById("inputTitle");
     const inputContent = document.getElementById("inputContent");
-    const inputImage = document.getElementById("inputImage");
+    const fileInput = document.getElementById('inputImage');
 
 
     formPost.addEventListener("submit", async (e) => {
@@ -12,16 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const title = inputTitle.value;
         const content = inputContent.value;
-        const fileInput = document.getElementById('inputImage');
+
         const file = fileInput.files[0];
 
-        if (!file) {
-            console.log("Please select a file");
-            return;
-        }
-
         try {
-            // Step 1: Upload the file
+
             const formData = new FormData();
             formData.append('myFile', file);
 
@@ -33,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const uploadData = await uploadRes.json();
 
             if (!uploadRes.ok) {
-                console.log("Upload failed:", uploadData.error);
+                alert("Upload failed:", uploadData.error);
                 return;
             }
 
             const imagePath = uploadData.filePath;
-            console.log("File uploaded:", imagePath);
+           alert("File uploaded:");
 
-            // Step 2: Create post with image path
+
             const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
             const postRes = await fetch("/createPost", {
