@@ -10,6 +10,7 @@ let env = require("dotenv").config();
 
 
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -54,6 +55,9 @@ async function startServer() {
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
     app.use('/css', express.static(path.join(__dirname, 'client/css')));
+    app.get('/html', (req, res) => {
+        res.sendFile(path.join(__dirname, 'client/html/index.html'));
+    });
 
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
@@ -95,27 +99,34 @@ async function startServer() {
     })
     //login no t
     app.post("/user/login", async (req, res) => {
-        const {email, password,} = req.body;
+        const {email, password} = req.body;
         const hashedPassword = HashPassword(password);
-        console.log("Hashed pass " + hashedPassword);
-        console.log("Email " + email);
-        console.log(password);
 
-        con.query('Select UserPassword From user WHERE UserEmail=?;', [email], (err, results) => {
-            if (err) return res.status(500).json({error: err.message});
-            if (results.length === 0) {
-                return res.status(401).json({error: "User not found"});
-            }
-            if (hashedPassword === results[0].UserPassword) {
-                //if we log in then we make the token for the user, SEND IT TO THE FRONT
-                const token = jwt.sign({ username: results[0].UserEmail, role: results[0].UserEmpFK }, secret, { expiresIn: '1h' });
-                return res.json({success: true, message: "Login successful", token: token});
+        con.query(
+            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
+             FROM user u LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK WHERE u.UserEmail=?`,
+            [email],
 
-            } else {
-                return res.status(401).json({error: "Passwords do not match"});
+            (err, results) => {
+                if (err) return res.status(500).json({error: err.message});
+                if (results.length === 0) {
+                    return res.status(401).json({error: "User not found"});
+                }
+                if (hashedPassword === results[0].UserPassword) {
+
+                    const token = jwt.sign({
+                        userId: results[0].UserIdPK,
+                        username: results[0].UserEmail,
+                        role: results[0].EmpIdPK,
+                    }, secret, { expiresIn: '1h' });
+
+                    return res.json({success: true, message: "Login successful", token: token});
+                } else {
+                    return res.status(401).json({error: "Passwords do not match"});
+                }
             }
-        })
-    })
+        );
+    });
     //sign up no t
     app.post("/users", async (req, res) => {
         const {firstname, lastname, email, password,} = req.body;
@@ -130,43 +141,50 @@ async function startServer() {
             }
         );
     });
-    //also needs token check
-    app.post("/createPost", async (req, res) => {
-        const {employeeFK,title , content, createdAt,updatedAt,imagePath,} = req.body;
-
-        con.query(
-            'INSERT INTO post (PostEmpIdFK, PostTitle, PostContent, PostCreatedAt,PostUpdatedAt,PostImagePath) VALUES ( ?, ?, ?, ?, ?, ?)',
-            [employeeFK, title, content, createdAt, updatedAt, imagePath],
-            (err, result) => {
-                if (err) return res.status(500).json({error: err.message});
-                res.json({id: result.insertId});
-            }
-        );
-    });
     app.listen(port, () => {
         console.log(`App listening at http://localhost:${port}`);
     });
 
     const verifyToken = (req, res, next) => {
-        // Get token from header: "Bearer eyJhbGciOi..."
         const token = req.headers.authorization?.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({success: false, message: "No token"});
         }
-
         try {
-            // Decrypt and verify with same secret
             const decoded = jwt.verify(token, secret);
-            // decoded now contains: { username: 'user@email.com', iat: 1234, exp: 5678 }
-            req.user = decoded;  // Store it on request for later use
+            req.user = decoded;
+            console.log(req.user);
             next();
         } catch (err) {
-            res.status(403).json({success: false, message: "Invalid token"});
+            return res.status(403).json({success: false, message: "Invalid token"});
         }
     };
-}
+    app.post("/createPost", verifyToken, async (req, res) => {
+        const { title, content,createdAt,updatedAt, imagePath } = req.body;
+        const userRole = req.user.role;
 
+        if (userRole == null) {
+            return res.status(403).json({error: "Only employees can create posts"});
+        }
+        else {
+            console.log("Running query")
+            con.query(
+                'INSERT INTO post ( PostTitle,PostEmpIdFK, PostContent,PostCreatedAt,PostUpdatedAt, PostImagePath) VALUES (?, ?,?, ?, ?, ?)',
+                [title,userRole, content, createdAt, updatedAt, imagePath],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            );
+        }
+    });
+    app.get("/html/createpost.html", (req, res) => {
+        let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
+        html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
+        res.send(html);
+    });
+}
 function HashPassword(password) {
     if (password === "") {
         throw new Error("Password cannot be empty");

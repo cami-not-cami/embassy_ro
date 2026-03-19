@@ -1,21 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
 
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
     const formSignup = document.getElementById("formSignup");
 
     formSignup.addEventListener('submit', async event => {
-        event.preventDefault()
-
         const password = document.getElementById("inputSignupPassword").value
         const confirmField = document.getElementById("inputSignupConfirmPassword")
 
-        confirmField.setCustomValidity(
-            password !== confirmField.value ? "Passwords do not match" : ""
-        )
+        if (password !== confirmField.value) {
+            confirmField.setCustomValidity("Passwords do not match")
+        } else {
+            confirmField.setCustomValidity("")
+        }
         formSignup.classList.add('was-validated')
 
         if (formSignup.checkValidity()) {
             await createUser()
         }
+        else
+        {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
     })
     const modal= document.getElementById("formLogin")
 
@@ -28,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("/user/login", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+
             },
             body: JSON.stringify({ email: emailField,password: passField })
         })
@@ -36,7 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     console.log("Login successful!");
-                    window.location.reload();
+                    localStorage.setItem("token", data.token);
+                    window.location.href = "/html/createpost.html"
+
                 } else {
                     console.log("Error:", data.error);
                 }
@@ -58,10 +68,4 @@ async function createUser() {
             password: document.getElementById("inputSignupPassword").value,
         })
     })
-    const data = await res.json()
-    if (data.success) {
-        window.location.href = "./html/createpost.html"
-    } else {
-        console.error("Signup error:", data.error)
-    }
 }
