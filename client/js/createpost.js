@@ -28,12 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const uploadData = await uploadRes.json();
 
             if (!uploadRes.ok) {
-                console.log("Upload failed:", uploadData.error);
+                alert("Upload failed:", uploadData.error);
                 return;
             }
 
             const imagePath = uploadData.filePath;
-            console.log("File uploaded:", imagePath);
+           alert("File uploaded:");
 
 
             const now = new Date().toISOString().slice(0, 19).replace('T', ' ');

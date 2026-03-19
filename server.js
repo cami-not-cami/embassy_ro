@@ -112,7 +112,13 @@ async function startServer() {
             }
         });
     });
-
+    app.get('/posts', (req, res) => {
+        con.query(
+            `SELECT * FROM post p LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK`, (err, results) => {
+                if (err) return res.status(500).json({error: err.message});
+                res.json(results);
+            });
+    })
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
         i18n.locale = locale;
@@ -147,7 +153,7 @@ async function startServer() {
         const hashedPassword = HashPassword(password);
 
         con.query(
-            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
+            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK, e.EmpIsAdmin
              FROM user u
                       LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK
              WHERE u.UserEmail = ?`,
@@ -164,6 +170,7 @@ async function startServer() {
                         userId: results[0].UserIdPK,
                         username: results[0].UserEmail,
                         role: results[0].EmpIdPK,
+                        isAdmin: results[0].EmpIsAdmin
                     }, secret, {expiresIn: '1h'});
 
                     return res.json({success: true, message: "Login successful", token: token});
