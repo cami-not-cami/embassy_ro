@@ -59,7 +59,7 @@ async function startServer() {
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
 
     app.use('/css', express.static(path.join(__dirname, 'client/css')));
-    app.use('/uploads',express.static(path.join(__dirname,'uploads')));
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
@@ -92,6 +92,7 @@ async function startServer() {
             return res.status(403).json({success: false, message: "Invalid token"});
         }
     };
+
     function checkFileType(file, cb) {
 
         const filetypes = /jpeg|jpg|png/;
@@ -114,7 +115,6 @@ async function startServer() {
             if (!req.file) {
                 return res.status(400).json({error: 'Please send file'});
             }
-
             try {
                 const filePath = req.file.path;
 
@@ -132,7 +132,9 @@ async function startServer() {
     });
     app.get('/posts', (req, res) => {
         con.query(
-            `SELECT * FROM post p LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK`, (err, results) => {
+            `SELECT *
+             FROM post p
+                      LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK`, (err, results) => {
                 if (err) return res.status(500).json({error: err.message});
                 res.json(results);
             });
@@ -149,7 +151,12 @@ async function startServer() {
 
     app.get("/users", (req, res) => {
         con.query(
-            `SELECT u.UserIdPK, u.UserFirstname, u.UserLastname, u.UserEmail, u.UserPassword, e.EmpIdPK, e.EmpPhonenumber, e.EmpDescription, e.EmpIsAdmin
+            `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,
+                    u.UserPassword,
+                    e.EmpIdPK,
+                    e.EmpPhonenumber,
+                    e.EmpDescription,
+                    e.EmpIsAdmin
              FROM user u
                       LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK`, (err, results) => {
                 if (err) return res.status(500).json({error: err.message});
@@ -170,30 +177,29 @@ async function startServer() {
 
 
     //only the admin gets to use this, gives the user his role
-    app.put("/editUser", verifyToken,(req, res) => {
-        const { userIDPK, firstname, lastname, email } = req.body;
+    app.put("/editUser", verifyToken, (req, res) => {
+        const {userIDPK, firstname, lastname, email} = req.body;
 
-        if(req.user.isAdmin === 1)
-        {
-        con.query(
-            'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? WHERE UserIdPK=?',
-            [firstname, lastname, email,userIDPK],
-            (err, result) => {
-                if (err) return res.status(500).json({error: err.message});
-                res.json({success: true, id: result.insertId});
-            }
-        )}
-        else {
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? WHERE UserIdPK=?',
+                [firstname, lastname, email, userIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+        } else {
             console.log("Trying for admin failed" +
                 "Admin is not 1  " + req.user.isAdmin);
         }
     })
 
     //token
-    app.delete("/user/id", (req, res) => {
-        if(req.user.isAdmin == 1){
+    app.delete("/user/id", verifyToken, (req, res) => {
+        if (req.user.isAdmin === 1) {
             con.query(
-                'DELETE FROM user  WHERE UserIdPK=?',
+                'DELETE FROM user WHERE UserIdPK=?',
                 [userIDPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
@@ -274,26 +280,30 @@ async function startServer() {
     });
 
     app.post("/createEmployee", verifyToken, async (req, res) => {
-        con.query(
-            'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',
-            [empPhoneNumber, EmpIsAdmin, EmpDescription],
-            (err, result) => {
-                if (err) return res.status(500).json({error: err.message});
-                res.json({success: true, id: result.insertId});
-            }
-        )
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',
+                [empPhoneNumber, EmpIsAdmin, EmpDescription],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+        }
     })
     //you need to send the id in the body
     app.put("/editEmployee", verifyToken, async (req, res) => {
-        const { EmpIdPK, empPhoneNumber, EmpIsAdmin, EmpDescription } = req.body;
-        con.query(
-            'UPDATE employee SET EmpPhonenumber=?, EmpIsAdmin=?, EmpDescription=? WHERE EmpIdPK=?',
-            [empPhoneNumber, EmpIsAdmin, EmpDescription, EmpIdPK],
-            (err, result) => {
-                if (err) return res.status(500).json({error: err.message});
-                res.json({success: true, id: result.insertId});
-            }
-        )
+        const {EmpIdPK, empPhoneNumber, EmpIsAdmin, EmpDescription} = req.body;
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'UPDATE employee SET EmpPhonenumber=?, EmpIsAdmin=?, EmpDescription=? WHERE EmpIdPK=?',
+                [empPhoneNumber, EmpIsAdmin, EmpDescription, EmpIdPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+        }
     })
     app.get("/html/createpost.html", (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
