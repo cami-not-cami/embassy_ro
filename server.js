@@ -90,10 +90,8 @@ async function startServer() {
         const hashedPassword = HashPassword(password);
 
         con.query(
-            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK, e.EmpIsAdmin 
-         FROM user u
-         LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK
-         WHERE u.UserEmail=?`,
+            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
+             FROM user u LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK WHERE u.UserEmail=?`,
             [email],
 
             (err, results) => {
@@ -101,14 +99,14 @@ async function startServer() {
                 if (results.length === 0) {
                     return res.status(401).json({error: "User not found"});
                 }
-
                 if (hashedPassword === results[0].UserPassword) {
+
                     const token = jwt.sign({
                         userId: results[0].UserIdPK,
-                        empId: results[0].EmpIdPK,      // ← Employee-ID!
                         username: results[0].UserEmail,
-                        role: results[0].EmpIsAdmin
+                        role: results[0].EmpIdPK,
                     }, secret, { expiresIn: '1h' });
+
                     return res.json({success: true, message: "Login successful", token: token});
                 } else {
                     return res.status(401).json({error: "Passwords do not match"});
@@ -130,12 +128,9 @@ async function startServer() {
             }
         );
     });
-    //also needs token check
-
     app.listen(port, () => {
         console.log(`App listening at http://localhost:${port}`);
     });
-
 
     const verifyToken = (req, res, next) => {
         const token = req.headers.authorization?.split(' ')[1];
@@ -143,12 +138,8 @@ async function startServer() {
         if (!token) {
             return res.status(401).json({success: false, message: "No token"});
         }
-
         try {
-            // Dekodiere das Token mit dem Secret
             const decoded = jwt.verify(token, secret);
-
-            // Jetzt hast du username, role, userId
             req.user = decoded;
             console.log(req.user);
             next();
@@ -158,32 +149,29 @@ async function startServer() {
     };
     app.post("/createPost", verifyToken, async (req, res) => {
         const { title, content,createdAt,updatedAt, imagePath } = req.body;
-        const userId = req.user.empId;
         const userRole = req.user.role;
 
-
-
-        if (!userRole || userRole === null) {
+        if (userRole == null) {
             return res.status(403).json({error: "Only employees can create posts"});
         }
-
-        con.query(
-            'INSERT INTO post (PostEmpIdFK, PostTitle, PostContent,PostCreatedAt,PostUpdatedAt, PostImagePath) VALUES (?, ?,?, ?, ?, ?)',
-            [userId, title, content,createdAt,updatedAt, imagePath],
-            (err, result) => {
-                if (err) return res.status(500).json({error: err.message});
-                res.json({success: true, id: result.insertId});
-            }
-        );
+        else {
+            console.log("Running query")
+            con.query(
+                'INSERT INTO post ( PostTitle,PostEmpIdFK, PostContent,PostCreatedAt,PostUpdatedAt, PostImagePath) VALUES (?, ?,?, ?, ?, ?)',
+                [title,userRole, content, createdAt, updatedAt, imagePath],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            );
+        }
     });
     app.get("/html/createpost.html", (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
         res.send(html);
     });
-
 }
-
 function HashPassword(password) {
     if (password === "") {
         throw new Error("Password cannot be empty");

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputTitle = document.getElementById("inputTitle");
     const inputContent = document.getElementById("inputContent");
     const inputImage = document.getElementById("inputImage");
-    console.log(token)
+
 
         formPost.addEventListener("submit", (e) => {
             e.preventDefault();
