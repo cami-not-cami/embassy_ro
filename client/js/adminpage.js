@@ -35,6 +35,50 @@ function renderUsers(user, index) {
 
     const promoteBtn = row.querySelector('.btn-primary');
     promoteBtn.addEventListener('click', () => openEditModal(user));
+
+    const editBtn = row.querySelector('.btn-success');
+    editBtn.addEventListener('click', () => openEditModal(user));
+}
+
+
+
+
+
+
+// Fix: rename openEditModal to match what you called in the event listener
+function openEditModal(user) {
+    document.getElementById('inputEditFirstname').value      = user.UserIdPK;
+    document.getElementById('inputEditLastname').value  = user.UserFirstname  || '';
+    document.getElementById('inputEditEmail').value   = user.UserLastname   || '';
+    document.getElementById('inputEditTelephone').value      = user.UserEmail      || '';
+    document.getElementById('inputEditDescription').value = user.UserEmpFK      || '';
+}
+
+async function editUser() {
+    const payload = {
+        userIDPK:    document.getElementById('editUserId').value,
+        firstname:   document.getElementById('editFirstname').value,
+        lastname:    document.getElementById('editLastname').value,
+        email:       document.getElementById('editEmail').value,
+        employeeFK:  document.getElementById('editEmployeeFK').value,
+    };
+
+    const res = await fetch('/editUser', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+        // Reload the table
+        tableBody.innerHTML = "";
+        const users = await (await fetch('/users')).json();
+        users.forEach((user, index) => renderUsers(user, index));
+    } else {
+        const err = await res.json();
+        alert('Error: ' + err.error);
+    }
 }
 
 
