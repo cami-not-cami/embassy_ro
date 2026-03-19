@@ -64,10 +64,10 @@ formEditUser.addEventListener('submit', async event => {
         method: "PUT",
         headers,
         body: JSON.stringify({
-            userIDPK:   currentUser.UserIdPK,
-            firstname: "Cami",
-            lastname: "currentUser.lastname",
-            email: "currentUser.email",
+            userIDPK: currentUser.UserIdPK,
+            firstname: document.getElementById('inputEditFirstname').value,
+            lastname:  document.getElementById('inputEditLastname').value,
+            email:     document.getElementById('inputEditEmail').value,
         })
     });
 
@@ -76,10 +76,10 @@ formEditUser.addEventListener('submit', async event => {
             method: "PUT",
             headers,
             body: JSON.stringify({
-                EmpIdPK:       currentUser.EmpIdPK,
-                empPhoneNumber: "123",
+                EmpIdPK: currentUser.EmpIdPK,
+                empPhoneNumber: telephone,
                 EmpIsAdmin: 0,
-                EmpDescription: "currentUser.description",
+                EmpDescription: description,
             })
         });
     }
