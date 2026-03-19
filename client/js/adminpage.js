@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded",  async () => {
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
 let currentUser = null;
@@ -8,7 +9,7 @@ users.forEach((user, index) => renderUsers(user, index));
 
 function renderUsers(user, index) {
     const row = tableBody.insertRow();
-    console.log(user);
+
     row.innerHTML = `
     <th scope="row" class="text-black">${index}</th>
     <td class="text-black">${user.UserFirstname  || '-'}</td>
@@ -53,13 +54,6 @@ formEditUser.addEventListener('submit', async event => {
         "Authorization": `Bearer ${token}`
     };
 
-    const firstname   = document.getElementById('inputEditFirstname').value;
-    const lastname    = document.getElementById('inputEditLastname').value;
-    const email       = document.getElementById('inputEditEmail').value;
-    const telephone   = document.getElementById('inputEditTelephone').value;
-    const description = document.getElementById('inputEditDescription').value;
-
-    console.log(firstname, lastname, email, telephone, description);
     const res = await fetch("/editUser", {
         method: "PUT",
         headers,
@@ -77,9 +71,9 @@ formEditUser.addEventListener('submit', async event => {
             headers,
             body: JSON.stringify({
                 EmpIdPK: currentUser.EmpIdPK,
-                empPhoneNumber: telephone,
+                empPhoneNumber: document.getElementById('inputEditTelephone').value,
                 EmpIsAdmin: 0,
-                EmpDescription: description,
+                EmpDescription: document.getElementById('inputEditDescription').value,
             })
         });
     }
@@ -103,30 +97,4 @@ function openEditModal(user) {
     console.log(user);
 }
 
-async function editUser() {
-    const payload = {
-        userIDPK:   users.dataset.userid,
-        firstname:   document.getElementById('inputEditFirstname').value,
-        lastname:    document.getElementById('inputEditLastname').value,
-        email:       document.getElementById('editEmail').value,
-    };
-
-    const res = await fetch('/editUser', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-    });
-
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
-        tableBody.innerHTML = "";
-        const users = await (await fetch('/users')).json();
-        users.forEach((user, index) => renderUsers(user, index));
-    } else {
-        const err = await res.json();
-        alert('Error: ' + err.error);
-    }
-}
-
-
-
+})
