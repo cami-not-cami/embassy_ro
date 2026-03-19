@@ -7,8 +7,13 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const {verify} = require("jsonwebtoken");
 let env = require("dotenv").config();
-
-
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: './uploads/posts',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
 const app = express();
 
 app.use(express.json());
@@ -28,6 +33,7 @@ const con = mysql.createPool({
     connectionLimit: 10,
 });
 const secret = env.parsed.SECRETKEY;
+
 
 async function startServer() {
     const {I18n} = await import("i18n-js");
@@ -58,6 +64,51 @@ async function startServer() {
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
+    // Add file type validation
+    const upload = multer({
+        storage: storage,
+        limits: {fileSize: 1000000},
+        fileFilter: function (req, file, cb) {
+            checkFileType(file, cb);
+        }
+    }).single('myFile');
+
+    function checkFileType(file, cb) {
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb('Error: Images only! (jpeg, jpg, png)');
+        }
+    }
+
+    app.post('/upload', (req, res) => {
+        upload(req, res, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({error: err});
+            }
+            if (!req.file) {
+                return res.status(400).json({error: 'Please send file'});
+            }
+
+            try {
+                const filePath = req.file.path;
+
+                res.json({
+                    success: true,
+                    message: 'File uploaded!',
+                    filePath: filePath
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                res.status(500).json({error: 'Upload failed'});
+            }
+        });
+    });
 
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
@@ -70,7 +121,10 @@ async function startServer() {
     });
 
     app.get("/users", (req, res) => {
-        con.query('SELECT * FROM user;', (err, results) => {
+        con.query(
+            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
+             FROM user u
+                      LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK`, (err, results) => {
             if (err) return res.status(500).json({error: err.message});
             res.json(results);
         });
@@ -104,7 +158,9 @@ async function startServer() {
 
         con.query(
             `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
-             FROM user u LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK WHERE u.UserEmail=?`,
+             FROM user u
+                      LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK
+             WHERE u.UserEmail = ?`,
             [email],
 
             (err, results) => {
@@ -118,7 +174,7 @@ async function startServer() {
                         userId: results[0].UserIdPK,
                         username: results[0].UserEmail,
                         role: results[0].EmpIdPK,
-                    }, secret, { expiresIn: '1h' });
+                    }, secret, {expiresIn: '1h'});
 
                     return res.json({success: true, message: "Login successful", token: token});
                 } else {
@@ -161,17 +217,16 @@ async function startServer() {
         }
     };
     app.post("/createPost", verifyToken, async (req, res) => {
-        const { title, content,createdAt,updatedAt, imagePath } = req.body;
+        const {title, content, createdAt, updatedAt, imagePath} = req.body;
         const userRole = req.user.role;
 
         if (userRole == null) {
             return res.status(403).json({error: "Only employees can create posts"});
-        }
-        else {
+        } else {
             console.log("Running query")
             con.query(
                 'INSERT INTO post ( PostTitle,PostEmpIdFK, PostContent,PostCreatedAt,PostUpdatedAt, PostImagePath) VALUES (?, ?,?, ?, ?, ?)',
-                [title,userRole, content, createdAt, updatedAt, imagePath],
+                [title, userRole, content, createdAt, updatedAt, imagePath],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, id: result.insertId});
@@ -185,6 +240,7 @@ async function startServer() {
         res.send(html);
     });
 }
+
 function HashPassword(password) {
     if (password === "") {
         throw new Error("Password cannot be empty");
@@ -202,5 +258,6 @@ function HashPassword(password) {
     console.log('SHA-512 Hash:', digest);
     return digest;
 }
+
 
 startServer();

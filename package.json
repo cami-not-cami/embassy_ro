@@ -20,6 +20,7 @@
     "express-session": "^1.19.0",
     "i18n-js": "^4.5.3",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
     "mysql2": "^3.19.1"
   }
 }
