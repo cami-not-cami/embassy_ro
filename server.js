@@ -8,12 +8,7 @@ const jwt = require("jsonwebtoken");
 const {verify} = require("jsonwebtoken");
 let env = require("dotenv").config();
 const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: './uploads/posts',
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
+
 const app = express();
 
 app.use(express.json());
@@ -64,7 +59,13 @@ async function startServer() {
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
-    // Add file type validation
+    const storage = multer.diskStorage({
+        destination: './uploads/posts',
+        filename: function (req, file, cb) {
+            cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
+        }
+    });
+   // Add file type validation
     const upload = multer({
         storage: storage,
         limits: {fileSize: 1000000},
@@ -74,6 +75,7 @@ async function startServer() {
     }).single('myFile');
 
     function checkFileType(file, cb) {
+
         const filetypes = /jpeg|jpg|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
@@ -103,6 +105,7 @@ async function startServer() {
                     message: 'File uploaded!',
                     filePath: filePath
                 });
+                console.log(filePath);
             } catch (error) {
                 console.error('Error:', error);
                 res.status(500).json({error: 'Upload failed'});
@@ -247,4 +250,4 @@ function HashPassword(password) {
 }
 
 
-startServer();
+startServer().then();
