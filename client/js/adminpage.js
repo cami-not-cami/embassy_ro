@@ -31,6 +31,24 @@ function renderUsers(user, index) {
         </svg>
       </button>
     </td>`;
+
+    const promoteBtn = row.querySelector('.btn-primary');
+    promoteBtn.addEventListener('click', () => openEditModal(user));
+}
+
+const inputSelectRole = document.getElementById("inputSelectRole");
+const modalPromote = new bootstrap.Modal(document.getElementById("modalPromote"));
+let selectedUser = null;
+
+function openEditModal(user) {
+    selectedUser = user;
+    const currentRole = getCurrentRole(user);
+
+    inputSelectRole.innerHTML = roles.map(r => `
+        <option value="${r.value}" ${r.value === currentRole ? 'selected' : ''}>${r.label}</option>
+    `).join('');
+
+    modalPromote.show();
 }
 
 // GET ALL BUTTONS
@@ -38,4 +56,33 @@ function renderUsers(user, index) {
 const btnDeleteUser = document.getElementById("btnDeleteUser");
 const formEditUser = document.getElementById("formEditUser");
 const inputSelectRole = document.getElementById("inputSelectRole");
+
+const roles = [
+    { value: 'User', label: 'User' },
+    { value: 'Employee', label: 'Employee' },
+    { value: 'Admin', label: 'Admin' },
+];
+
+function getCurrentRole(user) {
+    if (user.UserEmpFK == null) return 'user';
+    if (user.EmpIsAdmin) return 'admin';
+    return 'employee';
+}
+document.getElementById("formPromoteUser").addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newRole = inputSelectRole.value;
+
+    await fetch(`/user`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedUser.UserIdPK, role: newRole })
+    });
+
+    modalPromote.hide();
+    // refresh table
+    tableBody.innerHTML = "";
+    const res = await fetch('/users');
+    const users = await res.json();
+    users.forEach((u, i) => renderUsers(u, i));
+});
 

@@ -53,7 +53,9 @@ async function startServer() {
             romania: "Romenien",
             contact: "Kontakt",
             FirstName: "Vorname",
-            LastName: "Nachname"
+            LastName: "Nachname",
+            überblick: "Überblick",
+
         }
     });
 
