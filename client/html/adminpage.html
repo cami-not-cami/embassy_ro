@@ -305,28 +305,28 @@
                         <form id="formSignup" class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
-                                <div class="invalid-feedback">Please enter your first name.</div>
+                                <div class="invalid-feedback">{{firstnameerror}}</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control" required>
-                                <div class="invalid-feedback">Please enter your last name.</div>
+                                <div class="invalid-feedback">{{lastnameerror}}</div>
                             </div>
                             <div class="mb-3 mt-3">
                                 <input id="inputSignupEmail" placeholder="Email" type="email" class="form-control" required>
-                                <div class="invalid-feedback">Please enter a valid email.</div>
+                                <div class="invalid-feedback">{{emailerror}}</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required>
-                                <div class="invalid-feedback">Please enter a password.</div>
+                                <div class="invalid-feedback">{{passworderror}}</div>
                             </div>
                             <div class="mb-3">
                                 <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="password" class="form-control" required>
-                                <div class="invalid-feedback">Passwords do not match.</div>
+                                <div class="invalid-feedback">{{passwordmatcherror}}</div>
                             </div>
                             <div class="d-flex justify-content-center mt-3">
                                 <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">{{clicklogin}}</a></p>
                             </div>
-                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                            <button type="submit" class="btn btn-primary">{{signup}}</button>
                         </form>
                     </div>
                 </div>
@@ -381,6 +381,14 @@
                                 <input id="inputEditEmail" placeholder="{{email}}" type="text" class="form-control" required>
                                 <label for="inputEditEmail" class="form-label">{{email}}</label>
                             </div>
+                            <div class="mb-3">
+                                <input id="inputEditTelephone" placeholder="{{email}}" type="text" class="form-control" required>
+                                <label for="inputEditTelephone" class="form-label">{{email}}</label>
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputEditDescription" placeholder="{{lastname}}" type="text" class="form-control" required>
+                                <label for="inputEditDescription" class="form-label">{{lastname}}</label>
+                            </div>
                             <button type="submit" class="btn btn-primary">{{edit}}</button>
                         </form>
                     </div>
@@ -412,12 +420,10 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{edit}}</div>
-                        <form id="formPromoteUser" class="needs-validation" novalidate>
-                            <select id="inputSelectRole" class="form-select" aria-label="Default select example">
-
-                            </select>
-                            <button type="submit" class="btn btn-primary">{{edit}}</button>
-                        </form>
+                        <div>
+                            {{promotionquestion}}
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btnPromote">Promote</button>
                     </div>
                 </div>
             </div>
