@@ -157,10 +157,10 @@ async function startServer() {
 
     //only the admin gets to use this, gives the user his role
     app.put("/editUser", (req, res) => {
-
+        const { userIDPK, firstname, lastname, email } = req.body;
             con.query(
-                'UPDATE user SET UserFirname=?, UserLastname=?, UserEmail=?,UserEmpFK=? WHERE UserIdPK=?',
-                [firstname, lastname, email, employeeFK,userIDPK],
+                'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? WHERE UserIdPK=?',
+                [firstname, lastname, email,userIDPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, id: result.insertId});
@@ -267,7 +267,6 @@ async function startServer() {
     });
 
     app.post("/createEmployee", verifyToken, async (req, res) => {
-
             con.query(
                 'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',
                 [empPhoneNumber, EmpIsAdmin, EmpDescription],
@@ -279,7 +278,7 @@ async function startServer() {
     })
     //you need to send the id in the body
    app.put("/editEmployee", verifyToken, async (req, res) => {
-       if(req.user.isAdmin == 1){
+       const { EmpIdPK, empPhoneNumber, EmpIsAdmin, EmpDescription } = req.body;
            con.query(
                'UPDATE employee SET EmpPhonenumber=?, EmpIsAdmin=?, EmpDescription=? WHERE EmpIdPK=?',
                [empPhoneNumber, EmpIsAdmin, EmpDescription, EmpIdPK],
@@ -288,7 +287,6 @@ async function startServer() {
                    res.json({success: true, id: result.insertId});
                }
            )
-       }
    })
     app.get("/html/createpost.html", (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
