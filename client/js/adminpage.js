@@ -32,3 +32,10 @@ function renderUsers(user, index) {
       </button>
     </td>`;
 }
+
+// GET ALL BUTTONS
+
+const btnDeleteUser = document.getElementById("btnDeleteUser");
+const formEditUser = document.getElementById("formEditUser");
+const inputSelectRole = document.getElementById("inputSelectRole");
+
