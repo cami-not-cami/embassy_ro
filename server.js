@@ -157,7 +157,7 @@ async function startServer() {
 
     //only the admin gets to use this, gives the user his role
     app.put("/editUser", (req, res) => {
-        if(req.user.isAdmin == 1){
+
             con.query(
                 'UPDATE user SET UserFirname=?, UserLastname=?, UserEmail=?,UserEmpFK=? WHERE UserIdPK=?',
                 [firstname, lastname, email, employeeFK,userIDPK],
@@ -166,7 +166,6 @@ async function startServer() {
                     res.json({success: true, id: result.insertId});
                 }
             )
-        }
     })
 
     //token
@@ -268,7 +267,7 @@ async function startServer() {
     });
 
     app.post("/createEmployee", verifyToken, async (req, res) => {
-        if(req.user.isAdmin == 1){
+
             con.query(
                 'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',
                 [empPhoneNumber, EmpIsAdmin, EmpDescription],
@@ -277,7 +276,6 @@ async function startServer() {
                     res.json({success: true, id: result.insertId});
                 }
             )
-        }
     })
     //you need to send the id in the body
    app.put("/editEmployee", verifyToken, async (req, res) => {

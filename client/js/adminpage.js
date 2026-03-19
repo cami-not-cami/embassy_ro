@@ -1,5 +1,6 @@
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
+let currentUser = null;
 
 const res = await fetch('/users');
 const users = await res.json();
@@ -43,58 +44,63 @@ function renderUsers(user, index) {
 }
 
 const formEditUser = document.getElementById('formEditUser');
+formEditUser.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    };
+
+    const firstname   = document.getElementById('inputEditFirstname').value;
+    const lastname    = document.getElementById('inputEditLastname').value;
+    const email       = document.getElementById('inputEditEmail').value;
+    const telephone   = document.getElementById('inputEditTelephone').value;
+    const description = document.getElementById('inputEditDescription').value;
+
+    console.log(firstname, lastname, email, telephone, description);
+    const res = await fetch("/editUser", {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({
+            userIDPK:   currentUser.UserIdPK,
+            firstname: "Cami",
+            lastname: "currentUser.lastname",
+            email: "currentUser.email",
+        })
+    });
+
+    if (currentUser.EmpIdPK) {
+        const res1 = await fetch("/editEmployee", {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({
+                EmpIdPK:       currentUser.EmpIdPK,
+                empPhoneNumber: "123",
+                EmpIsAdmin: 0,
+                EmpDescription: "currentUser.description",
+            })
+        });
+    }
+
+    if (res.ok && res.ok === true) {
+        bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+        tableBody.innerHTML = "";
+        const updated = await (await fetch('/users')).json();
+        updated.forEach((user, index) => renderUsers(user, index));
+    }
+});
 
 
-
-
-
-
-// Fix: rename openEditModal to match what you called in the event listener
 function openEditModal(user) {
+    currentUser = user;
     document.getElementById('inputEditFirstname').value  = user.UserFirstname  || '';
     document.getElementById('inputEditLastname').value   = user.UserLastname   || '';
     document.getElementById('inputEditEmail').value      = user.UserEmail      || '';
     document.getElementById('inputEditDescription').value = user.EmpDescription|| '';
-
     console.log("IN openEditModal");
     console.log(user);
-
-    formEditUser.addEventListener('submit', async event => {
-        const inputEditFirstName = document.getElementById('inputEditFirstName').value;
-        const inputEditLastname = document.getElementById('inputEditLastname').value;
-        const inputEditEmail = document.getElementById('inputEditEmail').value;
-        const inputEditTelephone = document.getElementById('inputEditTelephone').value;
-        const inputEditDescription = document.getElementById('inputEditDescription').value;
-
-        console.log("IN FORM EDIT USER");
-
-        const res = await fetch("/editUser",{
-            method: "PUT",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                firstname: inputEditFirstName,
-                lastname: inputEditLastname,
-                email: inputEditEmail,
-                employeeFK: user.UserEmpFK,
-                userIDPK: user.UserIDPK,
-            })
-        })
-
-        const res1 = await fetch("/editEmployee",{
-            method: "PUT",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                empPhoneNumber: inputEditTelephone,
-                EmpDescription: inputEditDescription,
-                EmpIdPK: user.UserEmpFK,
-            })
-        })
-
-    })
 }
 
 async function editUser() {
@@ -113,7 +119,6 @@ async function editUser() {
 
     if (res.ok) {
         bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
-        // Reload the table
         tableBody.innerHTML = "";
         const users = await (await fetch('/users')).json();
         users.forEach((user, index) => renderUsers(user, index));
