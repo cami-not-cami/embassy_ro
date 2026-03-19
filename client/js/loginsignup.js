@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-
             },
             body: JSON.stringify({ email: emailField,password: passField })
         })
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-                    window.location.href = "createpost.html"
 
                 } else {
                     console.log("Error:", data.error);

@@ -38,7 +38,11 @@ function renderUsers(user, index) {
 
     const editBtn = row.querySelector('.btn-success');
     editBtn.addEventListener('click', () => openEditModal(user));
+
+
 }
+
+const formEditUser = document.getElementById('formEditUser');
 
 
 
@@ -47,20 +51,58 @@ function renderUsers(user, index) {
 
 // Fix: rename openEditModal to match what you called in the event listener
 function openEditModal(user) {
-    document.getElementById('inputEditFirstname').value      = user.UserIdPK;
-    document.getElementById('inputEditLastname').value  = user.UserFirstname  || '';
-    document.getElementById('inputEditEmail').value   = user.UserLastname   || '';
-    document.getElementById('inputEditTelephone').value      = user.UserEmail      || '';
-    document.getElementById('inputEditDescription').value = user.UserEmpFK      || '';
+    document.getElementById('inputEditFirstname').value  = user.UserFirstname  || '';
+    document.getElementById('inputEditLastname').value   = user.UserLastname   || '';
+    document.getElementById('inputEditEmail').value      = user.UserEmail      || '';
+    document.getElementById('inputEditDescription').value = user.EmpDescription|| '';
+
+    console.log("IN openEditModal");
+    console.log(user);
+
+    formEditUser.addEventListener('submit', async event => {
+        const inputEditFirstName = document.getElementById('inputEditFirstName').value;
+        const inputEditLastname = document.getElementById('inputEditLastname').value;
+        const inputEditEmail = document.getElementById('inputEditEmail').value;
+        const inputEditTelephone = document.getElementById('inputEditTelephone').value;
+        const inputEditDescription = document.getElementById('inputEditDescription').value;
+
+        console.log("IN FORM EDIT USER");
+
+        const res = await fetch("/editUser",{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                firstname: inputEditFirstName,
+                lastname: inputEditLastname,
+                email: inputEditEmail,
+                employeeFK: user.UserEmpFK,
+                userIDPK: user.UserIDPK,
+            })
+        })
+
+        const res1 = await fetch("/editEmployee",{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                empPhoneNumber: inputEditTelephone,
+                EmpDescription: inputEditDescription,
+                EmpIdPK: user.UserEmpFK,
+            })
+        })
+
+    })
 }
 
 async function editUser() {
     const payload = {
-        userIDPK:    document.getElementById('editUserId').value,
-        firstname:   document.getElementById('editFirstname').value,
-        lastname:    document.getElementById('editLastname').value,
+        userIDPK:   users.dataset.userid,
+        firstname:   document.getElementById('inputEditFirstname').value,
+        lastname:    document.getElementById('inputEditLastname').value,
         email:       document.getElementById('editEmail').value,
-        employeeFK:  document.getElementById('editEmployeeFK').value,
     };
 
     const res = await fetch('/editUser', {
