@@ -7,12 +7,13 @@ users.forEach((user, index) => renderUsers(user, index));
 
 function renderUsers(user, index) {
     const row = tableBody.insertRow();
-
+    console.log(user);
     row.innerHTML = `
     <th scope="row" class="text-black">${index}</th>
     <td class="text-black">${user.UserFirstname  || '-'}</td>
     <td class="text-black">${user.UserLastname  || '-'}</td>
     <td class="text-black">${user.UserEmail  || '-'}</td>
+    
     <td>
       <button class="btn btn-success" data-user-id="${user.UserIdPK}">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -36,53 +37,5 @@ function renderUsers(user, index) {
     promoteBtn.addEventListener('click', () => openEditModal(user));
 }
 
-const inputSelectRole = document.getElementById("inputSelectRole");
-const modalPromote = new bootstrap.Modal(document.getElementById("modalPromote"));
-let selectedUser = null;
 
-function openEditModal(user) {
-    selectedUser = user;
-    const currentRole = getCurrentRole(user);
-
-    inputSelectRole.innerHTML = roles.map(r => `
-        <option value="${r.value}" ${r.value === currentRole ? 'selected' : ''}>${r.label}</option>
-    `).join('');
-
-    modalPromote.show();
-}
-
-// GET ALL BUTTONS
-
-const btnDeleteUser = document.getElementById("btnDeleteUser");
-const formEditUser = document.getElementById("formEditUser");
-const inputSelectRole = document.getElementById("inputSelectRole");
-
-const roles = [
-    { value: 'User', label: 'User' },
-    { value: 'Employee', label: 'Employee' },
-    { value: 'Admin', label: 'Admin' },
-];
-
-function getCurrentRole(user) {
-    if (user.UserEmpFK == null) return 'user';
-    if (user.EmpIsAdmin) return 'admin';
-    return 'employee';
-}
-document.getElementById("formPromoteUser").addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const newRole = inputSelectRole.value;
-
-    await fetch(`/user`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: selectedUser.UserIdPK, role: newRole })
-    });
-
-    modalPromote.hide();
-    // refresh table
-    tableBody.innerHTML = "";
-    const res = await fetch('/users');
-    const users = await res.json();
-    users.forEach((u, i) => renderUsers(u, i));
-});
 

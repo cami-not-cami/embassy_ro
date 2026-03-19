@@ -57,9 +57,9 @@ async function startServer() {
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
-    app.use('/uploads',express.static(path.join(__dirname,'uploads')));
-    app.use('/css', express.static(path.join(__dirname, 'client/css')));
 
+    app.use('/css', express.static(path.join(__dirname, 'client/css')));
+    app.use('/uploads',express.static(path.join(__dirname,'uploads')));
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
@@ -135,7 +135,7 @@ async function startServer() {
 
     app.get("/users", (req, res) => {
         con.query(
-            `SELECT u.UserIdPK, u.UserEmail, u.UserPassword, e.EmpIdPK
+            `SELECT u.UserIdPK, u.UserFirstname, u.UserLastname, u.UserEmail, u.UserPassword, e.EmpIdPK, e.EmpPhonenumber, e.EmpDescription, e.EmpIsAdmin
              FROM user u
                       LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK`, (err, results) => {
             if (err) return res.status(500).json({error: err.message});
