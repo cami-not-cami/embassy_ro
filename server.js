@@ -57,7 +57,9 @@ async function startServer() {
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
+
     app.use('/css', express.static(path.join(__dirname, 'client/css')));
+    app.use('/posts', express.static(path.join(__dirname, 'uploads/posts')));
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
@@ -246,6 +248,10 @@ async function startServer() {
             );
         }
     });
+    app.get("/uploads/posts/", async (req, res) => {
+        res.sendFile(path.join(__dirname, 'uploads/posts'));
+
+    })
     app.get("/html/createpost.html", (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));

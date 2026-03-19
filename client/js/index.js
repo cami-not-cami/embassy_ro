@@ -27,7 +27,7 @@ function renderPost(post, container) {
                </div>
            </div>`
         : "";
-
+    console.log(post.PostImagePath);
     const date = new Date(post.PostCreatedAt).toLocaleDateString();
 
     const postEl = document.createElement("div");
