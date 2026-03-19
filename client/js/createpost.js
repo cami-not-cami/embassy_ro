@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const file = fileInput.files[0];
 
         try {
-
             const formData = new FormData();
             formData.append('myFile', file);
 
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 body: formData
             });
-
             const uploadData = await uploadRes.json();
 
             if (!uploadRes.ok) {

@@ -35,6 +35,92 @@ function renderUsers(user, index) {
 
     const promoteBtn = row.querySelector('.btn-primary');
     promoteBtn.addEventListener('click', () => openEditModal(user));
+
+    const editBtn = row.querySelector('.btn-success');
+    editBtn.addEventListener('click', () => openEditModal(user));
+
+
+}
+
+const formEditUser = document.getElementById('formEditUser');
+
+
+
+
+
+
+// Fix: rename openEditModal to match what you called in the event listener
+function openEditModal(user) {
+    document.getElementById('inputEditFirstname').value  = user.UserFirstname  || '';
+    document.getElementById('inputEditLastname').value   = user.UserLastname   || '';
+    document.getElementById('inputEditEmail').value      = user.UserEmail      || '';
+    document.getElementById('inputEditDescription').value = user.EmpDescription|| '';
+
+    console.log("IN openEditModal");
+    console.log(user);
+
+    formEditUser.addEventListener('submit', async event => {
+        const inputEditFirstName = document.getElementById('inputEditFirstName').value;
+        const inputEditLastname = document.getElementById('inputEditLastname').value;
+        const inputEditEmail = document.getElementById('inputEditEmail').value;
+        const inputEditTelephone = document.getElementById('inputEditTelephone').value;
+        const inputEditDescription = document.getElementById('inputEditDescription').value;
+
+        console.log("IN FORM EDIT USER");
+
+        const res = await fetch("/editUser",{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                firstname: inputEditFirstName,
+                lastname: inputEditLastname,
+                email: inputEditEmail,
+                employeeFK: user.UserEmpFK,
+                userIDPK: user.UserIDPK,
+            })
+        })
+
+        const res1 = await fetch("/editEmployee",{
+            method: "PUT",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                empPhoneNumber: inputEditTelephone,
+                EmpDescription: inputEditDescription,
+                EmpIdPK: user.UserEmpFK,
+            })
+        })
+
+    })
+}
+
+async function editUser() {
+    const payload = {
+        userIDPK:   users.dataset.userid,
+        firstname:   document.getElementById('inputEditFirstname').value,
+        lastname:    document.getElementById('inputEditLastname').value,
+        email:       document.getElementById('editEmail').value,
+    };
+
+    const res = await fetch('/editUser', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+        // Reload the table
+        tableBody.innerHTML = "";
+        const users = await (await fetch('/users')).json();
+        users.forEach((user, index) => renderUsers(user, index));
+    } else {
+        const err = await res.json();
+        alert('Error: ' + err.error);
+    }
 }
 
 
