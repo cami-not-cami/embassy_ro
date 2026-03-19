@@ -57,9 +57,9 @@ async function startServer() {
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
-
+    app.use('/uploads',express.static(path.join(__dirname,'uploads')));
     app.use('/css', express.static(path.join(__dirname, 'client/css')));
-    app.use('/posts', express.static(path.join(__dirname, 'uploads/posts')));
+
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
