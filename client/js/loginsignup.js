@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     localStorage.setItem("token", data.token);
                     console.log(token);
                     checkUserRole(data.token);
+                    modal.
                 } else {
                     console.log("Error:", data.error);
                 }
@@ -77,7 +78,27 @@ async function checkUserRole(token){
 
         const data = await res.json();
 
+        const userRes = await fetch(`/user/${data.userIDPK}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const userData = await userRes.json();
+        const userJob = document.getElementById("userJob");
 
+        document.getElementById("userName").textContent  = userData.user.UserFirstname + " " + userData.user.UserLastname;
+        userJob.textContent   = userData.user.EmpDescription ?? "";
+        document.getElementById("userEmail").textContent = userData.user.UserEmail ?? "";
+
+        if(userData.user.EmpDescription == null)
+        {
+            userJob.classList.add = "d-none";
+        }
+        else
+        {
+            if(userJob.classList.contains("d-none"))
+            {
+                userJob.classList.remove("d-none");
+            }
+        }
 
         console.log("User info:", data);
 

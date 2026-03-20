@@ -289,7 +289,7 @@ async function startServer() {
         }
     })
     app.get('/api/userInfo',verifyToken, async (req, res) => {
-        const userIDPK = req.user.userIDPK;
+        const userIDPK = req.user.userId;
         const userRole = req.user.role;
         const isAdmin = req.user.isAdmin;
         return res.json({userIDPK, userRole,isAdmin});
@@ -311,21 +311,20 @@ async function startServer() {
     })
     app.get("/user/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
-            con.query(
-                `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,
-                        u.UserPassword,
-                        e.EmpIdPK,
-                        e.EmpPhonenumber,
-                        e.EmpDescription
-                 FROM user u
-                          LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK`,
-                [userIDPK],
-                (err, result) => {
-                    if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, user:result.affectedRows});
-                }
-            )
-    })
+        con.query(
+            `SELECT u.UserIdPK, u.UserFirstname, u.UserLastname, u.UserEmail,
+                    e.EmpIdPK, e.EmpPhonenumber, e.EmpDescription, e.EmpIsAdmin
+             FROM user u
+                      LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK
+             WHERE u.UserIdPK = ?`,
+            [userIDPK],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (result.length === 0) return res.status(404).json({ error: "User not found" });
+                res.json({ success: true, user: result[0] });
+            }
+        );
+    });
     //login no t
     app.post("/user/login", async (req, res) => {
         const {email, password} = req.body;
