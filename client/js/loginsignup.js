@@ -48,15 +48,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     localStorage.setItem("token", data.token);
                     console.log(token);
                     checkUserRole(data.token);
-                    modal.
+                    btnLogOut.classList.remove('d-none');
+
                 } else {
                     console.log("Error:", data.error);
                 }
             })
             .catch(err => console.log("Request failed:", err));
     })
-
     const btnLogOut = document.getElementById("btnLogOut");
+
     if(btnLogOut) {
         btnLogOut.addEventListener("click", async event => {
             localStorage.removeItem("token");
@@ -104,6 +105,10 @@ async function checkUserRole(token){
 
         // Hide login button, show logout
         document.getElementById("btnLogin")?.classList.add("d-none");
+
+        // Close login modal
+        const loginModal = bootstrap.Modal.getInstance(document.getElementById("modalLogin"));
+        if (loginModal) loginModal.hide();
 
         // Show post button if employee (has a role)
         if (data.userRole != null) {
