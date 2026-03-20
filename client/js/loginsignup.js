@@ -1,3 +1,4 @@
+import {json} from "express";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -5,12 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formSignup = document.getElementById("formSignup");
 
 
-    //GET USER INFO
-    const res=  fetch("/api/userInfo",{
-        headers: { "Authorization": `Bearer ${token}` }
-    } )
-        .then((response) => response.json())
-        .then((json) => console.log(json));
+
 
 
     formSignup.addEventListener('submit', async event => {
@@ -55,15 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-                    console.log(token)
+                    console.log(token);
+                    console.log("BEFORE USERROLE");
+                    checkUserRole(token);
                 } else {
                     console.log("Error:", data.error);
                 }
             })
             .catch(err => console.log("Request failed:", err));
     })
-
 })
+
+async function checkUserRole(token){
+    let isEmployee;
+    //GET USER INFO
+    const res=  fetch("/api/userInfo",{
+        headers: { "Authorization": `Bearer ${token}` }
+    } )
+        .then((response) => response.json())
+        .then((json) => {console.log(json);
+         isEmployee = JSON.parse(json);});
+
+    console.log(isEmployee.userRole);
+}
 
 async function createUser() {
     const res = await fetch('/users', {
