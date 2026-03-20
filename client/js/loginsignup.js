@@ -1,12 +1,9 @@
-import {json} from "express";
-
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
+    if (token) {
+        await checkUserRole(token);
+    }
     const formSignup = document.getElementById("formSignup");
-
-
-
 
 
     formSignup.addEventListener('submit', async event => {
@@ -23,15 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formSignup.checkValidity()) {
             console.log("create usaer")
             await createUser()
-        }
-        else
-        {
+        } else {
             event.preventDefault()
             event.stopPropagation()
         }
 
     })
-    const modal= document.getElementById("formLogin")
+    const modal = document.getElementById("formLogin")
 
     modal.addEventListener("submit", async event => {
         event.preventDefault()
@@ -44,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: emailField,password: passField })
+            body: JSON.stringify({email: emailField, password: passField})
         })
             .then(res => res.json())
             .then(data => {
@@ -60,19 +55,48 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => console.log("Request failed:", err));
     })
+
+    const btnLogOut = document.getElementById("btnLogOut");
+    if(btnLogOut) {
+        btnLogOut.addEventListener("click", async event => {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        })
+    }
 })
 
 async function checkUserRole(token){
-    let isEmployee;
-    //GET USER INFO
-    const res=  fetch("/api/userInfo",{
-        headers: { "Authorization": `Bearer ${token}` }
-    } )
-        .then((response) => response.json())
-        .then((json) => {console.log(json);
-         isEmployee = JSON.parse(json);});
+    try {
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
 
-    console.log(isEmployee.userRole);
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+        console.log("User info:", data);
+
+        // Hide login button, show logout
+        document.getElementById("btnLogin")?.classList.add("d-none");
+
+        // Show post button if employee (has a role)
+        if (data.userRole != null) {
+            document.querySelector('a[href="createpost.html"]')?.classList.remove("d-none");
+        }
+
+        // Show admin button if admin
+        if (data.isAdmin === 1) {
+            document.querySelector('a[href="adminpage.html"]')?.classList.remove("d-none");
+        }
+
+        window.location.reload();
+
+    } catch (err) {
+        console.log("checkUserRole failed:", err);
+    }
 }
 
 async function createUser() {
