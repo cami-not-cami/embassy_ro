@@ -182,11 +182,11 @@ async function startServer() {
     app.get("/api/commentLike", (req, res) => {
         con.query(
             `SELECT
-                 p.PostIdPK,
-                 p.PostTitle,
+                 c.ComIdPK,
+                 c.ComContent,
                  COUNT(CASE WHEN ld.LikDisIsLike = 1 THEN 1 END) AS likes,
                  COUNT(CASE WHEN ld.LikDisIsLike = 0 THEN 1 END) AS dislikes
-             FROM post p
+             FROM comment c
                       LEFT JOIN likedislike ld
                                 ON ld.LikDisPostComId = c.ComIdPK AND ld.LikDisIsPost = 0
              GROUP BY  c.ComIdPK, c.ComContent`,
@@ -196,11 +196,11 @@ async function startServer() {
             });
     })
     app.post('/api/likeDislike', (req, res) => {
-        const {userID, postComID,isPost,isLike} = req.body;
-        if (req.user.role != null) {
+        const {LikDisUserIdFK, postComID,isPost,isLike} = req.body;
+        {
             con.query(
                 'INSERT INTO likedislike ( LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?,?)',
-                [userID, postComID, isPost,isLike],
+                [LikDisUserIdFK, postComID, isPost,isLike],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, id: result.insertId});
