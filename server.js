@@ -272,7 +272,6 @@ async function startServer() {
 
         res.send(html);
     });
-
     app.get("/users", (req, res) => {
         con.query(
             `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,
@@ -287,7 +286,6 @@ async function startServer() {
                 res.json(results);
             });
     });
-
     app.get("/html/createpost.html", (req, res) => {
         let html = fs.readFileSync(path.join(__dirname, 'client/html/createpost.html'), "utf-8");
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
