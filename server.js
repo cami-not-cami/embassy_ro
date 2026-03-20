@@ -50,6 +50,9 @@ async function startServer() {
             FirstName: "Vorname",
             LastName: "Nachname",
             überblick: "Überblick",
+            email: "Email",
+            password: "Passwort",
+
 
         }
     });
@@ -198,14 +201,14 @@ async function startServer() {
     //token
     app.delete("/user/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
-        const {userIDPK} = req.params.id;
+        const userIDPK = req.params.id;
         if (req.user.isAdmin === 1) {
             con.query(
                 'DELETE FROM user WHERE UserIdPK=?',
                 [userIDPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, id: result.insertId});
+                    res.json({success: true, user:result.affectedRows});
                 }
             )
         }
