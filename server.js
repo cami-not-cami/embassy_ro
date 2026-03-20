@@ -25,6 +25,7 @@ const con = mysql.createPool({
     waitForConnections: true,
     database: env.parsed.DBNAME,
     connectionLimit: 10,
+    connectTimeout: 5000,
 });
 const secret = env.parsed.SECRETKEY;
 
@@ -41,7 +42,34 @@ async function startServer() {
             FirstName: "Prenume",
             LastName: "Nume",
             überblick: "Viziune",
-
+            email: "Email",
+            password: "Parolă",
+            information: "Informații",
+            pictures: "Poze",
+            aboutus: "Despre noi",
+            Botschafter: "Ambasade",
+            Botschaftsteam: "Echipa ambasadei",
+            actual: "Actual",
+            visa: " Servicii consulare.Vize",
+            konsular: "Taxe consulare",
+            datenschutz: "Protecția datelor",
+            konsularform: "Formulare consulat",
+            wirtschaft: "Wirtschafts-Bureau",
+            förderung: "Förderung der wirtschaftlichen Zusammenarbeit",
+            investieren: "Österreichische Unternehmen in Rumänien investieren",
+            ausstellungen: "Ausstellungen",
+            bilaterale: "Bilaterale Beziehungen",
+            politischebeziehungen: "Politische Beziehungen",
+            wirtschaftlichezusammenarbeit: "Wirtschaftliche Zusammenarbeit",
+            kulturelle: "Kulturelle und wissenschaftliche Beziehungen",
+            institut: "Institutionelle Präsenz",
+            honorarkonsulate: "Honorarkonsulate",
+            kulturinstitut: "Honorarkonsulate",
+            vertretungen: "Vertretungen",
+            logout: "Abmelden",
+            signup: "Anmelden",
+            inputerror:"Ungültige Eingabe",
+            passwordmatcherror:"Die Passwörter stimmen nicht überein"
         },
         de: {
             home: "Startseite",
@@ -135,9 +163,43 @@ async function startServer() {
         }
     }
 
+    app.get("/api/postLike", (req, res) => {
+        con.query(
+            `SELECT p.PostIdPK,
+                 p.PostTitle,
+                 SUM(CASE WHEN ld.LikDisIsLike = 1 THEN 1 ELSE 0 END) AS likes,
+                 SUM(CASE WHEN ld.LikDisIsLike = 0 THEN 1 ELSE 0 END) AS dislikes
+             FROM post p
+                      LEFT JOIN likedislike ld
+                                ON ld.LikDisPostComId = p.PostIdPK AND ld.LikDisIsPost = 1
+             GROUP BY p.PostIdPK, p.PostTitle`,
+            (err, results) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.json(results);
+            }
+        );
+    });
+    app.get("/api/commentLike", (req, res) => {
+        con.query(
+            `SELECT * FROM likedislike `,
+            (err, results) => {
+                if (err) return res.status(500).json({error: err.message});
+                res.json(results);
+            });
 
+    })
     app.post('/api/likeDislike', (req, res) => {
-        const {} = req.body;
+        const {userID, postComID,isPost,isLike} = req.body;
+        if (req.user.role != null) {
+            con.query(
+                'INSERT INTO likedislike ( LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?,?)',
+                [userID, postComID, isPost,isLike],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+        }
     })
 
     app.post('/upload', (req, res) => {
@@ -247,6 +309,23 @@ async function startServer() {
             )
         }
     })
+    app.get("/user/:id", verifyToken, (req, res) => {
+        const userIDPK = req.params.id;
+            con.query(
+                `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,
+                        u.UserPassword,
+                        e.EmpIdPK,
+                        e.EmpPhonenumber,
+                        e.EmpDescription
+                 FROM user u
+                          LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK`,
+                [userIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, user:result.affectedRows});
+                }
+            )
+    })
     //login no t
     app.post("/user/login", async (req, res) => {
         const {email, password} = req.body;
@@ -316,9 +395,9 @@ async function startServer() {
             );
         }
     });
-
-
     app.post("/createEmployee", verifyToken, async (req, res) => {
+        const {empPhoneNumber, EmpIsAdmin, EmpDescription} = req.body;
+
         if (req.user.isAdmin === 1) {
             con.query(
                 'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',

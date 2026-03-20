@@ -5,12 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const formSignup = document.getElementById("formSignup");
 
 
-    //GET USER INFO
-    const res=  fetch("/api/userInfo",{
-        headers: { "Authorization": `Bearer ${token}` }
-    } )
-        .then((response) => response.json())
-        .then((json) => console.log(json));
 
 
     formSignup.addEventListener('submit', async event => {
@@ -55,7 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-                    console.log(token)
+
+
                 } else {
                     console.log("Error:", data.error);
                 }
