@@ -14,7 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-
 const port = 8080;
 let i18n;
 // MySQL
@@ -40,7 +39,9 @@ async function startServer() {
             romania: "România",
             contact: "Contactaţi-ne",
             FirstName: "Prenume",
-            LastName: "Nume"
+            LastName: "Nume",
+            überblick: "Viziune",
+
         },
         de: {
             home: "Startseite",
@@ -121,7 +122,6 @@ async function startServer() {
             return res.status(403).json({success: false, message: "Invalid token"});
         }
     };
-
     function checkFileType(file, cb) {
 
         const filetypes = /jpeg|jpg|png/;
@@ -134,6 +134,11 @@ async function startServer() {
             cb('Error: Images only! (jpeg, jpg, png)');
         }
     }
+
+
+    app.post('/api/likeDislike', (req, res) => {
+        const {} = req.body;
+    })
 
     app.post('/upload', (req, res) => {
         upload(req, res, (err) => {
@@ -203,8 +208,6 @@ async function startServer() {
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
         res.send(html);
     });
-
-
     //only the admin gets to use this, gives the user his role
     app.put("/editUser", verifyToken, (req, res) => {
         const {userIDPK, firstname, lastname, email} = req.body;
@@ -223,7 +226,12 @@ async function startServer() {
                 "Admin is not 1  " + req.user.isAdmin);
         }
     })
-
+    app.get('/api/userInfo',verifyToken, async (req, res) => {
+        const userIDPK = req.user.userIDPK;
+        const userRole = req.user.role;
+        const isAdmin = req.user.isAdmin;
+        return res.json({userIDPK, userRole,isAdmin});
+    })
     //token
     app.delete("/user/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
@@ -290,7 +298,6 @@ async function startServer() {
         console.log(`App listening at http://localhost:${port}`);
     });
 
-
     app.post("/createPost", verifyToken, async (req, res) => {
         const {title, content, createdAt, updatedAt, imagePath} = req.body;
         const userRole = req.user.role;
@@ -309,6 +316,7 @@ async function startServer() {
             );
         }
     });
+
 
     app.post("/createEmployee", verifyToken, async (req, res) => {
         if (req.user.isAdmin === 1) {
