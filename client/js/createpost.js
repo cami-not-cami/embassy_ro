@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const title = inputTitle.value;
         const content = inputContent.value;
-
         const file = fileInput.files[0];
 
         try {

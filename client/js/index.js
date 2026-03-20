@@ -22,10 +22,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 function renderPost(post, container) {
     const imageHtml = post.PostImagePath
         ? `<div class="row">
-               <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
-                   <img src="${post.PostImagePath}" class="w-100 object-fit-cover" alt="Post image">
-               </div>
-           </div>`
+           <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
+               <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;" alt="Post image">
+           </div>
+       </div>`
         : "";
     console.log(post.PostImagePath);
     const date = new Date(post.PostCreatedAt).toLocaleDateString();
