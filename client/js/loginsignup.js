@@ -1,4 +1,5 @@
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     const formSignup = document.getElementById("formSignup");
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formSignup.classList.add('was-validated')
 
         if (formSignup.checkValidity()) {
+            console.log("create usaer")
             await createUser()
         }
         else
@@ -31,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("IN MODAL")
         const emailField = document.getElementById("inputLoginEmail").value
         const passField = document.getElementById("inputLoginPassword").value
-        console.log(passField)
+
         fetch("/user/login", {
             method: "POST",
             headers: {
@@ -44,14 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-
+                    console.log(token)
                 } else {
                     console.log("Error:", data.error);
                 }
             })
             .catch(err => console.log("Request failed:", err));
     })
-
 
 })
 
