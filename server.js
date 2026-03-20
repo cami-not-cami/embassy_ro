@@ -121,15 +121,22 @@ async function startServer() {
     app.get('/html', (req, res) => {
         res.sendFile(path.join(__dirname, 'client/html/index.html'));
     });
-    const storage = multer.diskStorage({
+    const storagePosts = multer.diskStorage({
         destination: './uploads/posts',
+        filename: function (req, file, cb) {
+            cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
+        }
+    });
+    const storageUserPFP = multer.diskStorage({
+        destination: './uploads/pfps',
         filename: function (req, file, cb) {
             cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
         }
     });
     // Add file type validation
     const upload = multer({
-        storage: storage,
+        storagePosts: storagePosts ,
+        storageUserPFP: storageUserPFP,
         limits: {fileSize: 1000000},
         fileFilter: function (req, file, cb) {
             checkFileType(file, cb);
@@ -423,7 +430,6 @@ async function startServer() {
     });
     app.post("/createEmployee", verifyToken, async (req, res) => {
         const {empPhoneNumber, EmpIsAdmin, EmpDescription} = req.body;
-
         if (req.user.isAdmin === 1) {
             con.query(
                 'INSERT INTO employee ( EmpPhonenumber,EmpIsAdmin,EmpDescription) VALUES (?, ?, ?)',
