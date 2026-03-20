@@ -1,10 +1,9 @@
-
-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
+    if (token) {
+        await checkUserRole(token);
+    }
     const formSignup = document.getElementById("formSignup");
-
-
 
 
     formSignup.addEventListener('submit', async event => {
@@ -21,15 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formSignup.checkValidity()) {
             console.log("create usaer")
             await createUser()
-        }
-        else
-        {
+        } else {
             event.preventDefault()
             event.stopPropagation()
         }
 
     })
-    const modal= document.getElementById("formLogin")
+    const modal = document.getElementById("formLogin")
 
     modal.addEventListener("submit", async event => {
         event.preventDefault()
@@ -42,14 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: emailField,password: passField })
+            body: JSON.stringify({email: emailField, password: passField})
         })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-
+                    console.log(token);
+                    checkUserRole(data.token);
+                    btnLogOut.classList.remove('d-none');
 
                 } else {
                     console.log("Error:", data.error);
@@ -57,8 +56,75 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(err => console.log("Request failed:", err));
     })
+    const btnLogOut = document.getElementById("btnLogOut");
 
+    if(btnLogOut) {
+        btnLogOut.addEventListener("click", async event => {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        })
+    }
 })
+
+async function checkUserRole(token){
+    try {
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+
+        const userRes = await fetch(`/user/${data.userIDPK}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const userData = await userRes.json();
+        const userJob = document.getElementById("userJob");
+
+        document.getElementById("userName").textContent  = userData.user.UserFirstname + " " + userData.user.UserLastname;
+        userJob.textContent   = userData.user.EmpDescription ?? "";
+        document.getElementById("userEmail").textContent = userData.user.UserEmail ?? "";
+
+        if(userData.user.EmpDescription == null)
+        {
+            userJob.classList.add = "d-none";
+        }
+        else
+        {
+            if(userJob.classList.contains("d-none"))
+            {
+                userJob.classList.remove("d-none");
+            }
+        }
+
+        console.log("User info:", data);
+
+        // Hide login button, show logout
+        document.getElementById("btnLogin")?.classList.add("d-none");
+
+        // Close login modal
+        const loginModal = bootstrap.Modal.getInstance(document.getElementById("modalLogin"));
+        if (loginModal) loginModal.hide();
+
+        // Show post button if employee (has a role)
+        if (data.userRole != null) {
+            document.querySelector('a[href="createpost.html"]')?.classList.remove("d-none");
+        }
+
+        // Show admin button if admin
+        if (data.isAdmin === 1) {
+            document.querySelector('a[href="adminpage.html"]')?.classList.remove("d-none");
+        }
+
+
+    } catch (err) {
+        console.log("checkUserRole failed:", err);
+    }
+}
 
 async function createUser() {
     const res = await fetch('/users', {
