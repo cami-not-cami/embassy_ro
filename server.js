@@ -151,7 +151,6 @@ async function startServer() {
         }
     };
     function checkFileType(file, cb) {
-
         const filetypes = /jpeg|jpg|png/;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
@@ -165,10 +164,11 @@ async function startServer() {
 
     app.get("/api/postLike", (req, res) => {
         con.query(
-            `SELECT p.PostIdPK,
+            `SELECT
+                 p.PostIdPK,
                  p.PostTitle,
-                 SUM(CASE WHEN ld.LikDisIsLike = 1 THEN 1 ELSE 0 END) AS likes,
-                 SUM(CASE WHEN ld.LikDisIsLike = 0 THEN 1 ELSE 0 END) AS dislikes
+                 COUNT(CASE WHEN ld.LikDisIsLike = 1 THEN 1 END) AS likes,
+                 COUNT(CASE WHEN ld.LikDisIsLike = 0 THEN 1 END) AS dislikes
              FROM post p
                       LEFT JOIN likedislike ld
                                 ON ld.LikDisPostComId = p.PostIdPK AND ld.LikDisIsPost = 1
@@ -181,12 +181,19 @@ async function startServer() {
     });
     app.get("/api/commentLike", (req, res) => {
         con.query(
-            `SELECT * FROM likedislike `,
+            `SELECT
+                 p.PostIdPK,
+                 p.PostTitle,
+                 COUNT(CASE WHEN ld.LikDisIsLike = 1 THEN 1 END) AS likes,
+                 COUNT(CASE WHEN ld.LikDisIsLike = 0 THEN 1 END) AS dislikes
+             FROM post p
+                      LEFT JOIN likedislike ld
+                                ON ld.LikDisPostComId = c.ComIdPK AND ld.LikDisIsPost = 0
+             GROUP BY  c.ComIdPK, c.ComContent`,
             (err, results) => {
                 if (err) return res.status(500).json({error: err.message});
                 res.json(results);
             });
-
     })
     app.post('/api/likeDislike', (req, res) => {
         const {userID, postComID,isPost,isLike} = req.body;
@@ -201,7 +208,28 @@ async function startServer() {
             )
         }
     })
-
+    app.post("/api/comment", (req, res) => {
+        const { ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent } = req.body;
+        con.query(
+            `INSERT INTO comment (ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent) 
+         VALUES (?, ?, ?, ?)`,
+            [ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent],
+            (err, results) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.json({ message: "Comment created", id: results.insertId });
+            }
+        );
+    });
+    app.get("/api/comment/:postId", (req, res) => {
+        con.query(
+            `SELECT * FROM comment WHERE ComPostIdFK = ?`,
+            [req.params.postId],
+            (err, results) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.json(results);
+            }
+        );
+    });
     app.post('/upload', (req, res) => {
         upload(req, res, (err) => {
             if (err) {
