@@ -200,7 +200,12 @@ async function startServer() {
                 "Admin is not 1  " + req.user.isAdmin);
         }
     })
-
+    app.get('/api/userInfo',verifyToken, async (req, res) => {
+        const userIDPK = req.user.userIDPK;
+        const userRole = req.user.role;
+        const isAdmin = req.user.isAdmin;
+        return res.json({userIDPK, userRole,isAdmin});
+    })
     //token
     app.delete("/user/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
@@ -267,7 +272,6 @@ async function startServer() {
         console.log(`App listening at http://localhost:${port}`);
     });
 
-
     app.post("/createPost", verifyToken, async (req, res) => {
         const {title, content, createdAt, updatedAt, imagePath} = req.body;
         const userRole = req.user.role;
@@ -286,6 +290,7 @@ async function startServer() {
             );
         }
     });
+
 
     app.post("/createEmployee", verifyToken, async (req, res) => {
         if (req.user.isAdmin === 1) {

@@ -4,6 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     const formSignup = document.getElementById("formSignup");
 
+
+    //GET USER INFO
+    const res=  fetch("/api/userInfo",{
+        headers: { "Authorization": `Bearer ${token}` }
+    } )
+        .then((response) => response.json())
+        .then((json) => console.log(json));
+
+
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
         const confirmField = document.getElementById("inputSignupConfirmPassword")
@@ -30,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modal.addEventListener("submit", async event => {
         event.preventDefault()
-        console.log("IN MODAL")
+
         const emailField = document.getElementById("inputLoginEmail").value
         const passField = document.getElementById("inputLoginPassword").value
 
