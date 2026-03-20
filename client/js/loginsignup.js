@@ -47,8 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
                     console.log(token);
-                    console.log("BEFORE USERROLE");
-                    checkUserRole(token);
+                    checkUserRole(data.token);
                 } else {
                     console.log("Error:", data.error);
                 }
@@ -77,6 +76,9 @@ async function checkUserRole(token){
         }
 
         const data = await res.json();
+
+
+
         console.log("User info:", data);
 
         // Hide login button, show logout
@@ -92,7 +94,6 @@ async function checkUserRole(token){
             document.querySelector('a[href="adminpage.html"]')?.classList.remove("d-none");
         }
 
-        window.location.reload();
 
     } catch (err) {
         console.log("checkUserRole failed:", err);
