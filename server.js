@@ -196,7 +196,9 @@ async function startServer() {
     })
 
     //token
-    app.delete("/user/id", verifyToken, (req, res) => {
+    app.delete("/user/:id", verifyToken, (req, res) => {
+        console.log("IM HERE");
+        const {userIDPK} = req.params.id;
         if (req.user.isAdmin === 1) {
             con.query(
                 'DELETE FROM user WHERE UserIdPK=?',
