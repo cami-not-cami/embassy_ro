@@ -29,7 +29,7 @@
                     <a class="nav-link active" aria-current="page" href="#">{{home}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{contact}}</a>
+                    <a class="nav-link active" aria-current="page" href="contact">{{contact}}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="#">{{romania}}</a>
@@ -405,6 +405,31 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade">
+    <div class="container">
+        <div class="col">
+            <div id="imageContainer"></div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="d-flex align-items-center justify-content-between container-fluid">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:48px;height:48px;color:white;font-weight:bold;">
+                            ${(post.EmpFirstname?.[0] ?? "?").toUpperCase()}
+                        </div>
+                        <div>
+                            <div class="fw-bold">${post.EmpFirstname ?? ""} ${post.EmpLastname ?? ""}</div>
+                            <div class="text-muted small">${post.EmpJobTitle ?? ""}</div>
+                        </div>
+                    </div>
+                    <div class="text-muted small">${date}</div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

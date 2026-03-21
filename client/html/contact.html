@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/override.css">
     <title>Title</title>
 </head>
 <body>
@@ -54,6 +57,33 @@
         </button>
     </div>
 </nav>
+
+<header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
+
+<!-- TEAM SECTION -->
+<div class="container-fluid py-5 px-4 px-md-5">
+
+    <!-- Loading state -->
+    <div id="loadingState" class="text-center py-5">
+        <div class="spinner-border" style="color: #98768e;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Error state -->
+    <div id="errorState" class="text-center py-5 d-none">
+        <p class="text-muted">Could not load team members.</p>
+    </div>
+
+    <!-- Employee grid -->
+    <div id="employeeGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 d-none">
+        <!-- Cards injected here by contact.js -->
+    </div>
+
+    <!-- Decorative divider -->
+    <hr class="divider-line mt-5">
+</div>
+
 
 <!-- DRAWER/OFFCANVAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
@@ -351,5 +381,6 @@
     </div>
 </footer>
 <script type="module" src="../js/loginsignup.js"></script>
+<script type="module" src="../js/contact.js"></script>
 </body>
 </html>

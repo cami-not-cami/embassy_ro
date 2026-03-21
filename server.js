@@ -298,6 +298,16 @@ async function startServer() {
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
         res.send(html);
     });
+    app.get("/contact", (req, res) => {
+        const locale = req.query.lang || "de";
+        i18n.locale = locale;
+
+        let html = fs.readFileSync(path.join(__dirname, 'client/html/contact.html'), "utf-8");
+        html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
+        res.send(html);
+    });
+
+
     //only the admin gets to use this, gives the user his role
     app.put("/editUser", verifyToken, (req, res) => {
         const {userIDPK, firstname, lastname, email} = req.body;
