@@ -124,24 +124,34 @@ async function startServer() {
     const storagePosts = multer.diskStorage({
         destination: './uploads/posts',
         filename: function (req, file, cb) {
-            cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
+            const nameWithoutExt = path.basename(file.originalname, path.extname(file.originalname));
+            cb(null, nameWithoutExt + '-' + Date.now() + path.extname(file.originalname));
         }
     });
     const storageUserPFP = multer.diskStorage({
         destination: './uploads/pfps',
         filename: function (req, file, cb) {
-            cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
+            const nameWithoutExt = path.basename(file.originalname, path.extname(file.originalname));
+            cb(null, nameWithoutExt + '-' + Date.now() + path.extname(file.originalname));
         }
     });
-    // Add file type validation
-    const upload = multer({
-        storagePosts: storagePosts ,
-        storageUserPFP: storageUserPFP,
-        limits: {fileSize: 1000000},
+
+    const uploadPost = multer({
+        storage: storagePosts,
+        limits: { fileSize: 1000000 },
         fileFilter: function (req, file, cb) {
             checkFileType(file, cb);
         }
     }).single('myFile');
+
+    const uploadPFP = multer({
+        storage: storageUserPFP,
+        limits: { fileSize: 1000000 },
+        fileFilter: function (req, file, cb) {
+            checkFileType(file, cb);
+        }
+    }).single('myFile');
+
     const verifyToken = (req, res, next) => {
         const token = req.headers.authorization?.split(' ')[1];
 
@@ -237,8 +247,32 @@ async function startServer() {
             }
         );
     });
-    app.post('/upload', (req, res) => {
-        upload(req, res, (err) => {
+    app.post('/upload/post', (req, res) => {
+        uploadPost(req, res, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({error: err});
+            }
+            if (!req.file) {
+                return res.status(400).json({error: 'Please send file'});
+            }
+            try {
+                const filePath = req.file.path;
+
+                res.json({
+                    success: true,
+                    message: 'File uploaded!',
+                    filePath: filePath
+                });
+                console.log(filePath);
+            } catch (error) {
+                console.error('Error:', error);
+                res.status(500).json({error: 'Upload failed'});
+            }
+        });
+    });
+    app.post('/upload/pfp', (req, res) => {
+        uploadPFP(req, res, (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({error: err});
@@ -413,7 +447,7 @@ async function startServer() {
     app.post("/createPost", verifyToken, async (req, res) => {
         const {title, content, createdAt, updatedAt, imagePath} = req.body;
         const userRole = req.user.role;
-
+        console.log(userRole);
         if (userRole == null) {
             return res.status(403).json({error: "Only employees can create posts"});
         } else {
