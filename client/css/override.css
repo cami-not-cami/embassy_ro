@@ -1,18 +1,114 @@
 :root {
-    --bs-primary: #98768e;
-    --bs-warning: #d3b8c5;
-    --bs-danger: #d8928b;
-    --bs-light: #f6d4cf;
-    --dark: #281e30;
-    --btn-primary: #98768e;
+    /* Override Bootstrap's semantic colors */
+    --bs-primary:           #98768e;
+    --bs-primary-rgb:       152, 118, 142;
+    --bs-warning:           #d3b8c5;
+    --bs-warning-rgb:       211, 184, 197;
+    --bs-danger:            #d8928b;
+    --bs-danger-rgb:        216, 146, 139;
+    --bs-light:             #f6d4cf;
+    --bs-light-rgb:         246, 212, 207;
+    --bs-dark:              #281e30;
+    --bs-dark-rgb:          40, 30, 48;
+
+    --clr-plum:             #98768e;
+    --clr-plum-dark:        #6a4a7a;
+    --clr-blush:            #f6d4cf;
+    --clr-blush-mid:        #f0c8c0;
+    --clr-blush-deep:       #edd4cc;
+    --clr-rose:             #d3b8c5;
+    --clr-coral:            #d8928b;
+    --clr-ink:              #281e30;
 }
 
-.dark{
-    background-color: var(--bs-primary);
+
+/* Buttons */
+.btn-primary {
+    --bs-btn-bg:                var(--clr-plum);
+    --bs-btn-border-color:      var(--clr-plum);
+    --bs-btn-hover-bg:          var(--clr-plum-dark);
+    --bs-btn-hover-border-color:var(--clr-plum-dark);
+    --bs-btn-active-bg:         var(--clr-plum-dark);
+    --bs-btn-color:             #fff;
+    --bs-btn-hover-color:       #fff;
+    --bs-btn-active-color:      #fff;
 }
-.warning{
-    background-color: var(--bs-warning);
+.btn-outline-primary {
+    --bs-btn-color:             var(--clr-plum);
+    --bs-btn-border-color:      var(--clr-plum);
+    --bs-btn-hover-bg:          var(--clr-plum);
+    --bs-btn-hover-border-color:var(--clr-plum);
+    --bs-btn-hover-color:       #fff;
 }
+.btn-outline-success {
+    /* keep success green but unify focus ring */
+}
+
+/* Navbar / backgrounds */
+.bg-primary  { background-color: var(--clr-plum)      !important; }
+.bg-warning  { background-color: var(--clr-rose)       !important; }
+.bg-danger   { background-color: var(--clr-coral)      !important; }
+.bg-light    { background-color: var(--clr-blush)      !important; }
+.bg-dark     { background-color: var(--clr-ink)        !important; }
+
+/* Text colors */
+.text-primary { color: var(--clr-plum)  !important; }
+.text-warning { color: var(--clr-rose)  !important; }
+.text-danger  { color: var(--clr-coral) !important; }
+.text-dark    { color: var(--clr-ink)   !important; }
+
+/* Border colors */
+.border-primary { border-color: var(--clr-plum)  !important; }
+.border-warning { border-color: var(--clr-rose)  !important; }
+.border-danger  { border-color: var(--clr-coral) !important; }
+
+/* Navbar */
+.navbar-light .navbar-brand,
+.navbar-light .nav-link { color: var(--clr-ink); }
+.navbar-light .nav-link:hover { color: var(--clr-plum); }
+
+/* Accordion */
+.accordion-button:not(.collapsed) {
+    background-color: var(--clr-blush);
+    color: var(--clr-ink);
+    box-shadow: inset 0 -1px 0 rgba(152,118,142,.2);
+}
+.accordion-button:focus {
+    box-shadow: 0 0 0 .2rem rgba(152,118,142,.25);
+}
+
+/* Form controls */
+.form-control:focus {
+    border-color: var(--clr-plum);
+    box-shadow: 0 0 0 .2rem rgba(152,118,142,.25);
+}
+
+
+/* Backgrounds */
+.bg-plum        { background-color: var(--clr-plum)       !important; }
+.bg-plum-dark   { background-color: var(--clr-plum-dark)  !important; }
+.bg-blush       { background-color: var(--clr-blush)      !important; }
+.bg-blush-mid   { background-color: var(--clr-blush-mid)  !important; }
+.bg-blush-deep  { background-color: var(--clr-blush-deep) !important; }
+.bg-rose        { background-color: var(--clr-rose)       !important; }
+.bg-coral       { background-color: var(--clr-coral)      !important; }
+.bg-ink         { background-color: var(--clr-ink)        !important; }
+
+/* Text */
+.text-plum      { color: var(--clr-plum)      !important; }
+.text-plum-dark { color: var(--clr-plum-dark) !important; }
+.text-blush     { color: var(--clr-blush)     !important; }
+.text-rose      { color: var(--clr-rose)      !important; }
+.text-coral     { color: var(--clr-coral)     !important; }
+.text-ink       { color: var(--clr-ink)       !important; }
+
+/* Borders */
+.border-plum    { border-color: var(--clr-plum)  !important; }
+.border-rose    { border-color: var(--clr-rose)  !important; }
+.border-coral   { border-color: var(--clr-coral) !important; }
+.border-ink     { border-color: var(--clr-ink)   !important; }
+
+
 .btn:focus, .btn:active {
     box-shadow: none !important;
     outline: none !important;
@@ -33,14 +129,14 @@ header.masthead .masthead-subheading {
     font-style: italic;
     line-height: 1.5rem;
     margin-bottom: 25px;
-    font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 header.masthead .masthead-heading {
     font-size: 3.25rem;
     font-weight: 700;
     line-height: 3.25rem;
     margin-bottom: 2rem;
-    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -50,20 +146,18 @@ header.masthead .masthead-heading {
     }
     header.masthead .masthead-subheading {
         font-size: 2.25rem;
-        font-style: italic;
         line-height: 2.25rem;
         margin-bottom: 2rem;
     }
     header.masthead .masthead-heading {
         font-size: 4.5rem;
-        font-weight: 700;
         line-height: 4.5rem;
         margin-bottom: 4rem;
     }
 }
 
 .data-section {
-    border-left: 4px solid #98768e;
+    border-left: 4px solid var(--clr-plum);
     padding-left: 1rem;
     margin-bottom: 1.25rem;
 }
@@ -72,20 +166,20 @@ header.masthead .masthead-heading {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #98768e;
+    color: var(--clr-plum);
     margin-bottom: 0.15rem;
 }
 .data-value {
     font-size: 0.95rem;
-    color: #281e30;
+    color: var(--clr-ink);
     margin-bottom: 0;
 }
 .section-divider {
     border: none;
     height: 2px;
-    background: linear-gradient(to right, #98768e, transparent);
+    background: linear-gradient(to right, var(--clr-plum), transparent);
     margin: 2rem 0;
 }
 #staticTitle {
-    color: #281e30;
+    color: var(--clr-ink);
 }
