@@ -26,13 +26,13 @@
                     <a class="nav-link active" aria-current="page" href="?lang=de">DE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{home}}</a>
+                    <a class="nav-link active" aria-current="page" href="/">{{home}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{contact}}</a>
+                    <a class="nav-link active" aria-current="page" href="contact">{{contact}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{romania}}</a>
+                    <a class="nav-link active" aria-current="page" href="romania">{{romania}}</a>
                 </li>
             </ul>
         </div>
@@ -46,7 +46,9 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <a type="button" class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
+            <a type="button" class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -54,7 +56,6 @@
             </svg>
         </button>
     </div>
-
 </nav>
 
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
@@ -378,8 +379,7 @@
         </div>
     </div>
 </div>
-
-
+<!-- FOOTER -->
 <footer class="footer py-4 dark ">
     <div class="container">
         <div class="row align-items-center">

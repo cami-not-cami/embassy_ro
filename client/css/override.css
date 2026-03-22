@@ -61,3 +61,31 @@ header.masthead .masthead-heading {
         margin-bottom: 4rem;
     }
 }
+
+.data-section {
+    border-left: 4px solid #98768e;
+    padding-left: 1rem;
+    margin-bottom: 1.25rem;
+}
+.data-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #98768e;
+    margin-bottom: 0.15rem;
+}
+.data-value {
+    font-size: 0.95rem;
+    color: #281e30;
+    margin-bottom: 0;
+}
+.section-divider {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, #98768e, transparent);
+    margin: 2rem 0;
+}
+#staticTitle {
+    color: #281e30;
+}
