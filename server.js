@@ -195,47 +195,19 @@ async function startServer() {
                 res.json(results);
             });
     })
-    app.post('/api/likeDislike', verifyToken, (req, res) => {
-        const { postComID, isPost, isLike } = req.body;
-        const userId = req.user.userId;  // from JWT, not body
-
-        //CHECK IF VOTE EXISTS
-        con.query(
-            'SELECT LikDisIdPK FROM likedislike WHERE LikDisUserIdFK=? AND LikDisPostComId=? AND LikDisIsPost=? AND LikDisIsLike=?',
-            [userId, postComID, isPost, isLike],
-            (err, results) => {
-                if (err) return res.status(500).json({ error: err.message });
-
-                if (results.length > 0) {
-                    con.query(
-                        'DELETE FROM likedislike WHERE LikDisIdPK=?',
-                        [results[0].LikDisIdPK],
-                        (err) => {
-                            if (err) return res.status(500).json({ error: err.message });
-                            res.json({ success: true, action: 'removed' });
-                        }
-                    );
-                } else {
-                    // REMOVE OPPOSITE VOTE(CANT LIKE WHILE DISLIKING AND VICE VERSA)
-                    con.query(
-                        'DELETE FROM likedislike WHERE LikDisUserIdFK=? AND LikDisPostComId=? AND LikDisIsPost=?',
-                        [userId, postComID, isPost],
-                        (err) => {
-                            if (err) return res.status(500).json({ error: err.message });
-                            con.query(
-                                'INSERT INTO likedislike (LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?,?,?,?)',
-                                [userId, postComID, isPost, isLike],
-                                (err, result) => {
-                                    if (err) return res.status(500).json({ error: err.message });
-                                    res.json({ success: true, action: 'added', id: result.insertId });
-                                }
-                            );
-                        }
-                    );
+    app.post('/api/likeDislike', (req, res) => {
+        const {LikDisUserIdFK, postComID,isPost,isLike} = req.body;
+        {
+            con.query(
+                'INSERT INTO likedislike ( LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?,?)',
+                [LikDisUserIdFK, postComID, isPost,isLike],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
                 }
-            }
-        );
-    });
+            )
+        }
+    })
     app.post("/api/comment", (req, res) => {
         const { ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent } = req.body;
         con.query(
@@ -503,30 +475,6 @@ async function startServer() {
         html = html.replace(/{{(\w+)}}/g, (_, key) => i18n.t(key));
         res.send(html);
     });
-
-    //ADDED THIS - PRINCESS
-    app.get("/api/myVote/comment/:commentId", verifyToken, (req, res) => {
-        con.query(
-            'SELECT LikDisIsLike FROM likedislike WHERE LikDisUserIdFK=? AND LikDisPostComId=? AND LikDisIsPost=0',
-            [req.user.userId, req.params.commentId],
-            (err, results) => {
-                if (err) return res.status(500).json({ error: err.message });
-                res.json({ isLike: results.length > 0 ? results[0].LikDisIsLike : null });
-            }
-        );
-    });
-
-    app.get("/api/myVote/:postId", verifyToken, (req, res) => {
-        con.query(
-            'SELECT LikDisIsLike FROM likedislike WHERE LikDisUserIdFK=? AND LikDisPostComId=? AND LikDisIsPost=1',
-            [req.user.userId, req.params.postId],
-            (err, results) => {
-                if (err) return res.status(500).json({ error: err.message });
-                res.json({ isLike: results.length > 0 ? results[0].LikDisIsLike : null });
-            }
-        );
-    });
-    //ADDED ABOVE
 }
 
 

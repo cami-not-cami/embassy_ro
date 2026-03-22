@@ -17,6 +17,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
         console.error("Failed to load posts:", err);
     }
+
+    window.addEventListener('userLoggedIn', () => {
+        document.querySelectorAll('.btn-like').forEach(btn => {
+            const postId = parseInt(btn.dataset.postId);
+            const dislikeBtn = btn.parentElement.querySelector('.btn-dislike');
+            showActualLikesDislikes(postId, btn, dislikeBtn);
+        });
+    });
 });
 
 function renderPost(post, container) {
@@ -114,8 +122,11 @@ function renderPost(post, container) {
 
 async function toggleLikesDislikes(postComID, isPost, isLike) {
     const token = localStorage.getItem("token");
-    if (!token) return;
-    await fetch("/api/likeDislike", {
+    if (!token) {
+        alert("You must be logged in to vote.");
+        return;
+    }
+    const res = await fetch("/api/likeDislike", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -123,6 +134,8 @@ async function toggleLikesDislikes(postComID, isPost, isLike) {
         },
         body: JSON.stringify({ postComID, isPost, isLike })
     });
+    const data = await res.json();
+    console.log("Vote response:", data);  // ← add this
 }
 
 async function getPostLikeCounts(postId) {
