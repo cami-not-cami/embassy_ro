@@ -393,25 +393,27 @@ async function startServer() {
         }
     })
     app.delete("/likedislike/:id", verifyToken, (req, res) => {
-        const like = req.params.id;
-        const {userIdPK,postComId} = req.body;
+        const userIdPK = req.params.id;
+        if(req.user.userId === userIdPK) {
 
+        const {postComId,isPost} = req.body;
             con.query(
-                'DELETE  FROM likedislike Where LikDisUserIdFK = ?',
-                [userIdPK],
+                'DELETE  FROM likedislike Where LikDisUserIdFK = ? AND postComId=? AND isPost=?',
+                [userIdPK,postComId,isPost],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, user:result.affectedRows});
                 }
             )
+        }
     })
     app.delete("/comment/:id", verifyToken, (req, res) => {
-        console.log("IM HERE");
+            const comID= req.body;
         const userIDPK = req.params.id;
-        if (req.user.isAdmin === 1) {
+        if (req.user.userId === userIDPK) {
             con.query(
-                'DELETE FROM user WHERE UserIdPK=?',
-                [userIDPK],
+                'DELETE FROM comment WHERE ComIdPK=?',
+                [comID],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, user:result.affectedRows});
@@ -423,7 +425,7 @@ async function startServer() {
     app.put("/editUser/:id", verifyToken, (req, res) => {
         const { firstname, lastname, email,employeeFK} = req.body;
         const userIDPK = req.params.id;
-        if (req.user.isAdmin === 1) {
+        if (req.user.isAdmin === 1 || req.user.userId === userIDPK) {
             con.query(
                 'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? ,UserEmpFK=?  WHERE UserIdPK=?',
                 [firstname, lastname, email, employeeFK,userIDPK],
@@ -437,6 +439,57 @@ async function startServer() {
                 "Admin is not 1  " + req.user.isAdmin);
         }
     })
+    app.put("/editPost/:id", verifyToken, (req, res) => {
+        const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
+        const postID = req.params.id;
+        if(req.user.userId === postEmpFK)
+            con.query(
+                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
+                [ title, content, updatedAt, imagePath,postID],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+
+    })
+    app.put("/likedislike/:id", verifyToken, (req, res) => {
+        const {isLike,postComID ,isPost} = req.body;
+        const userIdPK = req.params.id;
+        if(req.user.userId === userIdPK) {
+            con.query(
+                'UPDATE likedislike SET LikDisIsLike=?  WHERE LikDisPostComId=? AND LikDisIsPost=? AND LikDisUserIdFK=?',
+                [ isLike,postComID ,isPost,userIdPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.affectedRows});
+                    if (result.affectedRows === 0) {
+                        return res.status(404).json({ error: "Like/dislike not found" });
+                    }
+                }
+
+            )}
+        else{
+            res.send("Error in likeddislike id put")
+        }
+    })
+
+
+    app.get("/post/:id", verifyToken, (req, res) => {
+        const postID = req.params.id;
+        con.query(`SELECT * From post p
+                               LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK
+                               LEFT JOIN user u ON  u.UserIdPK  = e.EmpIdPK
+                               WHERE p.PostIdPK=?`,
+            [postID],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (result.length === 0) return res.status(404).json({ error: "User not found" });
+                res.json({ success: true, user: result[0] });
+            }
+        );
+    });
+
     app.get("/user/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
         con.query(
