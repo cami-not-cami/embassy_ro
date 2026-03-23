@@ -75,6 +75,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     })
 
+    async function getUserData(token) {
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+    }
+
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
         const confirmField = document.getElementById("inputSignupConfirmPassword")
@@ -135,7 +148,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
+btnEdit.addEventListener("click", async () => {
+    let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
+    let inputLastNameEdit = document.getElementById("inputLastNameEdit");
+    let inputEmailEdit = document.getElementById("inputEmailEdit");
+    let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
 
+    let data = getUserData(token);
+
+    inputFirstNameEdit = data.FirstName;
+    inputLastNameEdit = data.LastName;
+    inputEmailEdit = data.email;
+    //inputProfilePictureEdit = data.
+
+})
 
 async function checkUserRole(token){
     try {
@@ -149,9 +175,6 @@ async function checkUserRole(token){
         }
 
         const data = await res.json();
-
-
-
         let userRes = await fetch(`/user/${data.userIDPK}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
