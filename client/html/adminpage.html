@@ -26,16 +26,20 @@
                     <a class="nav-link active" aria-current="page" href="?lang=de">DE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">{{home}}</a>
+                    <a class="nav-link active" aria-current="page" href="#">{{home}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="contact">{{contact}}</a>
+                    <a class="nav-link active" aria-current="page" href="#">{{contact}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="romania">{{romania}}</a>
+                    <a class="nav-link active" aria-current="page" href="#">{{romania}}</a>
                 </li>
             </ul>
         </div>
+
+
+
+
         <form id="search" class="d-flex" role="search">
                 <span class="input-group-text" id="addon-wrapping">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -46,10 +50,8 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
-            <button id="btnEdit" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">{{edit}}</button>
-            <a type="button" class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
-            <a type="button" class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
+            <a type="button" class="btn btn-primary d-none"  href="createpost.html">{{post}}</a>
+            <a type="button" class="btn btn-primary d-none"  href="adminpage.html">{{adminpage}}</a>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -58,32 +60,23 @@
         </button>
     </div>
 </nav>
+
 <!-- FANCY COLOR ON TOP FOR AESTHETIC -->
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
-<!-- CONTAINER -->
-<div class="container">
-    <div class="row justify-content-center">
-        <!-- STATISTIC -->
-        <canvas id="employeeStatistic"></canvas>
-    </div>
-    <div class="row justify-content-center">
-        <!-- TABLE -->
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">{{FirstName}}</th>
-                <th scope="col">{{LastName}}</th>
-                <th scope="col">{{email}}</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
-    </div>
-</div>
-
+<!-- TABLE -->
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{{FirstName}}</th>
+            <th scope="col">{{LastName}}</th>
+            <th scope="col">{{email}}</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+</table>
 
 
 
@@ -420,7 +413,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalPromote" aria-hidden="true" aria-labelledby="modalEdit" tabindex="-1">
+<div class="modal fade" id="modalPromote" aria-hidden="true" aria-labelledby="modalPromote" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">

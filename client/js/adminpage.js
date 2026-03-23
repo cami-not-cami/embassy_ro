@@ -1,4 +1,4 @@
-import {Chart} from "chart.js";
+//import {Chart} from "chart.js";
 
 document.addEventListener("DOMContentLoaded",  async () => {
 const tableBody = document.getElementById("tableBody");
@@ -30,15 +30,15 @@ function renderUsers(user, index) {
           <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
         </svg>
       </button>
-      <button class="btn btn-primary" href="#modalPromote" data-bs-target="#modalPromote" data-user-id="${user.UserIdPK}">
+      <button class="btn btn-primary" id="btnModelPromote" href="#modalPromote" data-bs-target="#modalPromote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
         </svg>
       </button>
     </td>`;
 
-    const promoteBtn = row.querySelector('.btn-primary');
-    promoteBtn.addEventListener('click', () => openEditModal(user));
+    //const promoteBtn = row.querySelector('.btn-primary');
+    //promoteBtn.addEventListener('click', () => openEditModal(user));
 
     const editBtn = row.querySelector('.btn-success');
     editBtn.addEventListener('click', () => openEditModal(user));
@@ -46,6 +46,8 @@ function renderUsers(user, index) {
     const deleteBtn = row.querySelector('.btn-danger');
     deleteBtn.addEventListener('click', () => currentUser = user);
 
+    const promoteBtn = document.getElementById("btnModelPromote");
+    promoteBtn.addEventListener('click', () => Promotion(user));
 
 }
 
@@ -68,6 +70,49 @@ function renderUsers(user, index) {
 
 //PROMOTE HERE
 //STATISTIC HERE
+
+    async function Promotion(user){
+        const btnPromote = document.getElementById('btnPromote');
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("You must be logged in to vote.");
+            return;
+        }
+        btnPromote.addEventListener('click', async() => {
+            const res1 = await fetch('/createEmployee', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    empPhoneNumber: "-",
+                    EmpIsAdmin: 0,
+                    EmpDescription: "-"
+                })
+            });
+            console.log(res1.id);
+            console.log(user);
+
+            let data = JSON.stringify(res1);
+            const res = await fetch(`/editUser/${user.UserIdPK}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    userIDPK: user.UserIdPK,
+                    employeeFK: data.userIDPK,
+                    firstname: document.getElementById('inputEditFirstname').value,
+                    lastname:  document.getElementById('inputEditLastname').value,
+                    email:     document.getElementById('inputEditEmail').value,
+                })
+            });
+        })
+    }
+
+
 async function getEmployeeStatistics(){
     const employeeStatistic = document.getElementById('employeeStatistic');
 
@@ -97,11 +142,12 @@ formEditUser.addEventListener('submit', async event => {
         "Authorization": `Bearer ${token}`
     };
 
-    const res = await fetch("/editUser", {
+    const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
         method: "PUT",
         headers,
         body: JSON.stringify({
             userIDPK: currentUser.UserIdPK,
+            employeeFK: currentUser.EmpIdPK,
             firstname: document.getElementById('inputEditFirstname').value,
             lastname:  document.getElementById('inputEditLastname').value,
             email:     document.getElementById('inputEditEmail').value,
