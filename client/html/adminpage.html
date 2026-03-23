@@ -63,6 +63,17 @@
 
 <!-- FANCY COLOR ON TOP FOR AESTHETIC -->
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
+<!-- Statistic Chart -->
+<div class="row mt-4">
+    <div class="col-12 col-md-6 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">User Statistics</div>
+            <div class="card-body">
+                <canvas id="employeeStatistic"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- TABLE -->
 <table class="table table-hover">
     <thead>
@@ -462,7 +473,8 @@
         </div>
     </div>
 </footer>
-
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="../js/loginsignup.js"></script>
 <script type="module" src="../js/adminpage.js"></script>
 

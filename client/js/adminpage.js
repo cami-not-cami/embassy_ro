@@ -78,6 +78,71 @@ function renderUsers(user, index) {
 //PROMOTE HERE
 //STATISTIC HERE
 
+    async function getEmployeeStatistics() {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch('/users', {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const users = await res.json();
+
+        let adminCount    = 0;
+        let employeeCount = 0;
+        let visitorCount  = 0;
+
+        users.forEach(user => {
+            if (user.EmpIsAdmin === 1) {
+                adminCount++;
+            } else if (user.EmpIdPK !== null) {
+                employeeCount++;
+            } else {
+                visitorCount++;
+            }
+        });
+
+        const ctx = document.getElementById('employeeStatistic');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Admin', 'Employee', 'Visitor'],
+                datasets: [{
+                    label: 'User Roles',
+                    data: [adminCount, employeeCount, visitorCount],
+                    backgroundColor: [
+                        'rgba(220, 53, 69, 0.7)',   //RED
+                        'rgba(13, 110, 253, 0.7)',   //BLUE
+                        'rgba(25, 135, 84, 0.7)',    //GREEN
+                    ],
+                    borderColor: [
+                        'rgb(220, 53, 69)',
+                        'rgb(13, 110, 253)',
+                        'rgb(25, 135, 84)',
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ` ${ctx.parsed.y} user(s)`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, precision: 0 }
+                    }
+                }
+            }
+        });
+    }
+
         const btnPromote = document.getElementById('btnPromote');
 
     btnPromote.addEventListener('click', async () => {
