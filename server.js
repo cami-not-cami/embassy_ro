@@ -406,7 +406,7 @@ async function startServer() {
     })
     app.delete("/likedislike/:id", verifyToken, (req, res) => {
         const userIdPK = req.params.id;
-        if(req.user.userId === userIdPK) {
+        if(req.user.userId == userIdPK) {
 
         const {postComId,isPost} = req.body;
             con.query(
@@ -422,7 +422,7 @@ async function startServer() {
     app.delete("/comment/:id", verifyToken, (req, res) => {
             const comID= req.body;
         const userIDPK = req.params.id;
-        if (req.user.userId === userIDPK) {
+        if (req.user.userId == userIDPK) {
             con.query(
                 'DELETE FROM comment WHERE ComIdPK=?',
                 [comID],
@@ -455,7 +455,7 @@ async function startServer() {
     app.put("/editPost/:id", verifyToken, (req, res) => {
         const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
         const postID = req.params.id;
-        if(req.user.userId === postEmpFK)
+        if(req.user.userId == postEmpFK)
             con.query(
                 'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
                 [ title, content, updatedAt, imagePath,postID],
@@ -468,7 +468,7 @@ async function startServer() {
     app.put("/likedislike/:id", verifyToken, (req, res) => {
         const {isLike,postComID ,isPost} = req.body;
         const userIdPK = req.params.id;
-        if(req.user.userId === userIdPK) {
+        if(req.user.userId == userIdPK) {
             con.query(
                 'UPDATE likedislike SET LikDisIsLike=?  WHERE LikDisPostComId=? AND LikDisIsPost=? AND LikDisUserIdFK=?',
                 [ isLike,postComID ,isPost,userIdPK],
