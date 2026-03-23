@@ -75,6 +75,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     })
 
+    async function getUserData(token) {
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+    }
+
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
         const confirmField = document.getElementById("inputSignupConfirmPassword")
@@ -135,28 +148,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
-async function getUserData(token)
-{
-    const res = await fetch("/api/userInfo", {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
+btnEdit.addEventListener("click", async () => {
+    let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
+    let inputLastNameEdit = document.getElementById("inputLastNameEdit");
+    let inputEmailEdit = document.getElementById("inputEmailEdit");
+    let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
 
-    if (!res.ok) {
-        localStorage.removeItem("token");
-        return;
-    }
+    let data = getUserData(token);
 
-    const data = await res.json();
+    inputFirstNameEdit = data.FirstName;
+    inputLastNameEdit = data.LastName;
+    inputEmailEdit = data.email;
+    //inputProfilePictureEdit = data.
 
-    const userRes = await fetch(`/user/${data.userIDPK}`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
-    return userRes;
-}
+})
 
 async function checkUserRole(token){
     try {
-        let userRes = getUserData(token)
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+        let userRes = await fetch(`/user/${data.userIDPK}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const userData = await userRes.json();
         const userJob = document.getElementById("userJob");
 
