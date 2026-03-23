@@ -408,12 +408,12 @@ async function startServer() {
         }
     })
     app.delete("/comment/:id", verifyToken, (req, res) => {
-        console.log("IM HERE");
+            const comID= req.body;
         const userIDPK = req.params.id;
-        if (req.user.isAdmin === 1) {
+        if (req.user.userId === userIDPK) {
             con.query(
-                'DELETE FROM user WHERE UserIdPK=?',
-                [userIDPK],
+                'DELETE FROM comment WHERE ComIdPK=?',
+                [comID],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, user:result.affectedRows});
