@@ -140,6 +140,8 @@ btnDemote.addEventListener('click', async () => {
             email:     currentUser.UserEmail,
         })
     });
+
+
 })
 
 async function getEmployeeStatistics(){
