@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         await checkUserRole(token);
     }
     const formSignup = document.getElementById("formSignup");
-
+    const formEdit = document.getElementById("formEditUser");
+    const btnEdit = document.getElementById("btnEdit");
 
     //CREATE COMMENT TOFIX
     // fetch("/api/comment", {
@@ -59,6 +60,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // })
     //     .then(res => res.json())
     //     .then(data => console.log(data));
+    btnEdit.addEventListener("click", async () => {
+        let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
+        let inputLastNameEdit = document.getElementById("inputLastNameEdit");
+        let inputEmailEdit = document.getElementById("inputEmailEdit");
+        let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
+
+        let data = getUserData(token);
+
+        inputFirstNameEdit = data.FirstName;
+        inputLastNameEdit = data.LastName;
+        inputEmailEdit = data.email;
+        //inputProfilePictureEdit = data.
+
+    })
 
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
@@ -103,7 +118,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log(data.token);
                     checkUserRole(data.token);
                     window.dispatchEvent(new CustomEvent('userLoggedIn'));
-                    btnLogOut.classList.remove('d-none');
 
                 } else {
                     console.log("Error:", data.error);
@@ -121,22 +135,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
+async function getUserData(token)
+{
+    const res = await fetch("/api/userInfo", {
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+        localStorage.removeItem("token");
+        return;
+    }
+
+    const data = await res.json();
+
+    const userRes = await fetch(`/user/${data.userIDPK}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+    return userRes;
+}
+
 async function checkUserRole(token){
     try {
-        const res = await fetch("/api/userInfo", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (!res.ok) {
-            localStorage.removeItem("token");
-            return;
-        }
-
-        const data = await res.json();
-
-        const userRes = await fetch(`/user/${data.userIDPK}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
+        let userRes = getUserData(token)
         const userData = await userRes.json();
         const userJob = document.getElementById("userJob");
 
@@ -160,6 +180,7 @@ async function checkUserRole(token){
 
         // Hide login button, show logout
         document.getElementById("btnLogin")?.classList.add("d-none");
+        document.getElementById("btnLogOut")?.classList.remove("d-none");
 
         // Close login modal
         const loginModal = bootstrap.Modal.getInstance(document.getElementById("modalLogin"));
