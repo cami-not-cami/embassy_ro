@@ -26,8 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    //EDIT POST STUFF
-
+    // EDIT POST SAVE
     document.addEventListener('click', async (e) => {
         if (e.target.id !== 'btnSavePost') return;
 
@@ -66,12 +65,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-// DELETE IN EDIT MODAL
+    // DELETE IN EDIT MODAL
     document.getElementById('btnDeleteFromEdit').addEventListener('click', () => {
         openDeletePostModal(_activeEditPost);
     });
 
-// CONFIRM DELETE
+    // CONFIRM DELETE
     document.getElementById('btnConfirmDeletePost').addEventListener('click', () => {
         deletePost(_activeEditPost);
     });
@@ -80,39 +79,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 function renderPost(post, container) {
     const imageHtml = post.PostImagePath
         ? `<div class="row">
-           <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
-               <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;" alt="Post image">
-           </div>
-       </div>`
+               <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
+                   <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;" alt="Post image">
+               </div>
+           </div>`
         : "";
 
-    const pfpHtml = post.UserPicturePath
-        ? `<div class="row">
-           <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
-               <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;" alt="Post image">
-           </div>
-       </div>`
-        : "";
-
-    //CHECK IF ITS BEEN EDITED AND CHANGES STRING ON POST
+    // CHECK IF IT'S BEEN EDITED
     let createdAt = new Date(post.PostCreatedAt).toLocaleTimeString();
     let updatedAt = new Date(post.PostUpdatedAt).toLocaleTimeString();
-    let actualdate = createdAt;
+    let actualdate;
 
-    if(createdAt !== updatedAt)
-    {
-        updatedAt =  new Date(post.PostUpdatedAt).toLocaleDateString();
-         actualdate = `Edited at: ${updatedAt}`;
-    }
-    else
-    {
-        createdAt =  new Date(post.PostCreatedAt).toLocaleDateString();
+    if (createdAt !== updatedAt) {
+        updatedAt = new Date(post.PostUpdatedAt).toLocaleDateString();
+        actualdate = `Edited at: ${updatedAt}`;
+    } else {
+        createdAt = new Date(post.PostCreatedAt).toLocaleDateString();
         actualdate = createdAt;
     }
-    console.log(actualdate);
 
+    // AUTHOR AVATAR: initials, not post image
+    const initials = ((post.UserFirstname?.[0] ?? "") + (post.UserLastname?.[0] ?? "")).toUpperCase() || "?";
+    const avatarHtml = post.UserPicturePath
+        ? `<img src="${post.UserPicturePath}" class="rounded-circle w-100 h-100" style="object-fit:cover;" alt="avatar">`
+        : `<span>${initials}</span>`;
 
-    console.log(post);
     const postEl = document.createElement("div");
     postEl.className = "container-fluid mt-4";
     postEl.innerHTML = `
@@ -124,9 +115,9 @@ function renderPost(post, container) {
                         <div class="row">
                             <div class="d-flex align-items-center justify-content-between container-fluid">
                                 <div class="d-flex align-items-center gap-2">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0"
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden"
                                          style="width:48px;height:48px;color:white;font-weight:bold;">
-                                        <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;">
+                                        ${avatarHtml}
                                     </div>
                                     <div>
                                         <div class="fw-bold">${post.UserFirstname ?? ""} ${post.UserLastname ?? ""}</div>
@@ -193,7 +184,6 @@ function renderPost(post, container) {
     const likeBtn    = postEl.querySelector('.btn-like');
     const dislikeBtn = postEl.querySelector('.btn-dislike');
 
-    // USER VOTE VISUAL
     showActualLikesDislikes(post.PostIdPK, likeBtn, dislikeBtn);
 
     likeBtn.addEventListener('click', async () => {
@@ -212,16 +202,12 @@ function renderPost(post, container) {
     container.appendChild(postEl);
 
     // SHOW MENU ONLY FOR POST OWNER / ADMIN
-    // SHOW MENU ONLY FOR POST OWNER / ADMIN
     (async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
         try {
             const info = await getUserInfo(token);
             if (!info) return;
-
-            console.log("userIDPK:", info.userIDPK, "PostEmpIdFK:", post.PostEmpIdFK, "isAdmin:", info.isAdmin); // ← ADD THIS
-
             const wrapper = postEl.querySelector('.post-menu-wrapper');
             const isOwner = info.userIDPK == post.PostEmpIdFK;
             const isAdmin = info.isAdmin === 1;
@@ -231,17 +217,18 @@ function renderPost(post, container) {
         } catch {}
     })();
 
-// EDIT BUTTON
+    // EDIT BUTTON
     postEl.querySelector('.btn-post-edit').addEventListener('click', () => {
         openEditPostModal(post);
     });
 
-// DELETE BUTTON
+    // DELETE BUTTON
     postEl.querySelector('.btn-post-delete').addEventListener('click', () => {
         openDeletePostModal(post);
     });
 }
-//EDIT POST STUFF
+
+// EDIT POST STUFF
 let _activeEditPost = null;
 
 function openEditPostModal(post) {
@@ -273,7 +260,6 @@ async function deletePost(post) {
     });
     if (res.ok) {
         bootstrap.Modal.getInstance(document.getElementById('modalDeletePost')).hide();
-        // Remove the card from the DOM
         const postsContainer = document.getElementById("postsContainer");
         postsContainer.innerHTML = "";
         const updated = await (await fetch('/posts')).json();
@@ -283,40 +269,46 @@ async function deletePost(post) {
     }
 }
 
-//LIKES/DISLIKES STUFF
+// LIKES AND DISLIKES
 
 async function toggleLikesDislikes(postComID, isPost, isLike) {
     const token = localStorage.getItem("token");
     if (!token) { alert("You must be logged in to vote."); return; }
 
     const info = await getUserInfo(token);
+    if (!info) return;
     const userId = info.userIDPK;
 
-    const voteRes = await fetch(`/api/myVote/post/${postComID}`, {
+    // Fetch current vote from the correct endpoint
+    const voteEndpoint = isPost === 1
+        ? `/api/myVote/post/${postComID}`
+        : `/api/myVote/comment/${postComID}`;
+
+    const voteRes = await fetch(voteEndpoint, {
         headers: { "Authorization": `Bearer ${token}` }
     });
-    const voteData = await voteRes.json();
+    const voteData = voteRes.ok ? await voteRes.json() : { reaction: null };
     const currentReaction = voteData.reaction; // "liked", "disliked", or null
 
     const isAlreadyThis = (isLike === 1 && currentReaction === "liked") ||
         (isLike === 0 && currentReaction === "disliked");
 
     if (isAlreadyThis) {
-        // REMOVE VOTE D:
+        // REMOVE VOTE
         await fetch(`/likedislike/${userId}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComId: postComID, isPost })
         });
     } else if (currentReaction !== null) {
-        // FLIP VOTE o.o
+        // FLIP VOTE
         await fetch(`/likedislike/${userId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComID, isPost, isLike })
         });
     } else {
-        // NEW VOTE :D
+        // NEW VOTE
         await fetch("/api/likeDislike", {
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
@@ -339,7 +331,7 @@ async function getUserVoteForPost(postId) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) return null;
-        return await res.json(); // { isLike: 1|0|null }
+        return await res.json(); // { reaction: "liked" | "disliked" | null }
     } catch { return null; }
 }
 
@@ -351,14 +343,15 @@ async function getUserVoteForComment(commentId) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) return null;
-        return await res.json(); // { isLike: 1|0|null }
+        return await res.json(); // { reaction: "liked" | "disliked" | null }
     } catch { return null; }
 }
 
 async function showActualLikesDislikes(postId, likeBtn, dislikeBtn) {
     const vote     = await getUserVoteForPost(postId);
-    const liked    = vote?.isLike === 1;
-    const disliked = vote?.isLike === 0;
+    // FIX: server returns { reaction: "liked"|"disliked"|null }, not { isLike }
+    const liked    = vote?.reaction === "liked";
+    const disliked = vote?.reaction === "disliked";
     likeBtn.style.color    = liked    ? 'var(--clr-plum-dark)' : '';
     likeBtn.style.filter   = liked    ? 'drop-shadow(0 0 3px var(--clr-plum))' : '';
     dislikeBtn.style.color  = disliked ? 'var(--clr-coral)'    : '';
@@ -367,16 +360,17 @@ async function showActualLikesDislikes(postId, likeBtn, dislikeBtn) {
 
 async function showCommentVoteState(commentId, likeBtn, dislikeBtn) {
     const vote     = await getUserVoteForComment(commentId);
-    const liked    = vote?.isLike === 1;
-    const disliked = vote?.isLike === 0;
+    // FIX: server returns { reaction: "liked"|"disliked"|null }, not { isLike }
+    const liked    = vote?.reaction === "liked";
+    const disliked = vote?.reaction === "disliked";
     likeBtn.style.color    = liked    ? 'var(--clr-plum-dark)' : '';
     likeBtn.style.filter   = liked    ? 'drop-shadow(0 0 3px var(--clr-plum))' : '';
     dislikeBtn.style.color  = disliked ? 'var(--clr-coral)'    : '';
     dislikeBtn.style.filter = disliked ? 'drop-shadow(0 0 3px var(--clr-coral))' : '';
 }
 
+// COMMENT STUFFS
 
-//COMENT FUNCTIONSS
 let _activePostId = null;
 let _replyToCommentId = null;
 
@@ -400,22 +394,23 @@ async function openCommentModal(post) {
         imgBox.innerHTML = "";
     }
 
-    // AVATAR
+    // SELF AVATAR
     const selfName = document.getElementById("userName")?.textContent?.trim() ?? "";
     const selfInitial = selfName?.[0]?.toUpperCase() ?? "?";
     document.getElementById("commentSelfAvatar").textContent = selfInitial;
 
     await loadComments(post.PostIdPK);
 
-    // LIKES/DISLIKES ON MODAL
+    // LIKES/DISLIKES IN MODAL
     const refreshModalCounts = async () => {
         const entry    = await getPostLikeCounts(post.PostIdPK);
         document.getElementById("commentModalLikeCount").textContent    = entry.likes;
         document.getElementById("commentModalDislikeCount").textContent = entry.dislikes;
 
         const vote     = await getUserVoteForPost(post.PostIdPK);
-        const liked    = vote?.isLike === 1;
-        const disliked = vote?.isLike === 0;
+        // FIX: use vote?.reaction not vote?.isLike
+        const liked    = vote?.reaction === "liked";
+        const disliked = vote?.reaction === "disliked";
         const likeEl    = document.getElementById("commentModalLike");
         const dislikeEl = document.getElementById("commentModalDislike");
         likeEl.style.color     = liked    ? 'var(--clr-blush)' : '';
@@ -469,7 +464,6 @@ async function loadComments(postId) {
     try {
         const res = await fetch(`/api/comment/${postId}`);
         const allComments = await res.json();
-
         const topLevel = allComments.filter(c => !c.ComComIdFK);
 
         if (topLevel.length === 0) {
@@ -481,7 +475,6 @@ async function loadComments(postId) {
         topLevel.forEach(comment => {
             list.appendChild(renderComment(comment, allComments, 0));
         });
-
     } catch (err) {
         list.innerHTML = `<p class="text-center text-muted small">Could not load comments.</p>`;
         console.error(err);
@@ -600,6 +593,8 @@ function renderComment(comment, allComments, depth = 0) {
 
     return el;
 }
+
+// UTIL
 
 async function getUserInfo(token) {
     try {

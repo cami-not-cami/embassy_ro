@@ -212,15 +212,14 @@ async function startServer() {
                 res.json(results);
             });
     })
-    app.get("/api/myVote/post/:postId", verifyToken,(req, res) => {
+    app.get("/api/myVote/post/:postId", verifyToken, (req, res) => {
         const { postId } = req.params;
         const userId = req.user.userId;
 
-        if (!userId) return res.status(400).json({ error: "userId query param required" });
-
         con.query(
             `SELECT * FROM likedislike
-             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 0`,
+             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 1`,
+
             [userId, postId],
             (err, results) => {
                 if (err) return res.status(500).json({ error: err.message });
@@ -248,17 +247,19 @@ async function startServer() {
         );
     });
     app.post('/api/likeDislike', (req, res) => {
-        const {LikDisUserIdFK, postComID,isPost,isLike} = req.body;
-        {
-            con.query(
-                'INSERT INTO likedislike ( LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?,?)',
-                [LikDisUserIdFK, postComID, isPost,isLike],
-                (err, result) => {
-                    if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, id: result.insertId});
+        const {LikDisUserIdFK, postComID, isPost, isLike} = req.body;
+        console.log("likeDislike body:", req.body); // ← ADD THIS
+        con.query(
+            'INSERT INTO likedislike (LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?, ?)',
+            [LikDisUserIdFK, postComID, isPost, isLike],
+            (err, result) => {
+                if (err) {
+                    console.error("DB ERROR:", err.code, err.sqlMessage); // ← ADD THIS
+                    return res.status(500).json({error: err.message});
                 }
-            )
-        }
+                res.json({success: true, id: result.insertId});
+            }
+        )
     })
     app.post("/api/comment", (req, res) => {
         const { ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent } = req.body;
