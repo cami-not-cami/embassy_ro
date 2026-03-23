@@ -60,20 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // })
     //     .then(res => res.json())
     //     .then(data => console.log(data));
-    btnEdit.addEventListener("click", async () => {
-        let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
-        let inputLastNameEdit = document.getElementById("inputLastNameEdit");
-        let inputEmailEdit = document.getElementById("inputEmailEdit");
-        let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
 
-        let data = getUserData(token);
-
-        inputFirstNameEdit = data.FirstName;
-        inputLastNameEdit = data.LastName;
-        inputEmailEdit = data.email;
-        //inputProfilePictureEdit = data.
-
-    })
 
     async function getUserData(token) {
         const res = await fetch("/api/userInfo", {
@@ -148,13 +135,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
+const btnEdit = document.getElementById("btnEdit");
 btnEdit.addEventListener("click", async () => {
     let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
     let inputLastNameEdit = document.getElementById("inputLastNameEdit");
     let inputEmailEdit = document.getElementById("inputEmailEdit");
     let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
 
-    let data = getUserData(token);
+
 
     inputFirstNameEdit = data.FirstName;
     inputLastNameEdit = data.LastName;
