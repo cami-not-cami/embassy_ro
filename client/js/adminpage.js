@@ -46,8 +46,8 @@ function renderUsers(user, index) {
     const deleteBtn = row.querySelector('.btn-danger');
     deleteBtn.addEventListener('click', () => currentUser = user);
 
-    const promoteBtn = document.getElementById("btnModelPromote");
-    promoteBtn.addEventListener('click', () => Promotion(user));
+    const promoteBtn = row.querySelector('.btn-primary');
+    promoteBtn.addEventListener('click', () => currentUser = user);
 
 }
 
@@ -71,46 +71,45 @@ function renderUsers(user, index) {
 //PROMOTE HERE
 //STATISTIC HERE
 
-    async function Promotion(user){
         const btnPromote = document.getElementById('btnPromote');
+
+    btnPromote.addEventListener('click', async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             alert("You must be logged in to vote.");
             return;
         }
-        btnPromote.addEventListener('click', async() => {
-            const res1 = await fetch('/createEmployee', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    empPhoneNumber: "-",
-                    EmpIsAdmin: 0,
-                    EmpDescription: "-"
-                })
-            });
-            console.log(res1.id);
-            console.log(user);
 
-            let data = JSON.stringify(res1);
-            const res = await fetch(`/editUser/${user.UserIdPK}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userIDPK: user.UserIdPK,
-                    employeeFK: data.userIDPK,
-                    firstname: document.getElementById('inputEditFirstname').value,
-                    lastname:  document.getElementById('inputEditLastname').value,
-                    email:     document.getElementById('inputEditEmail').value,
-                })
-            });
-        })
-    }
+        const res1 = await fetch('/createEmployee', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empPhoneNumber: "-",
+                EmpIsAdmin: 0,
+                EmpDescription: "-"
+            })
+        });
+
+        const data = await res1.json();
+        console.log(data.id);
+
+        const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                employeeFK: data.id,
+                firstname: currentUser.UserFirstName,
+                lastname:  currentUser.UserLastName,
+                email:     currentUser.UserEmail,
+            })
+        });
+    });
 
 
 async function getEmployeeStatistics(){
@@ -153,6 +152,8 @@ formEditUser.addEventListener('submit', async event => {
             email:     document.getElementById('inputEditEmail').value,
         })
     });
+
+    console.log(currentUser.UserIdPK);
 
     if (currentUser.EmpIdPK) {
         const res1 = await fetch("/editEmployee", {
