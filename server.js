@@ -300,8 +300,9 @@ async function startServer() {
     });
     app.get('/posts', (req, res) => {
         con.query(
-            `SELECT *  FROM post p
-                      LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK`, (err, results) => {
+            `SELECT * From post p
+                               LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK
+                               LEFT JOIN user u ON  u.UserIdPK  = e.EmpIdPK`, (err, results) => {
                 if (err) return res.status(500).json({error: err.message});
                 res.json(results);
             });
@@ -393,11 +394,11 @@ async function startServer() {
     })
     app.delete("/likedislike/:id", verifyToken, (req, res) => {
         const like = req.params.id;
-        const {userIdPK} = req.user;
+        const {userIdPK,postComId} = req.body;
 
             con.query(
-                'DELETE user FROM likedislike INNER JOIN user On user.UserEmpFK = employee.EmpIdPK Where user.UserIdPK = ?',
-                [userIDPK],
+                'DELETE  FROM likedislike Where LikDisUserIdFK = ?',
+                [userIdPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, user:result.affectedRows});
