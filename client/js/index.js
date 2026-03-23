@@ -143,7 +143,7 @@ function renderPost(post, container) {
     container.appendChild(postEl);
 }
 
-// ─── LIKES/DISLIKE HELPERS ─────────────────────────────────────────────────────────────
+//LIKES/DISLIKES STUFF
 
 async function toggleLikesDislikes(postComID, isPost, isLike) {
     const token = localStorage.getItem("token");
@@ -213,8 +213,8 @@ async function showCommentVoteState(commentId, likeBtn, dislikeBtn) {
     dislikeBtn.style.filter = disliked ? 'drop-shadow(0 0 3px var(--clr-coral))' : '';
 }
 
-// ─── Comment Modal ────────────────────────────────────────────────────────────
 
+//COMENT FUNCTIONSS
 let _activePostId = null;
 let _replyToCommentId = null;
 

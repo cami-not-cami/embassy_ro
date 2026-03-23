@@ -5,6 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/override.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Admin</title>
 </head>
 <body>
@@ -64,12 +65,30 @@
 <!-- FANCY COLOR ON TOP FOR AESTHETIC -->
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
 <!-- Statistic Chart -->
-<div class="row mt-4">
-    <div class="col-12 col-md-6 mx-auto">
-        <div class="card shadow-sm">
-            <div class="card-header fw-semibold">User Statistics</div>
-            <div class="card-body">
-                <canvas id="employeeStatistic"></canvas>
+<div class="container mt-4 mb-5">
+    <div class="row g-4">
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold">User Roles</div>
+                <div class="card-body">
+                    <canvas id="chartLikesDonut"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold">Post Likes &amp; Dislikes</div>
+                <div class="card-body">
+                    <canvas id="chartPostsVsComments"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold">Comment Likes &amp; Dislikes</div>
+                <div class="card-body">
+                    <canvas id="chartUserRoles"></canvas>
+                </div>
             </div>
         </div>
     </div>

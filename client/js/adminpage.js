@@ -1,10 +1,11 @@
 //import {Chart} from "chart.js";
 
 document.addEventListener("DOMContentLoaded",  async () => {
+    const chartInstances = {};
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
 let currentUser = null;
-
+await getEmployeeStatistics();
 const res = await fetch('/users');
 const users = await res.json();
 users.forEach((user, index) => renderUsers(user, index));
@@ -80,65 +81,105 @@ function renderUsers(user, index) {
 
     async function getEmployeeStatistics() {
         const token = localStorage.getItem("token");
+        const headers = { "Authorization": `Bearer ${token}` };
 
-        const res = await fetch('/users', {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const users = await res.json();
+        const [users, postLikes, commentLikes] = await Promise.all([
+            fetch("/users", { headers }).then(r => r.json()),
+            fetch("/api/postLike").then(r => r.json()),
+            fetch("/api/commentLike").then(r => r.json()),
+        ]);
 
-        let adminCount    = 0;
-        let employeeCount = 0;
-        let visitorCount  = 0;
 
+        let adminCount = 0, employeeCount = 0, visitorCount = 0;
         users.forEach(user => {
-            if (user.EmpIsAdmin === 1) {
-                adminCount++;
-            } else if (user.EmpIdPK !== null) {
-                employeeCount++;
-            } else {
-                visitorCount++;
+            if (user.EmpIsAdmin === 1)      adminCount++;
+            else if (user.EmpIdPK !== null) employeeCount++;
+            else                            visitorCount++;
+        });
+
+
+        const totalPostLikes       = postLikes.reduce((s, p) => s + Number(p.likes), 0);
+        const totalPostDislikes    = postLikes.reduce((s, p) => s + Number(p.dislikes), 0);
+        const totalCommentLikes    = commentLikes.reduce((s, c) => s + Number(c.likes), 0);
+        const totalCommentDislikes = commentLikes.reduce((s, c) => s + Number(c.dislikes), 0);
+
+        const totalLikes               = totalPostLikes + totalCommentLikes;
+        const totalDislikes            = totalPostDislikes + totalCommentDislikes;
+        const totalPostInteractions    = totalPostLikes + totalPostDislikes;
+        const totalCommentInteractions = totalCommentLikes + totalCommentDislikes;
+
+        //IGNORE EXISTING CHART
+        function makeChart(id, config) {
+            if (chartInstances[id]) chartInstances[id].destroy();
+            chartInstances[id] = new Chart(document.getElementById(id), config);
+        }
+
+        //CHART 1
+        makeChart("chartLikesDonut", {
+            type: "doughnut",
+            data: {
+                labels: ["Likes", "Dislikes"],
+                datasets: [{
+                    data: [totalLikes, totalDislikes],
+                    backgroundColor: ["rgba(25, 135, 84, 0.8)", "rgba(220, 53, 69, 0.8)"],
+                    borderColor:     ["rgb(25, 135, 84)",        "rgb(220, 53, 69)"],
+                    borderWidth: 2,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } }
+                }
             }
         });
 
-        const ctx = document.getElementById('employeeStatistic');
-
-        new Chart(ctx, {
-            type: 'bar',
+        //CHART 2
+        makeChart("chartPostsVsComments", {
+            type: "pie",
             data: {
-                labels: ['Admin', 'Employee', 'Visitor'],
+                labels: ["Post interactions", "Comment interactions"],
                 datasets: [{
-                    label: 'User Roles',
+                    data: [totalPostInteractions, totalCommentInteractions],
+                    backgroundColor: ["rgba(13, 110, 253, 0.8)", "rgba(255, 193, 7, 0.8)"],
+                    borderColor:     ["rgb(13, 110, 253)",        "rgb(255, 193, 7)"],
+                    borderWidth: 2,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } }
+                }
+            }
+        });
+
+        // CHART 3
+        makeChart("chartUserRoles", {
+            type: "bar",
+            data: {
+                labels: ["Admin", "Employee", "Visitor"],
+                datasets: [{
+                    label: "Users",
                     data: [adminCount, employeeCount, visitorCount],
                     backgroundColor: [
-                        'rgba(220, 53, 69, 0.7)',   //RED
-                        'rgba(13, 110, 253, 0.7)',   //BLUE
-                        'rgba(25, 135, 84, 0.7)',    //GREEN
+                        "rgba(220, 53, 69, 0.7)",
+                        "rgba(13, 110, 253, 0.7)",
+                        "rgba(25, 135, 84, 0.7)",
                     ],
-                    borderColor: [
-                        'rgb(220, 53, 69)',
-                        'rgb(13, 110, 253)',
-                        'rgb(25, 135, 84)',
-                    ],
+                    borderColor: ["rgb(220,53,69)", "rgb(13,110,253)", "rgb(25,135,84)"],
                     borderWidth: 2,
                     borderRadius: 6,
                 }]
             },
             options: {
                 responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ` ${ctx.parsed.y} user(s)`
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 }
-                    }
-                }
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } }
             }
         });
     }
@@ -208,24 +249,6 @@ btnDemote.addEventListener('click', async () => {
 
 
 })
-
-async function getEmployeeStatistics(){
-    const employeeStatistic = document.getElementById('employeeStatistic');
-
-    //GET ALL USERS
-
-    const labels =  ["Admin", "Visitor", "Employee"];
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Employee Statistic',
-            //data:
-        }]
-    }
-    new Chart(employeeStatistic, {
-        type: 'bar'
-    })
-}
 
 
 const formEditUser = document.getElementById('formEditUser');
