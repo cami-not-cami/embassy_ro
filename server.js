@@ -394,8 +394,9 @@ async function startServer() {
     })
     app.delete("/likedislike/:id", verifyToken, (req, res) => {
         const userIdPK = req.params.id;
-        const {postComId,isPost} = req.body;
+        if(req.user.userId === userIdPK) {
 
+        const {postComId,isPost} = req.body;
             con.query(
                 'DELETE  FROM likedislike Where LikDisUserIdFK = ? AND postComId=? AND isPost=?',
                 [userIdPK,postComId,isPost],
@@ -404,6 +405,7 @@ async function startServer() {
                     res.json({success: true, user:result.affectedRows});
                 }
             )
+        }
     })
     app.delete("/comment/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
