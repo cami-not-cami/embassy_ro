@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             showActualLikesDislikes(postId, btn, dislikeBtn);
         });
     });
+
+
 });
 
 function renderPost(post, container) {

@@ -1,3 +1,5 @@
+import {Chart} from "chart.js";
+
 document.addEventListener("DOMContentLoaded",  async () => {
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
@@ -65,6 +67,24 @@ function renderUsers(user, index) {
 
 
 //PROMOTE HERE
+//STATISTIC HERE
+async function getEmployeeStatistics(){
+    const employeeStatistic = document.getElementById('employeeStatistic');
+
+    //GET ALL USERS
+
+    const labels =  ["Admin", "Visitor", "Employee"];
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Employee Statistic',
+            //data:
+        }]
+    }
+    new Chart(employeeStatistic, {
+        type: 'bar'
+    })
+}
 
 
 const formEditUser = document.getElementById('formEditUser');
