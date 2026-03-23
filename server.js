@@ -378,6 +378,32 @@ async function startServer() {
             )
         }
     })
+    app.delete("/employee/:id", verifyToken, (req, res) => {
+        const employeeIDPK = req.params.id;
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'DELETE FROM employee  Where EmpIdPK= ?',
+                [employeeIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, user:result.affectedRows});
+                }
+            )
+        }
+    })
+    app.delete("/likedislike/:id", verifyToken, (req, res) => {
+        const like = req.params.id;
+        const {userIdPK} = req.user;
+
+            con.query(
+                'DELETE user FROM likedislike INNER JOIN user On user.UserEmpFK = employee.EmpIdPK Where user.UserIdPK = ?',
+                [userIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, user:result.affectedRows});
+                }
+            )
+    })
     app.delete("/comment/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
         const userIDPK = req.params.id;
