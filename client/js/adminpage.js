@@ -63,6 +63,10 @@ function renderUsers(user, index) {
         }
     });
 
+
+//PROMOTE HERE
+
+
 const formEditUser = document.getElementById('formEditUser');
 formEditUser.addEventListener('submit', async event => {
     event.preventDefault();
