@@ -214,7 +214,7 @@ async function startServer() {
     })
     app.get("/api/myVote/post/:postId", verifyToken,(req, res) => {
         const { postId } = req.params;
-        const { userId } = req.body;
+        const userId = req.user.userId;
 
         if (!userId) return res.status(400).json({ error: "userId query param required" });
 
@@ -231,7 +231,7 @@ async function startServer() {
     });
     app.get("/api/myVote/comment/:commentId", verifyToken,(req, res) => {
         const { commentId } = req.params;
-        const { userId } = req.body;
+        const userId = req.user.userId;
 
         if (!userId) return res.status(400).json({ error: "userId query param required" });
 
@@ -445,7 +445,7 @@ async function startServer() {
 
         const {postComId,isPost} = req.body;
             con.query(
-                'DELETE  FROM likedislike Where LikDisUserIdFK = ? AND postComId=? AND isPost=?',
+                'DELETE FROM likedislike WHERE LikDisUserIdFK = ? AND LikDisPostComId=? AND LikDisIsPost=?',
                 [userIdPK,postComId,isPost],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});

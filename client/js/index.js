@@ -93,6 +93,8 @@ function renderPost(post, container) {
            </div>
        </div>`
         : "";
+
+    //CHECK IF ITS BEEN EDITED AND CHANGES STRING ON POST
     let createdAt = new Date(post.PostCreatedAt).toLocaleTimeString();
     let updatedAt = new Date(post.PostUpdatedAt).toLocaleTimeString();
     let actualdate = createdAt;
@@ -285,20 +287,42 @@ async function deletePost(post) {
 
 async function toggleLikesDislikes(postComID, isPost, isLike) {
     const token = localStorage.getItem("token");
-    if (!token) {
-        alert("You must be logged in to vote.");
-        return;
-    }
-    const res = await fetch("/api/likeDislike", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ postComID, isPost, isLike })
+    if (!token) { alert("You must be logged in to vote."); return; }
+
+    const info = await getUserInfo(token);
+    const userId = info.userIDPK;
+
+    const voteRes = await fetch(`/api/myVote/post/${postComID}`, {
+        headers: { "Authorization": `Bearer ${token}` }
     });
-    const data = await res.json();
-    console.log("Vote response:", data);  // ← add this
+    const voteData = await voteRes.json();
+    const currentReaction = voteData.reaction; // "liked", "disliked", or null
+
+    const isAlreadyThis = (isLike === 1 && currentReaction === "liked") ||
+        (isLike === 0 && currentReaction === "disliked");
+
+    if (isAlreadyThis) {
+        // REMOVE VOTE D:
+        await fetch(`/likedislike/${userId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({ postComId: postComID, isPost })
+        });
+    } else if (currentReaction !== null) {
+        // FLIP VOTE o.o
+        await fetch(`/likedislike/${userId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({ postComID, isPost, isLike })
+        });
+    } else {
+        // NEW VOTE :D
+        await fetch("/api/likeDislike", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({ LikDisUserIdFK: userId, postComID, isPost, isLike })
+        });
+    }
 }
 
 async function getPostLikeCounts(postId) {
@@ -311,7 +335,7 @@ async function getUserVoteForPost(postId) {
     const token = localStorage.getItem("token");
     if (!token) return null;
     try {
-        const res = await fetch(`/api/myVote/${postId}`, {
+        const res = await fetch(`/api/myVote/post/${postId}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) return null;
