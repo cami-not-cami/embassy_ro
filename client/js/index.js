@@ -26,7 +26,54 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
+    //EDIT POST STUFF
 
+    // EDIT POST FORM
+    document.getElementById('formEditPost').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        form.classList.add('was-validated');
+        if (!form.checkValidity()) return;
+
+        const token = localStorage.getItem("token");
+        const title = document.getElementById('editPostTitle').value.trim();
+        const content = document.getElementById('editPostContent').value.trim();
+
+        const res = await fetch(`/editPost/${_activeEditPost.PostIdPK}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                postEmpFK: _activeEditPost.PostEmpIdFK,
+                title,
+                content,
+                updatedAt: new Date().toISOString(),
+                imagePath: _activeEditPost.PostImagePath ?? null
+            })
+        });
+
+        if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('modalEditPost')).hide();
+            const postsContainer = document.getElementById("postsContainer");
+            postsContainer.innerHTML = "";
+            const updated = await (await fetch('/posts')).json();
+            updated.forEach(p => renderPost(p, postsContainer));
+        } else {
+            alert("Could not save changes.");
+        }
+    });
+
+// DELETE IN EDIT MODAL
+    document.getElementById('btnDeleteFromEdit').addEventListener('click', () => {
+        openDeletePostModal(_activeEditPost);
+    });
+
+// CONFIRM DELETE
+    document.getElementById('btnConfirmDeletePost').addEventListener('click', () => {
+        deletePost(_activeEditPost);
+    });
 });
 
 function renderPost(post, container) {
@@ -83,7 +130,26 @@ function renderPost(post, container) {
                                         <div class="text-muted small">${post.EmpDescription ?? ""}</div>
                                     </div>
                                 </div>
-                                <div class="text-muted small">${actualdate}</div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="text-muted small">${actualdate}</div>
+                                    <div class="post-menu-wrapper d-none" data-post-id="${post.PostIdPK}" data-post-emp="${post.PostEmpIdFK}">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-link text-muted p-0 post-menu-btn"
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                                    title="Post options">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                                <li><button class="dropdown-item btn-post-edit" type="button">
+                                                    <i class="bi bi-pencil me-2"></i>Edit
+                                                </button></li>
+                                                <li><button class="dropdown-item btn-post-delete text-danger" type="button">
+                                                    <i class="bi bi-trash me-2"></i>Delete
+                                                </button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -141,9 +207,76 @@ function renderPost(post, container) {
     commentBtn.addEventListener('click', () => openCommentModal(post));
 
     container.appendChild(postEl);
+
+    // SHOW MENU ONLY FOR POST OWNER / ADMIN
+    (async () => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        try {
+            const info = await getUserInfo(token);
+            if (!info) return;
+            const wrapper = postEl.querySelector('.post-menu-wrapper');
+            const isOwner = info.userIDPK == post.PostEmpIdFK;
+            const isAdmin = info.isAdmin === 1;
+            if (isOwner || isAdmin) {
+                wrapper.classList.remove('d-none');
+            }
+        } catch {}
+    })();
+
+// EDIT BUTTON
+    postEl.querySelector('.btn-post-edit').addEventListener('click', () => {
+        openEditPostModal(post);
+    });
+
+// DELETE BUTTON
+    postEl.querySelector('.btn-post-delete').addEventListener('click', () => {
+        openDeletePostModal(post);
+    });
+}
+//EDIT POST STUFF
+let _activeEditPost = null;
+
+function openEditPostModal(post) {
+    _activeEditPost = post;
+    document.getElementById('editPostTitle').value = post.PostTitle ?? '';
+    document.getElementById('editPostContent').value = post.PostContent ?? '';
+    document.getElementById('formEditPost').classList.remove('was-validated');
+    new bootstrap.Modal(document.getElementById('modalEditPost')).show();
 }
 
-// ─── LIKES/DISLIKE HELPERS ─────────────────────────────────────────────────────────────
+function openDeletePostModal(post) {
+    _activeEditPost = post;
+    // Close edit modal if open
+    const editModalEl = document.getElementById('modalEditPost');
+    const editModalInstance = bootstrap.Modal.getInstance(editModalEl);
+    if (editModalInstance) editModalInstance.hide();
+    new bootstrap.Modal(document.getElementById('modalDeletePost')).show();
+}
+
+async function deletePost(post) {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`/post/${post.PostIdPK}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ postEmpFK: post.PostEmpIdFK })
+    });
+    if (res.ok) {
+        bootstrap.Modal.getInstance(document.getElementById('modalDeletePost')).hide();
+        // Remove the card from the DOM
+        const postsContainer = document.getElementById("postsContainer");
+        postsContainer.innerHTML = "";
+        const updated = await (await fetch('/posts')).json();
+        updated.forEach(p => renderPost(p, postsContainer));
+    } else {
+        alert("Could not delete post.");
+    }
+}
+
+//LIKES/DISLIKES STUFF
 
 async function toggleLikesDislikes(postComID, isPost, isLike) {
     const token = localStorage.getItem("token");
@@ -213,8 +346,8 @@ async function showCommentVoteState(commentId, likeBtn, dislikeBtn) {
     dislikeBtn.style.filter = disliked ? 'drop-shadow(0 0 3px var(--clr-coral))' : '';
 }
 
-// ─── Comment Modal ────────────────────────────────────────────────────────────
 
+//COMENT FUNCTIONSS
 let _activePostId = null;
 let _replyToCommentId = null;
 

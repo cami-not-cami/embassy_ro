@@ -1,10 +1,11 @@
 //import {Chart} from "chart.js";
 
 document.addEventListener("DOMContentLoaded",  async () => {
+    const chartInstances = {};
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
 let currentUser = null;
-
+await getEmployeeStatistics();
 const res = await fetch('/users');
 const users = await res.json();
 users.forEach((user, index) => renderUsers(user, index));
@@ -36,8 +37,8 @@ function renderUsers(user, index) {
         </svg>
       </button>
       <button class="btn btn-info" id="btnModelDemote" href="#modalDemote" data-bs-target="#modalDemote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
         </svg>
       </button>
     </td>`;
@@ -77,6 +78,111 @@ function renderUsers(user, index) {
 
 //PROMOTE HERE
 //STATISTIC HERE
+
+    async function getEmployeeStatistics() {
+        const token = localStorage.getItem("token");
+        const headers = { "Authorization": `Bearer ${token}` };
+
+        const [users, postLikes, commentLikes] = await Promise.all([
+            fetch("/users", { headers }).then(r => r.json()),
+            fetch("/api/postLike").then(r => r.json()),
+            fetch("/api/commentLike").then(r => r.json()),
+        ]);
+
+
+        let adminCount = 0, employeeCount = 0, visitorCount = 0;
+        users.forEach(user => {
+            if (user.EmpIsAdmin === 1)      adminCount++;
+            else if (user.EmpIdPK !== null) employeeCount++;
+            else                            visitorCount++;
+        });
+
+
+        const totalPostLikes       = postLikes.reduce((s, p) => s + Number(p.likes), 0);
+        const totalPostDislikes    = postLikes.reduce((s, p) => s + Number(p.dislikes), 0);
+        const totalCommentLikes    = commentLikes.reduce((s, c) => s + Number(c.likes), 0);
+        const totalCommentDislikes = commentLikes.reduce((s, c) => s + Number(c.dislikes), 0);
+
+        const totalLikes               = totalPostLikes + totalCommentLikes;
+        const totalDislikes            = totalPostDislikes + totalCommentDislikes;
+        const totalPostInteractions    = totalPostLikes + totalPostDislikes;
+        const totalCommentInteractions = totalCommentLikes + totalCommentDislikes;
+
+        //IGNORE EXISTING CHART
+        function makeChart(id, config) {
+            if (chartInstances[id]) chartInstances[id].destroy();
+            chartInstances[id] = new Chart(document.getElementById(id), config);
+        }
+
+        //CHART 1
+        makeChart("chartLikesDonut", {
+            type: "doughnut",
+            data: {
+                labels: ["Likes", "Dislikes"],
+                datasets: [{
+                    data: [totalLikes, totalDislikes],
+                    backgroundColor: ["rgba(25, 135, 84, 0.8)", "rgba(220, 53, 69, 0.8)"],
+                    borderColor:     ["rgb(25, 135, 84)",        "rgb(220, 53, 69)"],
+                    borderWidth: 2,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } }
+                }
+            }
+        });
+
+        //CHART 2
+        makeChart("chartPostsVsComments", {
+            type: "pie",
+            data: {
+                labels: ["Post interactions", "Comment interactions"],
+                datasets: [{
+                    data: [totalPostInteractions, totalCommentInteractions],
+                    backgroundColor: ["rgba(13, 110, 253, 0.8)", "rgba(255, 193, 7, 0.8)"],
+                    borderColor:     ["rgb(13, 110, 253)",        "rgb(255, 193, 7)"],
+                    borderWidth: 2,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } }
+                }
+            }
+        });
+
+        // CHART 3
+        makeChart("chartUserRoles", {
+            type: "bar",
+            data: {
+                labels: ["Admin", "Employee", "Visitor"],
+                datasets: [{
+                    label: "Users",
+                    data: [adminCount, employeeCount, visitorCount],
+                    backgroundColor: [
+                        "rgba(220, 53, 69, 0.7)",
+                        "rgba(13, 110, 253, 0.7)",
+                        "rgba(25, 135, 84, 0.7)",
+                    ],
+                    borderColor: ["rgb(220,53,69)", "rgb(13,110,253)", "rgb(25,135,84)"],
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } }
+            }
+        });
+    }
 
         const btnPromote = document.getElementById('btnPromote');
 
@@ -143,24 +249,6 @@ btnDemote.addEventListener('click', async () => {
 
 
 })
-
-async function getEmployeeStatistics(){
-    const employeeStatistic = document.getElementById('employeeStatistic');
-
-    //GET ALL USERS
-
-    const labels =  ["Admin", "Visitor", "Employee"];
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Employee Statistic',
-            //data:
-        }]
-    }
-    new Chart(employeeStatistic, {
-        type: 'bar'
-    })
-}
 
 
 const formEditUser = document.getElementById('formEditUser');
