@@ -307,6 +307,18 @@ async function startServer() {
                 res.json(results);
             });
     })
+    app.get('/api/last3posts', (req, res) => {
+        con.query(
+            `SELECT DISTINCT *
+             FROM post p
+                      LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK
+                      LEFT JOIN user u ON u.UserIdPK = e.EmpIdPK
+             ORDER BY p.PostCreatedAt DESC LIMIT 3`, (err, results) => {
+                if (err) return res.status(500).json({error: err.message});
+                res.json(results);
+            });
+    })
+
     app.get("/", (req, res) => {
         const locale = req.query.lang || "de";
         i18n.locale = locale;
