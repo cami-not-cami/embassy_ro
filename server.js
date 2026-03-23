@@ -29,7 +29,6 @@ const con = mysql.createPool({
 });
 const secret = env.parsed.SECRETKEY;
 
-
 async function startServer() {
     const {I18n} = await import("i18n-js");
 
@@ -42,7 +41,7 @@ async function startServer() {
             FirstName: "Prenume",
             LastName: "Nume",
             überblick: "Viziune",
-            email: "Email",
+            email: "Adresa de email",
             password: "Parolă",
             information: "Informații",
             pictures: "Poze",
@@ -54,22 +53,22 @@ async function startServer() {
             konsular: "Taxe consulare",
             datenschutz: "Protecția datelor",
             konsularform: "Formulare consulat",
-            wirtschaft: "Wirtschafts-Bureau",
-            förderung: "Förderung der wirtschaftlichen Zusammenarbeit",
-            investieren: "Österreichische Unternehmen in Rumänien investieren",
-            ausstellungen: "Ausstellungen",
-            bilaterale: "Bilaterale Beziehungen",
-            politischebeziehungen: "Politische Beziehungen",
-            wirtschaftlichezusammenarbeit: "Wirtschaftliche Zusammenarbeit",
-            kulturelle: "Kulturelle und wissenschaftliche Beziehungen",
-            institut: "Institutionelle Präsenz",
-            honorarkonsulate: "Honorarkonsulate",
-            kulturinstitut: "Honorarkonsulate",
-            vertretungen: "Vertretungen",
-            logout: "Abmelden",
-            signup: "Anmelden",
-            inputerror:"Ungültige Eingabe",
-            passwordmatcherror:"Die Passwörter stimmen nicht überein"
+            wirtschaft: "Birou economic",
+            förderung: "Promovarea cooperării economice",
+            investieren: "Companiile austriece investesc în România ",
+            ausstellungen: "Expoziții",
+            bilaterale: "Relații bilaterale",
+            politischebeziehungen: "Relații politice",
+            wirtschaftlichezusammenarbeit: "Cooperarea economică",
+            kulturelle: "Relații culturale și științifice",
+            institut: "Prezența instituțională",
+            honorarkonsulate: "Consulate Onorifice",
+            kulturinstitut: "Institutul Cultural Român din Viena",
+            vertretungen: "Reprezentare",
+            logout: "Deconectați-vă",
+            signup: "Conectați-vă",
+            inputerror:"Intrare invalidă",
+            passwordmatcherror:"Parolele nu se potrivesc"
         },
         de: {
             home: "Startseite",
@@ -115,7 +114,6 @@ async function startServer() {
     // Serve only JS/CSS as static, NOT the html folder
     app.use('/js', express.static(path.join(__dirname, 'client/js')));
     app.use('/images', express.static(path.join(__dirname, 'client/images')));
-
     app.use('/css', express.static(path.join(__dirname, 'client/css')));
     app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
     app.get('/html', (req, res) => {
@@ -135,7 +133,6 @@ async function startServer() {
             cb(null, nameWithoutExt + '-' + Date.now() + path.extname(file.originalname));
         }
     });
-
     const uploadPost = multer({
         storage: storagePosts,
         limits: { fileSize: 1000000 },
@@ -143,7 +140,6 @@ async function startServer() {
             checkFileType(file, cb);
         }
     }).single('myFile');
-
     const uploadPFP = multer({
         storage: storageUserPFP,
         limits: { fileSize: 1000000 },
@@ -151,10 +147,8 @@ async function startServer() {
             checkFileType(file, cb);
         }
     }).single('myFile');
-
     const verifyToken = (req, res, next) => {
         const token = req.headers.authorization?.split(' ')[1];
-
         if (!token) {
             return res.status(401).json({success: false, message: "No token"});
         }
@@ -178,7 +172,6 @@ async function startServer() {
             cb('Error: Images only! (jpeg, jpg, png)');
         }
     }
-
     app.get("/api/postLike", (req, res) => {
         con.query(
             `SELECT
@@ -228,8 +221,7 @@ async function startServer() {
     app.post("/api/comment", (req, res) => {
         const { ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent } = req.body;
         con.query(
-            `INSERT INTO comment (ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent) 
-         VALUES (?, ?, ?, ?)`,
+            `INSERT INTO comment (ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent) VALUES (?, ?, ?, ?)`,
             [ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent],
             (err, results) => {
                 if (err) return res.status(500).json({ error: err.message });
@@ -361,8 +353,22 @@ async function startServer() {
         const isAdmin = req.user.isAdmin;
         return res.json({userIDPK, userRole,isAdmin});
     })
-    //token
+
     app.delete("/user/:id", verifyToken, (req, res) => {
+
+        const userIDPK = req.params.id;
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'DELETE FROM user WHERE UserIdPK=?',
+                [userIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, user:result.affectedRows});
+                }
+            )
+        }
+    })
+    app.delete("/comment/:id", verifyToken, (req, res) => {
         console.log("IM HERE");
         const userIDPK = req.params.id;
         if (req.user.isAdmin === 1) {
@@ -379,7 +385,7 @@ async function startServer() {
     app.get("/user/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
             con.query(
-                `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,
+                `SELECT u.UserIdPK, u.UserFirstname,u.UserLastname,u.UserEmail,u.UserPicturePath
                         u.UserPassword,
                         e.EmpIdPK,
                         e.EmpPhonenumber,
@@ -443,7 +449,6 @@ async function startServer() {
     app.listen(port, () => {
         console.log(`App listening at http://localhost:${port}`);
     });
-
     app.post("/createPost", verifyToken, async (req, res) => {
         const {title, content, createdAt, updatedAt, imagePath} = req.body;
         const userRole = req.user.role;
@@ -495,7 +500,6 @@ async function startServer() {
         res.send(html);
     });
 }
-
 function HashPassword(password) {
     if (password === "") {
         throw new Error("Password cannot be empty");
