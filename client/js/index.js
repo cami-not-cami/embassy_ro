@@ -39,7 +39,7 @@ function renderPost(post, container) {
         : "";
 
     const date = new Date(post.PostCreatedAt).toLocaleDateString();
-
+    console.log(post);
     const postEl = document.createElement("div");
     postEl.className = "container-fluid mt-4";
     postEl.innerHTML = `

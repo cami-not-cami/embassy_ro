@@ -120,7 +120,25 @@ function renderUsers(user, index) {
 const btnDemote = document.getElementById('btnDemote');
 
 btnDemote.addEventListener('click', async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("You must be logged in to vote.");
+        return;
+    }
 
+    const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            employeeFK: null,
+            firstname: currentUser.UserFirstname,
+            lastname:  currentUser.UserLastname,
+            email:     currentUser.UserEmail,
+        })
+    });
 })
 
 async function getEmployeeStatistics(){
