@@ -393,12 +393,12 @@ async function startServer() {
         }
     })
     app.delete("/likedislike/:id", verifyToken, (req, res) => {
-        const like = req.params.id;
-        const {userIdPK,postComId} = req.body;
+        const userIdPK = req.params.id;
+        const {postComId,isPost} = req.body;
 
             con.query(
-                'DELETE  FROM likedislike Where LikDisUserIdFK = ?',
-                [userIdPK],
+                'DELETE  FROM likedislike Where LikDisUserIdFK = ? AND postComId=? AND isPost=?',
+                [userIdPK,postComId,isPost],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, user:result.affectedRows});
