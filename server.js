@@ -469,9 +469,9 @@ async function startServer() {
         }
     })
     app.delete("/post/:id", verifyToken, (req, res) => {
-        const postID= req.body;
-        const userIDPK = req.params.id;
-        if (req.user.userId == userIDPK) {
+        const postID = req.params.id;
+        const { postEmpFK } = req.body;
+        if (req.user.isAdmin === 1 || req.user.userId == postEmpFK) {
             con.query(
                 'DELETE FROM post WHERE PostIdPK=?',
                 [postID],
@@ -502,12 +502,12 @@ async function startServer() {
         }
     })
     app.put("/editPost/:id", verifyToken, (req, res) => {
-        const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
+        const {postEmpFK, title, content, updatedAt, imagePath} = req.body;
         const postID = req.params.id;
-        if(req.user.userId == postEmpFK || req.user.isAdmin == 1) {}
+        if (req.user.isAdmin === 1 || req.user.userId == postEmpFK)
             con.query(
-                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
-                [ title, content, updatedAt, imagePath,postID],
+                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=?, PostImagePath=? WHERE PostIdPK=?',
+                [title, content, updatedAt, imagePath, postID],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, id: result.insertId});

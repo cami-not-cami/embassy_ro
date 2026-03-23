@@ -28,16 +28,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     //EDIT POST STUFF
 
-    // EDIT POST FORM
-    document.getElementById('formEditPost').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        form.classList.add('was-validated');
-        if (!form.checkValidity()) return;
+    document.addEventListener('click', async (e) => {
+        if (e.target.id !== 'btnSavePost') return;
 
         const token = localStorage.getItem("token");
         const title = document.getElementById('editPostTitle').value.trim();
         const content = document.getElementById('editPostContent').value.trim();
+
+        if (!title || !content) {
+            document.getElementById('formEditPost').classList.add('was-validated');
+            return;
+        }
 
         const res = await fetch(`/editPost/${_activeEditPost.PostIdPK}`, {
             method: "PUT",
@@ -49,13 +50,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 postEmpFK: _activeEditPost.PostEmpIdFK,
                 title,
                 content,
-                updatedAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
                 imagePath: _activeEditPost.PostImagePath ?? null
             })
         });
 
         if (res.ok) {
-            bootstrap.Modal.getInstance(document.getElementById('modalEditPost')).hide();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEditPost')).hide();
             const postsContainer = document.getElementById("postsContainer");
             postsContainer.innerHTML = "";
             const updated = await (await fetch('/posts')).json();
@@ -209,12 +210,16 @@ function renderPost(post, container) {
     container.appendChild(postEl);
 
     // SHOW MENU ONLY FOR POST OWNER / ADMIN
+    // SHOW MENU ONLY FOR POST OWNER / ADMIN
     (async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
         try {
             const info = await getUserInfo(token);
             if (!info) return;
+
+            console.log("userIDPK:", info.userIDPK, "PostEmpIdFK:", post.PostEmpIdFK, "isAdmin:", info.isAdmin); // ← ADD THIS
+
             const wrapper = postEl.querySelector('.post-menu-wrapper');
             const isOwner = info.userIDPK == post.PostEmpIdFK;
             const isAdmin = info.isAdmin === 1;
@@ -242,16 +247,16 @@ function openEditPostModal(post) {
     document.getElementById('editPostTitle').value = post.PostTitle ?? '';
     document.getElementById('editPostContent').value = post.PostContent ?? '';
     document.getElementById('formEditPost').classList.remove('was-validated');
-    new bootstrap.Modal(document.getElementById('modalEditPost')).show();
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEditPost'));
+    modal.show();
 }
 
 function openDeletePostModal(post) {
     _activeEditPost = post;
-    // Close edit modal if open
-    const editModalEl = document.getElementById('modalEditPost');
-    const editModalInstance = bootstrap.Modal.getInstance(editModalEl);
+    const editModalInstance = bootstrap.Modal.getInstance(document.getElementById('modalEditPost'));
     if (editModalInstance) editModalInstance.hide();
-    new bootstrap.Modal(document.getElementById('modalDeletePost')).show();
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalDeletePost'));
+    modal.show();
 }
 
 async function deletePost(post) {
