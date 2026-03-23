@@ -110,6 +110,7 @@ function renderUsers(user, index) {
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
+                userIDPK: currentUser.UserIdPK,
                 employeeFK: data.id,
                 firstname: currentUser.UserFirstname,
                 lastname:  currentUser.UserLastname,
