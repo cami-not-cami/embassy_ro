@@ -425,7 +425,7 @@ async function startServer() {
     app.put("/editUser/:id", verifyToken, (req, res) => {
         const { firstname, lastname, email,employeeFK} = req.body;
         const userIDPK = req.params.id;
-        if (req.user.isAdmin === 1) {
+        if (req.user.isAdmin === 1 || req.user.userId === userIDPK) {
             con.query(
                 'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? ,UserEmpFK=?  WHERE UserIdPK=?',
                 [firstname, lastname, email, employeeFK,userIDPK],
