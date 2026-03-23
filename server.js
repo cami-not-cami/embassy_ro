@@ -212,6 +212,41 @@ async function startServer() {
                 res.json(results);
             });
     })
+    app.get("/api/myVote/post/:postId", verifyToken,(req, res) => {
+        const { postId } = req.params;
+        const { userId } = req.body;
+
+        if (!userId) return res.status(400).json({ error: "userId query param required" });
+
+        con.query(
+            `SELECT * FROM likedislike
+             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 0`,
+            [userId, postId],
+            (err, results) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (results.length === 0) return res.json({ reaction: null });
+                res.json({ reaction: results[0].LikDisIsLike == 1 ? "liked" : "disliked" });
+            }
+        );
+    });
+    app.get("/api/myVote/comment/:commentId", verifyToken,(req, res) => {
+        const { commentId } = req.params;
+        const { userId } = req.body;
+
+        if (!userId) return res.status(400).json({ error: "userId query param required" });
+
+        con.query(
+            `SELECT * FROM likedislike
+             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 0`,
+            [userId, commentId],
+            (err, results) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (results.length === 0) return res.json({ reaction: null });
+                res.json({ reaction: results[0].LikDisIsLike == 1 ? "liked" : "disliked" });
+
+            }
+        );
+    });
     app.post('/api/likeDislike', (req, res) => {
         const {LikDisUserIdFK, postComID,isPost,isLike} = req.body;
         {
@@ -433,6 +468,20 @@ async function startServer() {
             )
         }
     })
+    app.delete("/post/:id", verifyToken, (req, res) => {
+        const postID= req.body;
+        const userIDPK = req.params.id;
+        if (req.user.userId == userIDPK) {
+            con.query(
+                'DELETE FROM post WHERE PostIdPK=?',
+                [postID],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, result:result.affectedRows});
+                }
+            )
+        }
+    })
     //only the admin gets to use this, gives the user his role
     app.put("/editUser/:id", verifyToken, (req, res) => {
         const { firstname, lastname, email,employeeFK} = req.body;
@@ -455,7 +504,7 @@ async function startServer() {
     app.put("/editPost/:id", verifyToken, (req, res) => {
         const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
         const postID = req.params.id;
-        if(req.user.userId == postEmpFK)
+        if(req.user.userId == postEmpFK || req.user.isAdmin == 1) {}
             con.query(
                 'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
                 [ title, content, updatedAt, imagePath,postID],
