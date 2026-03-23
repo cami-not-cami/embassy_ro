@@ -46,7 +46,8 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <button id="btnEdit" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">{{edit}}</button>
             <a type="button" class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
             <a type="button" class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
         </div>
@@ -127,7 +128,6 @@
 
 <!-- POST CONTAINER -->
 <div id="postsContainer" class="mb-5"></div>
-
 <!-- DRAWER/OFFCANVAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
     <div class="offcanvas-header">
@@ -481,6 +481,39 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+<!-- EDIT -->
+<div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="modalSignup" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="h3 text-center mt-3">{{edit}}</div>
+                        <form id="formEditUser" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <input id="inputFirstNameEdit" placeholder="{{FirstName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your first name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputLastNameEdit" placeholder="{{LastName}}" type="text" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your last name.</div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <input id="inputSignupEmailEdit" placeholder="Email" type="email" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a valid email.</div>
+                            </div>
+                            <div class="mb-3">
+                                <input id="inputProfilePictureEdit" placeholder="{{profilepicture}}" type="file" class="form-control" required>
+                                <div class="invalid-feedback">Passwords do not match.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Edit </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
