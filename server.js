@@ -393,7 +393,7 @@ async function startServer() {
         }
     })
     //only the admin gets to use this, gives the user his role
-    app.put("/editUser:id", verifyToken, (req, res) => {
+    app.put("/editUser/:id", verifyToken, (req, res) => {
         const { firstname, lastname, email,employeeFK} = req.body;
         const userIDPK = req.params.id;
         if (req.user.isAdmin === 1) {
