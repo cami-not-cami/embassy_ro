@@ -437,7 +437,8 @@ async function startServer() {
     app.put("/editUser/:id", verifyToken, (req, res) => {
         const { firstname, lastname, email,employeeFK} = req.body;
         const userIDPK = req.params.id;
-        //if (req.user.isAdmin === 1 || req.user.userId === userIDPK) {
+        if (req.user.isAdmin == 1 || req.user.userId == userIDPK) {
+            console.log(req.user.userId +"TRUE");
             con.query(
                 'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? ,UserEmpFK=?  WHERE UserIdPK=?',
                 [firstname, lastname, email, employeeFK,userIDPK],
@@ -446,10 +447,10 @@ async function startServer() {
                     res.json({success: true, id: result.insertId});
                 }
             )
-        //} else {
+        } else {
             console.log("Trying for admin failed" +
                 "Admin is not 1  " + req.user.isAdmin);
-        //}
+        }
     })
     app.put("/editPost/:id", verifyToken, (req, res) => {
         const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
