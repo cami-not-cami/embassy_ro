@@ -38,8 +38,31 @@ function renderPost(post, container) {
        </div>`
         : "";
 
-    const date = new Date(post.PostCreatedAt).toLocaleDateString();
+    const pfpHtml = post.UserPicturePath
+        ? `<div class="row">
+           <div class="d-flex align-items-center justify-content-center ps-5 pe-5">
+               <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;" alt="Post image">
+           </div>
+       </div>`
+        : "";
+    let createdAt = new Date(post.PostCreatedAt).toLocaleTimeString();
+    let updatedAt = new Date(post.PostUpdatedAt).toLocaleTimeString();
+    let actualdate = createdAt;
 
+    if(createdAt !== updatedAt)
+    {
+        updatedAt =  new Date(post.PostUpdatedAt).toLocaleDateString();
+         actualdate = `Edited at: ${updatedAt}`;
+    }
+    else
+    {
+        createdAt =  new Date(post.PostCreatedAt).toLocaleDateString();
+        actualdate = createdAt;
+    }
+    console.log(actualdate);
+
+
+    console.log(post);
     const postEl = document.createElement("div");
     postEl.className = "container-fluid mt-4";
     postEl.innerHTML = `
@@ -53,14 +76,14 @@ function renderPost(post, container) {
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0"
                                          style="width:48px;height:48px;color:white;font-weight:bold;">
-                                        ${(post.EmpFirstname?.[0] ?? "?").toUpperCase()}
+                                        <img src="${post.PostImagePath}" class="w-100" style="object-fit: contain; max-height: 400px;">
                                     </div>
                                     <div>
-                                        <div class="fw-bold">${post.EmpFirstname ?? ""} ${post.EmpLastname ?? ""}</div>
-                                        <div class="text-muted small">${post.EmpJobTitle ?? ""}</div>
+                                        <div class="fw-bold">${post.UserFirstname ?? ""} ${post.UserLastname ?? ""}</div>
+                                        <div class="text-muted small">${post.EmpDescription ?? ""}</div>
                                     </div>
                                 </div>
-                                <div class="text-muted small">${date}</div>
+                                <div class="text-muted small">${actualdate}</div>
                             </div>
                         </div>
                         <div class="row mt-2">
