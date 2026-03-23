@@ -488,7 +488,7 @@
     </div>
 </div>
 <!-- EDIT -->
-<div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="modalSignup" tabindex="-1">
+<div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="modalEdit" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -520,7 +520,56 @@
         </div>
     </div>
 </div>
-
+<!-- EDIT POST MODAL -->
+<div class="modal fade" id="modalEditPost" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Edit Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditPost" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="editPostTitle" class="form-label fw-semibold">Title</label>
+                        <input type="text" id="editPostTitle" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a title.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="editPostContent" class="form-label fw-semibold">Content</label>
+                        <textarea id="editPostContent" class="form-control" rows="6" required></textarea>
+                        <div class="invalid-feedback">Please enter content.</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-primary px-4">Save changes</button>
+                        <button type="button" id="btnDeleteFromEdit" class="btn btn-outline-danger">
+                            <i class="bi bi-trash me-1"></i>Delete post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DELETE POST CONFIRM MODAL -->
+<div class="modal fade" id="modalDeletePost" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center px-4 pb-4">
+                <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:2.5rem;"></i>
+                <h5 class="fw-bold mt-3 mb-2">Delete this post?</h5>
+                <p class="text-muted mb-4">This action cannot be undone. The post will be permanently removed.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="btnConfirmDeletePost" class="btn btn-danger px-4">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- FOOTER -->
 <footer class="footer py-4 dark ">
     <div class="container">
