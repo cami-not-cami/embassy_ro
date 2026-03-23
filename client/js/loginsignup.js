@@ -4,9 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         await checkUserRole(token);
     }
     const formSignup = document.getElementById("formSignup");
-    const formEdit = document.getElementById("formEditUser");
-    const btnEdit = document.getElementById("btnEdit");
 
+    let currentUser;
     //CREATE COMMENT TOFIX
     // fetch("/api/comment", {
     //     method: "POST",
@@ -133,28 +132,109 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "/";
         })
     }
+
+    const btnEdit = document.getElementById("btnEdit");
+    btnEdit.addEventListener("click", async () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            await checkUserRole(token);
+        }
+        console.log("edit user");
+        const res = await fetch("/api/userInfo", {
+            headers: {"Authorization": `Bearer ${token}`}
+        });
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+        let userRes = await fetch(`/user/${data.userIDPK}`, {
+            headers: {"Authorization": `Bearer ${token}`}
+        });
+
+        const userData = await userRes.json();
+
+        console.log(userData);
+
+        document.getElementById("inputFirstNameEdit").value = userData.user.UserFirstname;
+        document.getElementById("inputLastNameEdit").value = userData.user.UserLastname;
+        document.getElementById("inputEmailEdit").value = userData.user.UserEmail;
+        document.getElementById("inputProfilePictureEdit").files = userData.user.UserPicturePath;
+
+    })
+
+    const formEdit = document.getElementById("formEditUser");
+
+    formEdit.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const infoRes = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (!infoRes.ok) return;
+        const info = await infoRes.json();
+
+        const firstname = document.getElementById("inputFirstNameEdit").value.trim();
+        const lastname  = document.getElementById("inputLastNameEdit").value.trim();
+        const email     = document.getElementById("inputEmailEdit").value.trim();
+        const photoFile = document.getElementById("inputProfilePictureEdit").files?.[0];
+
+        let photoPath = null;
+        if (photoFile) {
+            const formData = new FormData();
+            formData.append("myFile", photoFile);
+            const uploadRes = await fetch("/upload/pfp", {
+                method: "POST",
+                body: formData
+            });
+            if (uploadRes.ok) {
+                const uploadData = await uploadRes.json();
+                photoPath = uploadData.filePath;
+            }
+        }
+
+        const userRes = await fetch(`/user/${info.userIDPK}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const userData = await userRes.json();
+
+        const res = await fetch(`/editUser/${info.userIDPK}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                firstname,
+                lastname,
+                email,
+                employeeFK: userData.user.EmpIdPK ?? null,
+                userIDPK: info.userIDPK,
+            })
+        });
+
+        if (res.ok) {
+            await checkUserRole(token);
+
+            const modalEl = document.getElementById("modalEdit");
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+        } else {
+            const err = await res.json();
+            console.error("Edit failed:", err);
+        }
+    });
 })
 
-const btnEdit = document.getElementById("btnEdit");
-btnEdit.addEventListener("click", async () => {
-    let inputFirstNameEdit = document.getElementById("inputFirstNameEdit").value;
-    let inputLastNameEdit = document.getElementById("inputLastNameEdit");
-    let inputEmailEdit = document.getElementById("inputEmailEdit");
-    let inputProfilePictureEdit = document.getElementById("inputProfilePictureEdit");
 
-
-
-    inputFirstNameEdit = data.FirstName;
-    inputLastNameEdit = data.LastName;
-    inputEmailEdit = data.email;
-    //inputProfilePictureEdit = data.
-
-})
 
 async function checkUserRole(token){
     try {
         const res = await fetch("/api/userInfo", {
-            headers: { "Authorization": `Bearer ${token}` }
+            headers: {"Authorization": `Bearer ${token}`}
         });
 
         if (!res.ok) {
@@ -164,23 +244,19 @@ async function checkUserRole(token){
 
         const data = await res.json();
         let userRes = await fetch(`/user/${data.userIDPK}`, {
-            headers: { "Authorization": `Bearer ${token}` }
+            headers: {"Authorization": `Bearer ${token}`}
         });
         const userData = await userRes.json();
         const userJob = document.getElementById("userJob");
 
-        document.getElementById("userName").textContent  = userData.user.UserFirstname + " " + userData.user.UserLastname;
-        userJob.textContent   = userData.user.EmpDescription ?? "";
+        document.getElementById("userName").textContent = userData.user.UserFirstname + " " + userData.user.UserLastname;
+        userJob.textContent = userData.user.EmpDescription ?? "";
         document.getElementById("userEmail").textContent = userData.user.UserEmail ?? "";
 
-        if(userData.user.EmpDescription == null)
-        {
+        if (userData.user.EmpDescription == null) {
             userJob.classList.add = "d-none";
-        }
-        else
-        {
-            if(userJob.classList.contains("d-none"))
-            {
+        } else {
+            if (userJob.classList.contains("d-none")) {
                 userJob.classList.remove("d-none");
             }
         }
