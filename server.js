@@ -366,11 +366,10 @@ async function startServer() {
     })
     //token
     app.delete("/user/:id", verifyToken, (req, res) => {
-
         const userIDPK = req.params.id;
         if (req.user.isAdmin === 1) {
             con.query(
-                'DELETE FROM user WHERE UserIdPK=?',
+                'DELETE employee FROM employee INNER JOIN user On user.UserEmpFK = employee.EmpIdPK Where user.UserIdPK = ?',
                 [userIDPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
@@ -412,6 +411,22 @@ async function startServer() {
         }
     })
     app.get("/user/:id", verifyToken, (req, res) => {
+        const userIDPK = req.params.id;
+        con.query(
+            `SELECT u.UserIdPK, u.UserFirstname, u.UserLastname, u.UserEmail,
+                    e.EmpIdPK, e.EmpPhonenumber, e.EmpDescription, e.EmpIsAdmin
+             FROM user u
+                      LEFT JOIN employee e ON u.UserEmpFK = e.EmpIdPK
+             WHERE u.UserIdPK = ?`,
+            [userIDPK],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (result.length === 0) return res.status(404).json({ error: "User not found" });
+                res.json({ success: true, user: result[0] });
+            }
+        );
+    });
+    app.get("/employee/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
         con.query(
             `SELECT u.UserIdPK, u.UserFirstname, u.UserLastname, u.UserEmail,
