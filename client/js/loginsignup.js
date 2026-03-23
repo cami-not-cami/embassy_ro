@@ -135,28 +135,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 })
 
-async function getUserData(token)
-{
-    const res = await fetch("/api/userInfo", {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
 
-    if (!res.ok) {
-        localStorage.removeItem("token");
-        return;
-    }
-
-    const data = await res.json();
-
-    const userRes = await fetch(`/user/${data.userIDPK}`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    });
-    return userRes;
-}
 
 async function checkUserRole(token){
     try {
-        let userRes = getUserData(token)
+        const res = await fetch("/api/userInfo", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("token");
+            return;
+        }
+
+        const data = await res.json();
+
+
+
+        let userRes = await fetch(`/user/${data.userIDPK}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const userData = await userRes.json();
         const userJob = document.getElementById("userJob");
 
