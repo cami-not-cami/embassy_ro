@@ -486,7 +486,9 @@ async function startServer() {
         }
     })
 
+    app.get("/api/statistic", verifyToken, (req, res) => {
 
+    })
     app.get("/post/:id", verifyToken, (req, res) => {
         const postID = req.params.id;
         con.query(`SELECT * From post p
