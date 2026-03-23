@@ -439,6 +439,35 @@ async function startServer() {
                 "Admin is not 1  " + req.user.isAdmin);
         }
     })
+    app.put("/editPost/:id", verifyToken, (req, res) => {
+        const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
+        const postID = req.params.id;
+        if(req.user.userId === postEmpFK)
+            con.query(
+                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
+                [ title, content, updatedAt, imagePath,postID],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+
+    })
+    app.get("/post/:id", verifyToken, (req, res) => {
+        const postID = req.params.id;
+        con.query(`SELECT * From post p
+                               LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK
+                               LEFT JOIN user u ON  u.UserIdPK  = e.EmpIdPK
+                               WHERE p.PostIdPK=?`,
+            [postID],
+            (err, result) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (result.length === 0) return res.status(404).json({ error: "User not found" });
+                res.json({ success: true, user: result[0] });
+            }
+        );
+    });
+
     app.get("/user/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
         con.query(
