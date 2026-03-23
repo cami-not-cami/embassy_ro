@@ -458,12 +458,16 @@ async function startServer() {
         const userIdPK = req.params.id;
         if(req.user.userId === userIdPK) {
             con.query(
-                'UPDATE likedislike SET LikDisIsLike=?  WHERE LikDisPostComId=? AND LikDisIsPost=?',
-                [ isLike,postComID ,isPost],
+                'UPDATE likedislike SET LikDisIsLike=?  WHERE LikDisPostComId=? AND LikDisIsPost=? AND LikDisUserIdFK=?',
+                [ isLike,postComID ,isPost,userIdPK],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, id: result.insertId});
+                    res.json({success: true, id: result.affectedRows});
+                    if (result.affectedRows === 0) {
+                        return res.status(404).json({ error: "Like/dislike not found" });
+                    }
                 }
+
             )}
         else{
             res.send("Error in likeddislike id put")
