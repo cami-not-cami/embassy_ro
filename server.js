@@ -357,24 +357,7 @@ async function startServer() {
         res.send(html);
     });
 
-    //only the admin gets to use this, gives the user his role
-    app.put("/editUser", verifyToken, (req, res) => {
-        const {userIDPK, firstname, lastname, email} = req.body;
 
-        if (req.user.isAdmin === 1) {
-            con.query(
-                'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? WHERE UserIdPK=?',
-                [firstname, lastname, email, userIDPK],
-                (err, result) => {
-                    if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, id: result.insertId});
-                }
-            )
-        } else {
-            console.log("Trying for admin failed" +
-                "Admin is not 1  " + req.user.isAdmin);
-        }
-    })
     app.get('/api/userInfo',verifyToken, async (req, res) => {
         const userIDPK = req.user.userId;
         const userRole = req.user.role;
@@ -408,6 +391,24 @@ async function startServer() {
                     res.json({success: true, user:result.affectedRows});
                 }
             )
+        }
+    })
+    //only the admin gets to use this, gives the user his role
+    app.put("/editUser:id", verifyToken, (req, res) => {
+        const { firstname, lastname, email,employeeFK} = req.body;
+        const userIDPK = req.params.id;
+        if (req.user.isAdmin === 1) {
+            con.query(
+                'UPDATE user SET UserFirstname=?, UserLastname=?, UserEmail=? ,UserEmpFK=?  WHERE UserIdPK=?',
+                [firstname, lastname, email, employeeFK,userIDPK],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )
+        } else {
+            console.log("Trying for admin failed" +
+                "Admin is not 1  " + req.user.isAdmin);
         }
     })
     app.get("/user/:id", verifyToken, (req, res) => {
