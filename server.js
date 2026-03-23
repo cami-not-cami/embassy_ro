@@ -42,7 +42,7 @@ async function startServer() {
             FirstName: "Prenume",
             LastName: "Nume",
             überblick: "Viziune",
-            email: "Email",
+            email: "Adresa de email",
             password: "Parolă",
             information: "Informații",
             pictures: "Poze",
@@ -50,26 +50,29 @@ async function startServer() {
             Botschafter: "Ambasade",
             Botschaftsteam: "Echipa ambasadei",
             actual: "Actual",
+            haager: "\"Apostilare\"",
             visa: " Servicii consulare.Vize",
             konsular: "Taxe consulare",
             datenschutz: "Protecția datelor",
             konsularform: "Formulare consulat",
-            wirtschaft: "Wirtschafts-Bureau",
-            förderung: "Förderung der wirtschaftlichen Zusammenarbeit",
-            investieren: "Österreichische Unternehmen in Rumänien investieren",
-            ausstellungen: "Ausstellungen",
-            bilaterale: "Bilaterale Beziehungen",
-            politischebeziehungen: "Politische Beziehungen",
-            wirtschaftlichezusammenarbeit: "Wirtschaftliche Zusammenarbeit",
-            kulturelle: "Kulturelle und wissenschaftliche Beziehungen",
-            institut: "Institutionelle Präsenz",
-            honorarkonsulate: "Honorarkonsulate",
-            kulturinstitut: "Honorarkonsulate",
-            vertretungen: "Vertretungen",
-            logout: "Abmelden",
-            signup: "Anmelden",
-            inputerror:"Ungültige Eingabe",
-            passwordmatcherror:"Die Passwörter stimmen nicht überein"
+            wirtschaft: "Birou economic",
+            förderung: "Promovarea cooperării economice",
+            investieren: "Companiile austriece investesc în România ",
+            ausstellungen: "Expoziții",
+            bilaterale: "Relații bilaterale",
+            politischebeziehungen: "Relații politice",
+            wirtschaftlichezusammenarbeit: "Cooperarea economică",
+            kulturelle: "Relații culturale și științifice",
+            institut: "Prezența instituțională",
+            honorarkonsulate: "Consulate Onorifice",
+            kulturinstitut: "Institutul Cultural Român din Viena",
+            vertretungen: "Reprezentare",
+            logout: "Deconectați-vă",
+            signup: "Conectați-vă",
+            inputerror:"Intrare invalidă",
+            passwordmatcherror:"Parolele nu se potrivesc",
+            menu:"Meniu"
+
         },
         de: {
             home: "Startseite",
@@ -107,7 +110,8 @@ async function startServer() {
             logout: "Abmelden",
             signup: "Anmelden",
             inputerror:"Ungültige Eingabe",
-            passwordmatcherror:"Die Passwörter stimmen nicht überein"
+            passwordmatcherror:"Die Passwörter stimmen nicht überein",
+            menu:"Menü"
 
         }
     });
@@ -296,8 +300,7 @@ async function startServer() {
     });
     app.get('/posts', (req, res) => {
         con.query(
-            `SELECT *
-             FROM post p
+            `SELECT *  FROM post p
                       LEFT JOIN employee e ON p.PostEmpIdFK = e.EmpIdPK`, (err, results) => {
                 if (err) return res.status(500).json({error: err.message});
                 res.json(results);
