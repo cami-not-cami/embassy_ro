@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../css/override.css">
-    <title>Static</title>
+    <title>Allgemeine Daten – Rumänien</title>
 </head>
 <body>
 
@@ -26,17 +26,17 @@
                     <a class="nav-link active" aria-current="page" href="?lang=de">DE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{home}}</a>
+                    <a class="nav-link active" aria-current="page" href="/">{{home}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{contact}}</a>
+                    <a class="nav-link active" aria-current="page" href="contact">{{contact}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">{{romania}}</a>
+                    <a class="nav-link active" aria-current="page" href="romania">{{romania}}</a>
                 </li>
             </ul>
         </div>
-        <form  id="search" class="d-flex" role="search">
+        <form id="search" class="d-flex" role="search">
                 <span class="input-group-text" id="addon-wrapping">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                       <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -46,7 +46,9 @@
             <button class="btn btn-outline-success" type="submit">{{search}}</button>
         </form>
         <div class="ms-3">
-            <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
+            <a type="button" class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
+            <a type="button" class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -54,49 +56,158 @@
             </svg>
         </button>
     </div>
-
 </nav>
 
 <header class="masthead" style="background-color: #98768e; padding-top: 3rem; padding-bottom: 3rem;"></header>
 
-
-
-<!-- WORK HERE -->
-
+<!-- MAIN CONTENT -->
 <div class="container-fluid mt-5 mb-5">
     <div class="row">
         <div class="col-2"></div>
         <div class="col">
             <div class="card ms-3">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="d-flex align-items-center justify-content-between container-fluid">
-                            <h1 id="staticTitle">Glory to Romania</h1>
-                            <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="text-start">
-                            <div id="staticContent">
-                                AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                            </div>
-                        </div>
+
+                    <!-- Title row -->
+                    <div class="d-flex align-items-center justify-content-between container-fluid mb-3">
+                        <h1 id="staticTitle">Allgemeine Daten</h1>
+                        <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </button>
                     </div>
+
+                    <!-- Content -->
+                    <div id="staticContent" class="text-start px-3">
+
+                        <!-- Staat & Regierung -->
+                        <hr class="section-divider">
+
+                        <div class="data-section">
+                            <div class="data-label">Offizielle Benennung</div>
+                            <div class="data-value">Rumänien</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Regierungsform</div>
+                            <div class="data-value">Parlamentarische Republik mit zwei Parlamentskammern. Der Staatspräsident, die Senatoren und die Abgeordneten werden in allgemeiner, gleicher, unmittelbarer, geheimer und freier Wahl gewählt. Rumänien ist NATO- und EU-Mitglied.</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Staatspräsident</div>
+                            <div class="data-value">Herr Nicusor Dan</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Premierminister</div>
+                            <div class="data-value">Herr Ilie Bolojan</div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Geografie -->
+                        <div class="data-section">
+                            <div class="data-label">Hauptstadt</div>
+                            <div class="data-value">Bukarest – 2.000.000 Einwohner, im Süd-Osten Rumäniens gelegen.</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Wichtigste Städte</div>
+                            <div class="data-value">Constanta, Timisoara (Temeswar), Iasi, Cluj-Napoca (Klausenburg), Brasov (Kronstadt), Galati, Craiova, Ploiesti, Sibiu (Herrmannstadt), Suceava, Braila</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Geographische Lage</div>
+                            <div class="data-value">Staat im Südosten Mitteleuropas, nördlich der Balkanhalbinsel, im Donaubecken, mit Zugang zum Schwarzen Meer. Rumänien befindet sich etwa in gleichem Abstand (zwischen 2.700 und 2.900 km) vom Atlantischen Ozean (im Westen), Arktischen Ozean (im Norden) und dem Ural-Gebirge (im Osten). Vom Mittelmeer liegt es 1.050 km nord-östlich.</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Nachbarn</div>
+                            <div class="data-value">Ukraine (Nordosten), Republik Moldau (Osten), Schwarzes Meer (Südosten), Bulgarien (Süden), Serbien-Montenegro (Südwesten), Ungarn (Nordwesten)</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Oberfläche</div>
+                            <div class="data-value">238.391 km² (4,8 % der Oberfläche Europas) – 11. Land in Europa, 79. in der Welt. Gesamte Grenzlänge: 3.149,9 km, davon 1.085,5 km Bodengrenze und 2.064,4 km Fluss- und Meeresgrenze. Eingeteilt in 41 Verwaltungsbezirke (40 Kreise + Bukarest mit 6 Sektoren).</div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Sprache, Flagge, Zeit -->
+                        <div class="data-section">
+                            <div class="data-label">Landesflagge</div>
+                            <div class="data-value">Trikolore; Farben senkrecht geordnet (von der Lanze): Blau – Gelb – Rot.</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Offizielle Sprache</div>
+                            <div class="data-value">Rumänisch (neulateinische Sprache)</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Offizielle Zeit</div>
+                            <div class="data-value">Sommerzeit: GMT +3 (letzter Sonntag im März – letzter Sonntag im Oktober) · Winterzeit: GMT +2</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Klima</div>
+                            <div class="data-value">Gemäßigt kontinental. Sommer-Durchschnittstemperatur: 22–24 °C (Höchstwerte bis 38 °C). Winter-Durchschnittstemperatur: bis −3 °C (Tiefstwerte bis −30 °C).</div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Bevölkerung & Religion -->
+                        <div class="data-section">
+                            <div class="data-label">Bevölkerung</div>
+                            <div class="data-value">21.698.181 Einwohner (Stand 2002), darunter Rumänen 89,5 %, Magyaren 6,6 %, Zigeuner 2,5 %, Deutsche 0,3 %, Ukrainer-Rutenen 0,3 %, Russen-Lipowaner 0,2 %, Türken 0,2 %, Tataren 0,1 %, Serben 0,1 %, Slowaken 0,1 % sowie weitere Minderheiten (Bulgaren, Kroaten, Griechen, Juden, Tschechen, Polen, Italiener, Armenier u. a.).</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Religion</div>
+                            <div class="data-value">Christlich-Orthodox 86,7 % · Römisch-katholisch 4,7 % · Reformiert 3,2 % · Pentikostale 1,5 % · Griechisch-katholisch 0,9 % · Baptisten 0,6 % · Adventisten 0,4 % · Unitarianer 0,3 % · Moslems 0,3 % · weitere Konfessionen (Angaben nach Volkszählung 2002).</div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Praktische Infos -->
+                        <div class="data-section">
+                            <div class="data-label">Landeswährung</div>
+                            <div class="data-value">Leu (LEU, Plural: LEI) = 100 Bani. Seit 1. Juli 2005: 1 Leu (neu) = 10.000 Lei (alt). Scheine: 1, 5, 10, 50, 100, 500 Lei · Münzen: 1, 5, 10, 50 Bani.</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Maßeinheit</div>
+                            <div class="data-value">Metrisches System (1 km = 0,62 Meilen)</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Telefonische Vorwahl</div>
+                            <div class="data-value">+40 (Rumänien) · +40 21 (Bukarest)</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Notruf</div>
+                            <div class="data-value">112 (europäischer Notruf)</div>
+                        </div>
+
+                        <div class="data-section">
+                            <div class="data-label">Gesetzliche Feiertage</div>
+                            <div class="data-value">1.–2. Januar (Neujahr) · Ostermontag (orthodox) · 1. Mai (Tag der Arbeit) · Pfingsten (Juni/Juli) · 15. August (Maria Himmelfahrt) · 30. November · 1. Dezember (Nationalfeiertag) · 25.–26. Dezember (Weihnachten)</div>
+                        </div>
+
+                        <hr class="section-divider">
+                        <p class="text-muted small">Quelle: Staatliche Behörde für Tourismus</p>
+
+                    </div>
+                    <!-- /staticContent -->
+
                 </div>
             </div>
         </div>
         <div class="col-2"></div>
     </div>
 </div>
-
-
-
-
-
-<!-- WORK UP THERE -->
-
 
 <!-- DRAWER/OFFCANVAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
@@ -109,241 +220,119 @@
                 <img src="../images/logo.png" class="rounded mx-auto d-block object-fit-cover rounded-circle w-50" alt="...">
             </div>
             <div class="row">
-                <div id="userName" class="text-center fw-bold">
-                    Vorname Nachname
-                </div>
+                <div id="userName" class="text-center fw-bold">Vorname Nachname</div>
             </div>
             <div class="row">
-                <div id="userJob" class="text-center fw-normal">
-                    Job Title goes here!
-                </div>
+                <div id="userJob" class="text-center fw-normal">Job Title goes here!</div>
             </div>
             <div class="row mb-3">
-                <div id="userEmail" class="text-center fw-light">
-                    Email goes here!
-                </div>
+                <div id="userEmail" class="text-center fw-light">Email goes here!</div>
             </div>
-
-            <!-- LOG IN -->
             <div class="row mt-5 invisible">
                 <button class="btn btn-primary">{{login}}</button>
             </div>
 
-
             <!-- ACCORDION -->
             <div class="accordion" id="staticPageAccordion">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseTwo">
-                            {{romania}}
-                        </button>
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false">{{romania}}</button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{überblick}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{information}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{pictures}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{überblick}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{information}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{pictures}}</button></div>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            {{aboutus}}
-                        </button>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false">{{aboutus}}</button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{Botschafter}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{Botschaftsteam}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{contact}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{actual}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{Botschafter}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{Botschaftsteam}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{contact}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{actual}}</button></div>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            {{visa}}
-                        </button>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false">{{visa}}</button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{konsular}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{haager}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{datenschutz}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{konsularform}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{konsular}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{haager}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{datenschutz}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{konsularform}}</button></div>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                            {{wirtschaft}}
-                        </button>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false">{{wirtschaft}}</button>
                     </h2>
                     <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{förderung}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{investieren}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{ausstellungen}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{förderung}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{investieren}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{ausstellungen}}</button></div>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                            {{bilaterale}}
-                        </button>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false">{{bilaterale}}</button>
                     </h2>
                     <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{übersicht}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{politischebeziehungen}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{wirtschaftlichezusammenarbeit}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{kulturelle}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{übersicht}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{politischebeziehungen}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{wirtschaftlichezusammenarbeit}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{kulturelle}}</button></div>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                            {{institut}}
-                        </button>
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false">{{institut}}</button>
                     </h2>
                     <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#staticPageAccordion">
                         <div class="accordion-body">
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{honorarkonsulate}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{kulturinstitut}}
-                                </button>
-                            </div>
-                            <div class="border-top border-bottom d-flex justify-content-center">
-                                <button class="fw-normal m-3 btn">
-                                    {{vertretungen}}
-                                </button>
-                            </div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{honorarkonsulate}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{kulturinstitut}}</button></div>
+                            <div class="border-top border-bottom d-flex justify-content-center"><button class="fw-normal m-3 btn">{{vertretungen}}</button></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- LOG OUT -->
             <div class="row mt-5">
                 <button id="btnLogOut" class="btn btn-primary">Log out</button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- MODALS -->
-<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="modalSignup" tabindex="-1">
+<div class="modal fade" id="modalSignup" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{signup}}</div>
-                        <form class="needs-validation" novalidate>
-                            <div class="mb-3">
-                                <input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required>
-                                <div class="invalid-feedback">Please enter your first name.</div>
-                            </div>
-                            <div class="mb-3">
-                                <input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control" required>
-                                <div class="invalid-feedback">Please enter your last name.</div>
-                            </div>
-                            <div class="mb-3 mt-3">
-                                <input id="inputSignupEmail" placeholder="Email" type="email" class="form-control" required>
-                                <div class="invalid-feedback">Please enter a valid email.</div>
-                            </div>
-                            <div class="mb-3">
-                                <input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required>
-                                <div class="invalid-feedback">Please enter a password.</div>
-                            </div>
-                            <div class="mb-3">
-                                <input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="password" class="form-control" required>
-                                <div class="invalid-feedback">Passwords do not match.</div>
-                            </div>
-                            <div class="d-flex justify-content-center mt-3">
-                                <p><a class="link-opacity-75 text-center" href="#modalLogin" data-bs-target="#modalLogin" data-bs-toggle="modal">{{clicklogin}}</a></p>
-                            </div>
+                        <form id="formSignup" class="needs-validation" novalidate>
+                            <div class="mb-3"><input id="inputFirstName" placeholder="{{FirstName}}" type="text" class="form-control" required><div class="invalid-feedback">Please enter your first name.</div></div>
+                            <div class="mb-3"><input id="inputLastName" placeholder="{{LastName}}" type="text" class="form-control" required><div class="invalid-feedback">Please enter your last name.</div></div>
+                            <div class="mb-3 mt-3"><input id="inputSignupEmail" placeholder="Email" type="email" class="form-control" required><div class="invalid-feedback">Please enter a valid email.</div></div>
+                            <div class="mb-3"><input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required><div class="invalid-feedback">Please enter a password.</div></div>
+                            <div class="mb-3"><input id="inputSignupConfirmPassword" placeholder="{{confirmpassword}}" type="password" class="form-control" required><div class="invalid-feedback">Passwords do not match.</div></div>
+                            <div class="d-flex justify-content-center mt-3"><p><a class="link-opacity-75 text-center" data-bs-target="#modalLogin" data-bs-toggle="modal">{{clicklogin}}</a></p></div>
                             <button type="submit" class="btn btn-primary">Sign Up</button>
                         </form>
                     </div>
@@ -352,24 +341,17 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="modalLogin" tabindex="-1">
+<div class="modal fade" id="modalLogin" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="h3 text-center mt-3">{{login}}</div>
-                        <form class="needs-validation" novalidate>
-                            <div class="mb-3 mt-3">
-                                <input id="inputLoginEmail" placeholder="Email" type="text" class="form-control" required>
-                                <div class="invalid-feedback">Please enter a valid email.</div>
-                            </div>
-                            <div class="mb-3">
-                                <input id="inputLoginPassword" placeholder="{{password}}" type="text" class="form-control" required>
-                            </div>
-                            <div class="d-flex justify-content-center mt-3">
-                                <p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal" >{{clicksignup}}</a></p>
-                            </div>
+                        <form id="formLogin" class="needs-validation" novalidate>
+                            <div class="mb-3 mt-3"><input id="inputLoginEmail" placeholder="Email" type="text" class="form-control" required><div class="invalid-feedback">Please enter a valid email.</div></div>
+                            <div class="mb-3"><input id="inputLoginPassword" placeholder="{{password}}" type="password" class="form-control" required></div>
+                            <div class="d-flex justify-content-center mt-3"><p><a class="link-opacity-75 text-center" data-bs-target="#modalSignup" data-bs-toggle="modal">{{clicksignup}}</a></p></div>
                             <button type="submit" class="btn btn-primary">{{login}}</button>
                         </form>
                     </div>
@@ -379,8 +361,7 @@
     </div>
 </div>
 
-
-<footer class="footer py-4 dark ">
+<footer class="footer py-4 dark">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-4 text-lg-start">
@@ -393,6 +374,8 @@
         </div>
     </div>
 </footer>
+
+<script type="module" src="../js/loginsignup.js"></script>
 
 </body>
 </html>

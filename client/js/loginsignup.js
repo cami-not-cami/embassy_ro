@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const formSignup = document.getElementById("formSignup");
 
+
     //CREATE COMMENT TOFIX
     // fetch("/api/comment", {
     //     method: "POST",
@@ -99,8 +100,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (data.success) {
                     console.log("Login successful!");
                     localStorage.setItem("token", data.token);
-                    console.log(token);
+                    console.log(data.token);
                     checkUserRole(data.token);
+                    window.dispatchEvent(new CustomEvent('userLoggedIn'));
                     btnLogOut.classList.remove('d-none');
 
                 } else {
@@ -191,3 +193,4 @@ async function createUser() {
         })
     })
 }
+
