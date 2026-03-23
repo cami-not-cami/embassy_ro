@@ -453,6 +453,24 @@ async function startServer() {
             )
 
     })
+    app.put("/likedislike/:id", verifyToken, (req, res) => {
+        const {isLike,postComID ,isPost} = req.body;
+        const userIdPK = req.params.id;
+        if(req.user.userId === userIdPK) {
+            con.query(
+                'UPDATE likedislike SET LikDisIsLike=?  WHERE LikDisPostComId=? AND LikDisIsPost=?',
+                [ isLike,postComID ,isPost],
+                (err, result) => {
+                    if (err) return res.status(500).json({error: err.message});
+                    res.json({success: true, id: result.insertId});
+                }
+            )}
+        else{
+            res.send("Error in likeddislike id put")
+        }
+    })
+
+
     app.get("/post/:id", verifyToken, (req, res) => {
         const postID = req.params.id;
         con.query(`SELECT * From post p
