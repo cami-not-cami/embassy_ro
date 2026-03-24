@@ -295,14 +295,14 @@ async function toggleLikesDislikes(postComID, isPost, isLike) {
 
     if (isAlreadyThis) {
         // REMOVE VOTE
-        await fetch(`/likedislike/${userId}`, {
+        await fetch(`/api/likedislike/${userId}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComId: postComID, isPost })
         });
     } else if (currentReaction !== null) {
         // FLIP VOTE
-        await fetch(`/likedislike/${userId}`, {
+        await fetch(`/api/likedislike/${userId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComID, isPost, isLike })

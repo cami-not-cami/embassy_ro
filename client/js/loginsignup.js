@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (photoFile) {
             const formData = new FormData();
             formData.append("myFile", photoFile);
-            const uploadRes = await fetch("/upload/pfp", {
+            const uploadRes = await fetch("/api/upload/pfp", {
                 method: "POST",
                 body: formData
             });
