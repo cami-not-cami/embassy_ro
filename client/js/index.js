@@ -1,3 +1,5 @@
+loadCarousel();
+
 document.addEventListener("DOMContentLoaded", async () => {
     const postsContainer = document.getElementById("postsContainer");
 
@@ -592,6 +594,56 @@ function renderComment(comment, allComments, depth = 0) {
     });
 
     return el;
+}
+
+//CAREOUSELA
+
+async function loadCarousel() {
+    try {
+        const res = await fetch('/api/last3posts');
+        const posts = await res.json();
+
+        const indicatorsEl = document.getElementById('carouselIndicators');
+        const innerEl = document.getElementById('carouselInner');
+
+        if (!indicatorsEl || !innerEl || posts.length === 0) return;
+
+        posts.forEach((post, i) => {
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.bsTarget = '#carouselExampleInterval';
+            btn.dataset.bsSlideTo = String(i);
+            btn.style.backgroundColor = '#6a4a7a';
+            if (i === 0) btn.classList.add('active');
+            indicatorsEl.appendChild(btn);
+
+
+            const item = document.createElement('div');
+            item.className = 'carousel-item' + (i === 0 ? ' active' : '');
+            item.dataset.bsInterval = '5000';
+
+            const imgHtml = post.PostImagePath
+                ? `<img src="${post.PostImagePath}" style="width:50%; object-fit:cover;" alt="${post.PostTitle ?? ''}">`
+                : '';
+
+            item.innerHTML = `
+            <div class="d-flex" style="min-height: 260px;">
+                ${imgHtml}
+                <div class="p-4 card ${post.PostImagePath ? 'ms-2' : 'w-100'}">
+                    <div class="card-body">
+                        <h5 class="fw-bold">${post.PostTitle ?? ''}</h5>
+                        <p>${post.PostContent ? post.PostContent.substring(0, 200) + '...' : ''}</p>
+                        <small class="text-muted">${new Date(post.PostCreatedAt).toLocaleDateString()}</small>
+                    </div>
+                </div>
+            </div>`;
+            innerEl.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error('Failed to load carousel posts:', err);
+    }
 }
 
 // UTIL
