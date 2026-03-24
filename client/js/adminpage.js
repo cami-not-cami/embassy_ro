@@ -1,4 +1,3 @@
-//import {Chart} from "chart.js";
 
 document.addEventListener("DOMContentLoaded",  async () => {
     const chartInstances = {};
@@ -42,9 +41,6 @@ function renderUsers(user, index) {
         </svg>
       </button>
     </td>`;
-
-    //const promoteBtn = row.querySelector('.btn-primary');
-    //promoteBtn.addEventListener('click', () => openEditModal(user));
 
     const editBtn = row.querySelector('.btn-success');
     editBtn.addEventListener('click', () => openEditModal(user));
