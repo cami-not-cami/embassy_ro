@@ -48,9 +48,9 @@
         </form>
         <div class="ms-3">
             <button id="btnLogin" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalLogin">{{login}}</button>
-            <button id="btnEdit" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">{{edit}}</button>
-            <a type="button" class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
-            <a type="button" class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
+            <button id="btnEdit" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#modalEdit">{{edit}}</button>
+            <a class="btn btn-primary d-none"  href="createpost.html" >{{post}}</a>
+            <a class="btn btn-primary d-none"  href="adminpage.html" >{{adminpage}}</a>
         </div>
         <button class="btn" data-bs-toggle="offcanvas" data-bs-target="#menu" >
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
@@ -133,7 +133,7 @@
 
 
 <!-- DRAWER/OFFCANVAS -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="menu" aria-labelledby="menu">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="menu" >
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="menuName">{{menu}}</h5>
     </div>
@@ -176,7 +176,7 @@
                         <div class="accordion-body">
                             <div class="border-top border-bottom d-flex justify-content-center">
                                 <button class="fw-normal m-3 btn">
-                                    {{überblick}}
+                                    {{uberblick}}
                                 </button>
                             </div>
                             <div class="border-top border-bottom d-flex justify-content-center">
@@ -347,7 +347,7 @@
     </div>
 </div>
 <!-- MODALS -->
-<div class="modal fade" id="modalSignup" aria-hidden="true" aria-labelledby="modalSignup" tabindex="-1">
+<div class="modal fade" id="modalSignup" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -368,7 +368,7 @@
                                 <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputSignupPassword" placeholder="Password" type="password" class="form-control" required>
+                                <input id="inputSignupPassword" placeholder="{{passwort}}" type="password" class="form-control" required>
                                 <div class="invalid-feedback">Please enter a password.</div>
                             </div>
                             <div class="mb-3">
@@ -386,8 +386,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalLogin" aria-hidden="true" aria-labelledby="modalLogin" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="modalLogin" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog  modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
@@ -413,8 +413,8 @@
     </div>
 </div>
 <!-- COMMENT MODAL -->
-<div class="modal fade" id="modalComment" aria-hidden="true" aria-labelledby="modalCommentLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modalComment" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 overflow-hidden bg-blush">
 
             <!-- Header -->
@@ -489,7 +489,7 @@
     </div>
 </div>
 <!-- EDIT -->
-<div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="modalEdit" tabindex="-1">
+<div class="modal fade" id="modalEdit" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
@@ -510,7 +510,7 @@
                                 <div class="invalid-feedback">Please enter a valid email.</div>
                             </div>
                             <div class="mb-3">
-                                <input id="inputProfilePictureEdit" placeholder="{{profilepicture}}" type="file" class="form-control" required>
+                                <input id="inputProfilePictureEdit" type="file" class="form-control" required>
                                 <div class="invalid-feedback">Passwords do not match.</div>
                             </div>
                             <button type="submit" class="btn btn-primary">Edit</button>

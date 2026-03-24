@@ -76,8 +76,7 @@ function renderUsers(user, index) {
     });
 
 
-//PROMOTE HERE
-//STATISTIC HERE
+    //STATISTIC HERE
 
     async function getEmployeeStatistics() {
         const token = localStorage.getItem("token");

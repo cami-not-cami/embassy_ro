@@ -70,17 +70,17 @@
                     <h4 class="ms-1">
                         {{editpost}}
                     </h4>
-                    <form id="formPost" class="needs-validation">
+                    <form id="formPost"  class="needs-validation form-floating">
                         <div class="mb-3 mt-3">
-                            <input id="inputTitle" placeholder="{{title}}" type="text" class="form-control">
-                            <label for="inputTitle" class="form-label">{{title}}</label>
+                            <input id="inputTitle" type="text" class="form-control">
+                            <label for="inputTitle" >{{title}}</label>
                             <div class="invalid-feedback">
                                 {{pleasevalidtitle}}
                             </div>
                         </div>
                         <div class="mb-3">
-                            <textarea rows="5" id="inputContent" placeholder="{{content}}" type="text" class="form-control"></textarea>
-                            <label for="inputContent" class="form-label">{{content}}</label>
+                            <textarea rows="5" id="inputContent" type="text" class="form-control"></textarea>
+                            <label for="inputContent">{{content}}</label>
                             <div class="invalid-feedback">
                                 {{pleasevalidcontent}}
                             </div>

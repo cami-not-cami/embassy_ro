@@ -80,8 +80,10 @@ async function startServer() {
             romania: "Romenien",
             contact: "Kontakt",
             FirstName: "Vorname",
+            firstname: "Vorname",
+            lastname: "Nachname",
             LastName: "Nachname",
-            überblick: "Überblick",
+            uberblick: "Überblick",
             email: "Email",
             password: "Passwort",
             information: "Information",
@@ -111,7 +113,27 @@ async function startServer() {
             signup: "Anmelden",
             inputerror:"Ungültige Eingabe",
             passwordmatcherror:"Die Passwörter stimmen nicht überein",
-            menu:"Menü"
+            menu:"Menü",
+            login: "Anmelden",
+            edit: "Nutzer editieren",
+            clicksignup: "Noch keinen Account? Klicke hier um einen neuen Acccount zu erstellen!",
+            passwort: "Passwort",
+            confirmpassword: "Passwort bestätigen",
+            post: "Posten",
+            adminpage: "Adminseite",
+            editpost: "Post erstellen",
+            title: "Titel",
+            content: "Inhalt",
+            promotionquestion: "Wollen Sie diesen Benutzer wirklich in einen Mitarbeiter umwandeln?",
+            demotequestion: "Wollen Sie diesen Mitarbeiter wirklich in einem Benutzer umwandeln?",
+            areyousureyouwanttodeleteuser: "Wollen Sie diesen Benutzer wirklich löschen?",
+            telephone: "Telefonnummer",
+            description: "Beschreibung",
+            userroles: "Benutzerrollen",
+            comlikesdis: "Kommentare Likes und Dislikes",
+            postlikesdis: "Posts Likes und Dislikes",
+
+
 
         }
     });
