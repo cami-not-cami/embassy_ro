@@ -80,8 +80,10 @@ async function startServer() {
             romania: "Romenien",
             contact: "Kontakt",
             FirstName: "Vorname",
+            firstname: "Vorname",
+            lastname: "Nachname",
             LastName: "Nachname",
-            überblick: "Überblick",
+            uberblick: "Überblick",
             email: "Email",
             password: "Passwort",
             information: "Information",
@@ -111,7 +113,27 @@ async function startServer() {
             signup: "Anmelden",
             inputerror:"Ungültige Eingabe",
             passwordmatcherror:"Die Passwörter stimmen nicht überein",
-            menu:"Menü"
+            menu:"Menü",
+            login: "Anmelden",
+            edit: "Nutzer editieren",
+            clicksignup: "Noch keinen Account? Klicke hier um einen neuen Acccount zu erstellen!",
+            passwort: "Passwort",
+            confirmpassword: "Passwort bestätigen",
+            post: "Posten",
+            adminpage: "Adminseite",
+            editpost: "Post erstellen",
+            title: "Titel",
+            content: "Inhalt",
+            promotionquestion: "Wollen Sie diesen Benutzer wirklich in einen Mitarbeiter umwandeln?",
+            demotequestion: "Wollen Sie diesen Mitarbeiter wirklich in einem Benutzer umwandeln?",
+            areyousureyouwanttodeleteuser: "Wollen Sie diesen Benutzer wirklich löschen?",
+            telephone: "Telefonnummer",
+            description: "Beschreibung",
+            userroles: "Benutzerrollen",
+            comlikesdis: "Kommentare Likes und Dislikes",
+            postlikesdis: "Posts Likes und Dislikes",
+
+
 
         }
     });
@@ -212,15 +234,14 @@ async function startServer() {
                 res.json(results);
             });
     })
-    app.get("/api/myVote/post/:postId", verifyToken,(req, res) => {
+    app.get("/api/myVote/post/:postId", verifyToken, (req, res) => {
         const { postId } = req.params;
-        const { userId } = req.body;
-
-        if (!userId) return res.status(400).json({ error: "userId query param required" });
+        const userId = req.user.userId;
 
         con.query(
             `SELECT * FROM likedislike
-             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 0`,
+             WHERE LikDisUserIdFK = ? AND LikDisPostComId = ? AND LikDisIsPost = 1`,
+
             [userId, postId],
             (err, results) => {
                 if (err) return res.status(500).json({ error: err.message });
@@ -231,7 +252,7 @@ async function startServer() {
     });
     app.get("/api/myVote/comment/:commentId", verifyToken,(req, res) => {
         const { commentId } = req.params;
-        const { userId } = req.body;
+        const userId = req.user.userId;
 
         if (!userId) return res.status(400).json({ error: "userId query param required" });
 
@@ -248,17 +269,19 @@ async function startServer() {
         );
     });
     app.post('/api/likeDislike', (req, res) => {
-        const {LikDisUserIdFK, postComID,isPost,isLike} = req.body;
-        {
-            con.query(
-                'INSERT INTO likedislike ( LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?,?)',
-                [LikDisUserIdFK, postComID, isPost,isLike],
-                (err, result) => {
-                    if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, id: result.insertId});
+        const {LikDisUserIdFK, postComID, isPost, isLike} = req.body;
+        console.log("likeDislike body:", req.body); // ← ADD THIS
+        con.query(
+            'INSERT INTO likedislike (LikDisUserIdFK, LikDisPostComId, LikDisIsPost, LikDisIsLike) VALUES (?, ?, ?, ?)',
+            [LikDisUserIdFK, postComID, isPost, isLike],
+            (err, result) => {
+                if (err) {
+                    console.error("DB ERROR:", err.code, err.sqlMessage); // ← ADD THIS
+                    return res.status(500).json({error: err.message});
                 }
-            )
-        }
+                res.json({success: true, id: result.insertId});
+            }
+        )
     })
     app.post("/api/comment", (req, res) => {
         const { ComUserIdFK, ComPostIdFK, ComComIdFK, ComContent } = req.body;
@@ -445,7 +468,7 @@ async function startServer() {
 
         const {postComId,isPost} = req.body;
             con.query(
-                'DELETE  FROM likedislike Where LikDisUserIdFK = ? AND postComId=? AND isPost=?',
+                'DELETE FROM likedislike WHERE LikDisUserIdFK = ? AND LikDisPostComId=? AND LikDisIsPost=?',
                 [userIdPK,postComId,isPost],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
@@ -469,9 +492,9 @@ async function startServer() {
         }
     })
     app.delete("/post/:id", verifyToken, (req, res) => {
-        const postID= req.body;
-        const userIDPK = req.params.id;
-        if (req.user.userId == userIDPK) {
+        const postID = req.params.id;
+        const { postEmpFK } = req.body;
+        if (req.user.isAdmin === 1 || req.user.userId == postEmpFK) {
             con.query(
                 'DELETE FROM post WHERE PostIdPK=?',
                 [postID],
@@ -502,12 +525,12 @@ async function startServer() {
         }
     })
     app.put("/editPost/:id", verifyToken, (req, res) => {
-        const {postEmpFK,title, content, updatedAt, imagePath} = req.body;
+        const {postEmpFK, title, content, updatedAt, imagePath} = req.body;
         const postID = req.params.id;
-        if(req.user.userId == postEmpFK || req.user.isAdmin == 1) {}
+        if (req.user.isAdmin === 1 || req.user.userId == postEmpFK)
             con.query(
-                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=? ,PostImagePath=?  WHERE PostIdPK=?',
-                [ title, content, updatedAt, imagePath,postID],
+                'UPDATE post SET PostTitle=?, PostContent=?, PostUpdatedAt=?, PostImagePath=? WHERE PostIdPK=?',
+                [title, content, updatedAt, imagePath, postID],
                 (err, result) => {
                     if (err) return res.status(500).json({error: err.message});
                     res.json({success: true, id: result.insertId});

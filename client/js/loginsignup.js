@@ -271,6 +271,7 @@ async function checkUserRole(token){
         const loginModal = bootstrap.Modal.getInstance(document.getElementById("modalLogin"));
         if (loginModal) loginModal.hide();
 
+        document.getElementById("btnEdit").classList.remove("d-none");
         // Show post button if employee (has a role)
         if (data.userRole != null) {
             document.querySelector('a[href="createpost.html"]')?.classList.remove("d-none");
