@@ -77,7 +77,7 @@ async function startServer() {
         de: {
             home: "Startseite",
             search: "Suche",
-            romania: "Romenien",
+            romania: "Rumänien",
             contact: "Kontakt",
             FirstName: "Vorname",
             firstname: "Vorname",
@@ -438,17 +438,25 @@ async function startServer() {
     //token
     app.delete("/user/:id", verifyToken, (req, res) => {
         const userIDPK = req.params.id;
-        if (req.user.isAdmin === 1) {
-            con.query(
-                'DELETE employee FROM employee INNER JOIN user On user.UserEmpFK = employee.EmpIdPK Where user.UserIdPK = ?',
-                [userIDPK],
-                (err, result) => {
-                    if (err) return res.status(500).json({error: err.message});
-                    res.json({success: true, user:result.affectedRows});
-                }
-            )
+        if (req.user.isAdmin !== 1) {
+            return res.status(403).json({ error: "Forbidden" });
         }
-    })
+        con.query(
+            'DELETE employee FROM employee INNER JOIN user ON user.UserEmpFK = employee.EmpIdPK WHERE user.UserIdPK = ?',
+            [userIDPK],
+            (err) => {
+                if (err) return res.status(500).json({ error: err.message });
+                con.query(
+                    'DELETE FROM user WHERE UserIdPK = ?',
+                    [userIDPK],
+                    (err2, result) => {
+                        if (err2) return res.status(500).json({ error: err2.message });
+                        res.json({ success: true, affectedRows: result.affectedRows });
+                    }
+                );
+            }
+        );
+    });
     app.delete("/employee/:id", verifyToken, (req, res) => {
         const employeeIDPK = req.params.id;
         if (req.user.isAdmin === 1) {

@@ -1,7 +1,5 @@
-//import {Chart} from "chart.js";
-
 document.addEventListener("DOMContentLoaded",  async () => {
-    const chartInstances = {};
+const chartInstances = {};
 const tableBody = document.getElementById("tableBody");
 tableBody.innerHTML = "";
 let currentUser = null;
@@ -43,9 +41,6 @@ function renderUsers(user, index) {
       </button>
     </td>`;
 
-    //const promoteBtn = row.querySelector('.btn-primary');
-    //promoteBtn.addEventListener('click', () => openEditModal(user));
-
     const editBtn = row.querySelector('.btn-success');
     editBtn.addEventListener('click', () => openEditModal(user));
 
@@ -77,7 +72,6 @@ function renderUsers(user, index) {
 
 
     //STATISTIC HERE
-
     async function getEmployeeStatistics() {
         const token = localStorage.getItem("token");
         const headers = { "Authorization": `Bearer ${token}` };
@@ -183,7 +177,7 @@ function renderUsers(user, index) {
         });
     }
 
-        const btnPromote = document.getElementById('btnPromote');
+    const btnPromote = document.getElementById('btnPromote');
 
     btnPromote.addEventListener('click', async () => {
         const token = localStorage.getItem("token");
@@ -223,6 +217,7 @@ function renderUsers(user, index) {
             })
         });
     });
+
 const btnDemote = document.getElementById('btnDemote');
 
 btnDemote.addEventListener('click', async () => {
@@ -245,8 +240,6 @@ btnDemote.addEventListener('click', async () => {
             email:     currentUser.UserEmail,
         })
     });
-
-
 })
 
 
