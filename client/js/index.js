@@ -297,14 +297,14 @@ async function toggleLikesDislikes(postComID, isPost, isLike) {
 
     if (isAlreadyThis) {
         // REMOVE VOTE
-        await fetch(`/api/likedislike/${userId}`, {
+        await fetch(`/likedislike/${userId}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComId: postComID, isPost })
         });
     } else if (currentReaction !== null) {
         // FLIP VOTE
-        await fetch(`/api/likedislike/${userId}`, {
+        await fetch(`/likedislike/${userId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
             body: JSON.stringify({ postComID, isPost, isLike })
@@ -333,7 +333,7 @@ async function getUserVoteForPost(postId) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) return null;
-        return await res.json(); // { reaction: "liked" | "disliked" | null }
+        return await res.json();
     } catch { return null; }
 }
 
@@ -345,13 +345,12 @@ async function getUserVoteForComment(commentId) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) return null;
-        return await res.json(); // { reaction: "liked" | "disliked" | null }
+        return await res.json();
     } catch { return null; }
 }
 
 async function showActualLikesDislikes(postId, likeBtn, dislikeBtn) {
     const vote     = await getUserVoteForPost(postId);
-    // FIX: server returns { reaction: "liked"|"disliked"|null }, not { isLike }
     const liked    = vote?.reaction === "liked";
     const disliked = vote?.reaction === "disliked";
     likeBtn.style.color    = liked    ? 'var(--clr-plum-dark)' : '';
@@ -362,7 +361,6 @@ async function showActualLikesDislikes(postId, likeBtn, dislikeBtn) {
 
 async function showCommentVoteState(commentId, likeBtn, dislikeBtn) {
     const vote     = await getUserVoteForComment(commentId);
-    // FIX: server returns { reaction: "liked"|"disliked"|null }, not { isLike }
     const liked    = vote?.reaction === "liked";
     const disliked = vote?.reaction === "disliked";
     likeBtn.style.color    = liked    ? 'var(--clr-plum-dark)' : '';
@@ -595,8 +593,7 @@ function renderComment(comment, allComments, depth = 0) {
 
     return el;
 }
-
-//CAREOUSELA
+// CAROUSEL
 
 async function loadCarousel() {
     try {
