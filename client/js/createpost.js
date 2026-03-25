@@ -1,5 +1,9 @@
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // ELEMENTS
+
+
     const token = localStorage.getItem("token");
     const formPost = document.getElementById("formPost");
     const inputTitle = document.getElementById("inputTitle");
@@ -7,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById('inputImage');
 
 
+    // POST
     formPost.addEventListener("submit", async (e) => {
         e.preventDefault();
 

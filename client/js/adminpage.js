@@ -1,119 +1,231 @@
-document.addEventListener("DOMContentLoaded",  async () => {
-const chartInstances = {};
-const tableBody = document.getElementById("tableBody");
-tableBody.innerHTML = "";
-let currentUser = null;
-await getEmployeeStatistics();
-const res = await fetch('/users');
-const users = await res.json();
-users.forEach((user, index) => renderUsers(user, index));
+document.addEventListener("DOMContentLoaded", async () => {
 
-function renderUsers(user, index) {
-    const row = tableBody.insertRow();
+    // STATE
 
-    row.innerHTML = `
-    <th scope="row" class="text-black">${index}</th>
-    <td class="text-black">${user.UserFirstname  || '-'}</td>
-    <td class="text-black">${user.UserLastname  || '-'}</td>
-    <td class="text-black">${user.UserEmail  || '-'}</td>
-    
-    <td>
-      <button class="btn btn-success" href="#modalEdit" data-bs-target="#modalEdit" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-        </svg>
-      </button>
-     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete" data-user-id="${user.UserIdPK}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-        </svg>
-      </button>
-      <button class="btn btn-primary" id="btnModelPromote" href="#modalPromote" data-bs-target="#modalPromote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
-        </svg>
-      </button>
-      <button class="btn btn-info" id="btnModelDemote" href="#modalDemote" data-bs-target="#modalDemote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
-        </svg>
-      </button>
-    </td>`;
+    const chartInstances = {};
+    let currentUser = null;
 
-    const editBtn = row.querySelector('.btn-success');
-    editBtn.addEventListener('click', () => openEditModal(user));
+    // INITIALISATION
 
-    const deleteBtn = row.querySelector('.btn-danger');
-    deleteBtn.addEventListener('click', () => currentUser = user);
+    await getEmployeeStatistics();
+    await loadUsers();
 
-    const promoteBtn = row.querySelector('.btn-primary');
-    promoteBtn.addEventListener('click', () => currentUser = user);
+    // USER TABLE
 
-    const demoteBtn = row.querySelector('.btn-info');
-    demoteBtn.addEventListener('click', () => currentUser = user);
-}
+    async function loadUsers() {
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
+        const res = await fetch('/users');
+        const users = await res.json();
+        users.forEach((user, index) => renderUser(user, index));
+    }
+
+    function renderUser(user, index) {
+        const tableBody = document.getElementById("tableBody");
+        const row = tableBody.insertRow();
+
+        row.innerHTML = `
+            <th scope="row" class="text-black">${index}</th>
+            <td class="text-black">${user.UserFirstname  || '-'}</td>
+            <td class="text-black">${user.UserLastname   || '-'}</td>
+            <td class="text-black">${user.UserEmail      || '-'}</td>
+            <td>
+                <button class="btn btn-success" data-bs-target="#modalEdit" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete" data-user-id="${user.UserIdPK}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                </button>
+                <button class="btn btn-primary" data-bs-target="#modalPromote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-info" data-bs-target="#modalDemote" data-bs-toggle="modal" data-user-id="${user.UserIdPK}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+                    </svg>
+                </button>
+            </td>`;
+
+        row.querySelector('.btn-success').addEventListener('click', () => openEditModal(user));
+        row.querySelector('.btn-danger').addEventListener('click',  () => currentUser = user);
+        row.querySelector('.btn-primary').addEventListener('click', () => currentUser = user);
+        row.querySelector('.btn-info').addEventListener('click',    () => currentUser = user);
+    }
+
+    // EDIT
+
+    function openEditModal(user) {
+        currentUser = user;
+        document.getElementById('inputEditFirstname').value   = user.UserFirstname   || '';
+        document.getElementById('inputEditLastname').value    = user.UserLastname    || '';
+        document.getElementById('inputEditEmail').value       = user.UserEmail       || '';
+        document.getElementById('inputEditDescription').value = user.EmpDescription  || '';
+    }
+
+    document.getElementById('formEditUser').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const token = localStorage.getItem("token");
+        const headers = {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        };
+
+        const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({
+                userIDPK:   currentUser.UserIdPK,
+                employeeFK: currentUser.EmpIdPK,
+                firstname:  document.getElementById('inputEditFirstname').value,
+                lastname:   document.getElementById('inputEditLastname').value,
+                email:      document.getElementById('inputEditEmail').value,
+            })
+        });
+
+        if (currentUser.EmpIdPK) {
+            await fetch("/editEmployee", {
+                method: "PUT",
+                headers,
+                body: JSON.stringify({
+                    EmpIdPK:        currentUser.EmpIdPK,
+                    empPhoneNumber: document.getElementById('inputEditTelephone').value,
+                    EmpIsAdmin:     0,
+                    EmpDescription: document.getElementById('inputEditDescription').value,
+                })
+            });
+        }
+
+        if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+            await loadUsers();
+        }
+    });
+
+    // DELETE
 
     document.getElementById('btnDeleteUser').addEventListener('click', async () => {
-        console.log(currentUser.UserIdPK)
         const token = localStorage.getItem("token");
         const res = await fetch(`/user/${currentUser.UserIdPK}`, {
             method: "DELETE",
             headers: { "Authorization": `Bearer ${token}` }
-
         });
+
         if (res.ok) {
             bootstrap.Modal.getInstance(document.getElementById('modalDelete')).hide();
-            tableBody.innerHTML = "";
-            const updated = await (await fetch('/users')).json();
-            updated.forEach((user, index) => renderUsers(user, index));
+            await loadUsers();
         }
     });
 
+    // PROMOTE
 
-    //STATISTIC HERE
+    document.getElementById('btnPromote').addEventListener('click', async () => {
+        const token = localStorage.getItem("token");
+        if (!token) { alert("You must be logged in."); return; }
+
+        const res1 = await fetch('/createEmployee', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empPhoneNumber: "-",
+                EmpIsAdmin:     0,
+                EmpDescription: "-"
+            })
+        });
+
+        const data = await res1.json();
+
+        await fetch(`/editUser/${currentUser.UserIdPK}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                userIDPK:   currentUser.UserIdPK,
+                employeeFK: data.id,
+                firstname:  currentUser.UserFirstname,
+                lastname:   currentUser.UserLastname,
+                email:      currentUser.UserEmail,
+            })
+        });
+    });
+
+    // DEMOTE
+
+    document.getElementById('btnDemote').addEventListener('click', async () => {
+        const token = localStorage.getItem("token");
+        if (!token) { alert("You must be logged in."); return; }
+
+        await fetch(`/editUser/${currentUser.UserIdPK}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                employeeFK: null,
+                firstname:  currentUser.UserFirstname,
+                lastname:   currentUser.UserLastname,
+                email:      currentUser.UserEmail,
+            })
+        });
+    });
+
+    // STATISTICS
+
     async function getEmployeeStatistics() {
         const token = localStorage.getItem("token");
         const headers = { "Authorization": `Bearer ${token}` };
 
         const [users, postLikes, commentLikes] = await Promise.all([
-            fetch("/users", { headers }).then(r => r.json()),
-            fetch("/api/postLike").then(r => r.json()),
-            fetch("/api/commentLike").then(r => r.json()),
+            fetch("/users",            { headers }).then(r => r.json()),
+            fetch("/api/postLike"                ).then(r => r.json()),
+            fetch("/api/commentLike"             ).then(r => r.json()),
         ]);
 
-
+        // Role counts
         let adminCount = 0, employeeCount = 0, visitorCount = 0;
         users.forEach(user => {
-            if (user.EmpIsAdmin === 1)      adminCount++;
-            else if (user.EmpIdPK !== null) employeeCount++;
-            else                            visitorCount++;
+            if      (user.EmpIsAdmin === 1)  adminCount++;
+            else if (user.EmpIdPK !== null)  employeeCount++;
+            else                             visitorCount++;
         });
 
-
-        const totalPostLikes       = postLikes.reduce((s, p) => s + Number(p.likes), 0);
-        const totalPostDislikes    = postLikes.reduce((s, p) => s + Number(p.dislikes), 0);
-        const totalCommentLikes    = commentLikes.reduce((s, c) => s + Number(c.likes), 0);
+        // Interaction totals
+        const totalPostLikes       = postLikes.reduce((s, p)    => s + Number(p.likes),    0);
+        const totalPostDislikes    = postLikes.reduce((s, p)    => s + Number(p.dislikes), 0);
+        const totalCommentLikes    = commentLikes.reduce((s, c) => s + Number(c.likes),    0);
         const totalCommentDislikes = commentLikes.reduce((s, c) => s + Number(c.dislikes), 0);
 
-        const totalLikes               = totalPostLikes + totalCommentLikes;
+        const totalLikes               = totalPostLikes    + totalCommentLikes;
         const totalDislikes            = totalPostDislikes + totalCommentDislikes;
-        const totalPostInteractions    = totalPostLikes + totalPostDislikes;
+        const totalPostInteractions    = totalPostLikes    + totalPostDislikes;
         const totalCommentInteractions = totalCommentLikes + totalCommentDislikes;
 
-        //IGNORE EXISTING CHART
+        // Destroy and re-create a chart (prevents canvas reuse errors)
         function makeChart(id, config) {
             if (chartInstances[id]) chartInstances[id].destroy();
             chartInstances[id] = new Chart(document.getElementById(id), config);
         }
 
-        //CHART 1
+        // Chart 1 – Likes vs Dislikes (doughnut)
         makeChart("chartLikesDonut", {
             type: "doughnut",
             data: {
                 labels: ["Likes", "Dislikes"],
                 datasets: [{
-                    data: [totalLikes, totalDislikes],
+                    data:            [totalLikes, totalDislikes],
                     backgroundColor: ["rgba(25, 135, 84, 0.8)", "rgba(220, 53, 69, 0.8)"],
                     borderColor:     ["rgb(25, 135, 84)",        "rgb(220, 53, 69)"],
                     borderWidth: 2,
@@ -129,13 +241,13 @@ function renderUsers(user, index) {
             }
         });
 
-        //CHART 2
+        // Chart 2 – Post vs Comment interactions (pie)
         makeChart("chartPostsVsComments", {
             type: "pie",
             data: {
                 labels: ["Post interactions", "Comment interactions"],
                 datasets: [{
-                    data: [totalPostInteractions, totalCommentInteractions],
+                    data:            [totalPostInteractions, totalCommentInteractions],
                     backgroundColor: ["rgba(13, 110, 253, 0.8)", "rgba(255, 193, 7, 0.8)"],
                     borderColor:     ["rgb(13, 110, 253)",        "rgb(255, 193, 7)"],
                     borderWidth: 2,
@@ -151,20 +263,16 @@ function renderUsers(user, index) {
             }
         });
 
-        // CHART 3
+        // Chart 3 – Users by role (bar)
         makeChart("chartUserRoles", {
             type: "bar",
             data: {
                 labels: ["Admin", "Employee", "Visitor"],
                 datasets: [{
                     label: "Users",
-                    data: [adminCount, employeeCount, visitorCount],
-                    backgroundColor: [
-                        "rgba(220, 53, 69, 0.7)",
-                        "rgba(13, 110, 253, 0.7)",
-                        "rgba(25, 135, 84, 0.7)",
-                    ],
-                    borderColor: ["rgb(220,53,69)", "rgb(13,110,253)", "rgb(25,135,84)"],
+                    data:            [adminCount, employeeCount, visitorCount],
+                    backgroundColor: ["rgba(220, 53, 69, 0.7)", "rgba(13, 110, 253, 0.7)", "rgba(25, 135, 84, 0.7)"],
+                    borderColor:     ["rgb(220, 53, 69)",        "rgb(13, 110, 253)",        "rgb(25, 135, 84)"],
                     borderWidth: 2,
                     borderRadius: 6,
                 }]
@@ -176,127 +284,4 @@ function renderUsers(user, index) {
             }
         });
     }
-
-    const btnPromote = document.getElementById('btnPromote');
-
-    btnPromote.addEventListener('click', async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("You must be logged in to vote.");
-            return;
-        }
-
-        const res1 = await fetch('/createEmployee', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                empPhoneNumber: "-",
-                EmpIsAdmin: 0,
-                EmpDescription: "-"
-            })
-        });
-
-        const data = await res1.json();
-        console.log(data.id);
-
-        const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                userIDPK: currentUser.UserIdPK,
-                employeeFK: data.id,
-                firstname: currentUser.UserFirstname,
-                lastname:  currentUser.UserLastname,
-                email:     currentUser.UserEmail,
-            })
-        });
-    });
-
-const btnDemote = document.getElementById('btnDemote');
-
-btnDemote.addEventListener('click', async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        alert("You must be logged in to vote.");
-        return;
-    }
-
-    const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            employeeFK: null,
-            firstname: currentUser.UserFirstname,
-            lastname:  currentUser.UserLastname,
-            email:     currentUser.UserEmail,
-        })
-    });
-})
-
-
-const formEditUser = document.getElementById('formEditUser');
-formEditUser.addEventListener('submit', async event => {
-    event.preventDefault();
-
-    const token = localStorage.getItem("token");
-    const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-    };
-
-    const res = await fetch(`/editUser/${currentUser.UserIdPK}`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({
-            userIDPK: currentUser.UserIdPK,
-            employeeFK: currentUser.EmpIdPK,
-            firstname: document.getElementById('inputEditFirstname').value,
-            lastname:  document.getElementById('inputEditLastname').value,
-            email:     document.getElementById('inputEditEmail').value,
-        })
-    });
-
-    console.log(currentUser.UserIdPK);
-
-    if (currentUser.EmpIdPK) {
-        const res1 = await fetch("/editEmployee", {
-            method: "PUT",
-            headers,
-            body: JSON.stringify({
-                EmpIdPK: currentUser.EmpIdPK,
-                empPhoneNumber: document.getElementById('inputEditTelephone').value,
-                EmpIsAdmin: 0,
-                EmpDescription: document.getElementById('inputEditDescription').value,
-            })
-        });
-    }
-
-    if (res.ok && res.ok === true) {
-        bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
-        tableBody.innerHTML = "";
-        const updated = await (await fetch('/users')).json();
-        updated.forEach((user, index) => renderUsers(user, index));
-    }
 });
-
-
-function openEditModal(user) {
-    currentUser = user;
-    document.getElementById('inputEditFirstname').value  = user.UserFirstname  || '';
-    document.getElementById('inputEditLastname').value   = user.UserLastname   || '';
-    document.getElementById('inputEditEmail').value      = user.UserEmail      || '';
-    document.getElementById('inputEditDescription').value = user.EmpDescription|| '';
-    console.log("IN openEditModal");
-    console.log(user);
-}
-
-})

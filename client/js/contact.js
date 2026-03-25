@@ -1,13 +1,16 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const grid        = document.getElementById("employeeGrid");
+
+    // ELEMENTS
+
+    const grid         = document.getElementById("employeeGrid");
     const loadingState = document.getElementById("loadingState");
-    const errorState  = document.getElementById("errorState");
+    const errorState   = document.getElementById("errorState");
+
+    // LOAD EMPLOYEES
 
     try {
-        const res   = await fetch("/users");
-        const users = await res.json();
-
-        // Only show users who are employees (have an EmpIdPK)
+        const res       = await fetch("/users");
+        const users     = await res.json();
         const employees = users.filter(u => u.EmpIdPK != null);
 
         loadingState.classList.add("d-none");
@@ -28,15 +31,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-function renderEmployee(emp, container) {
-    const fullName  = `${emp.UserFirstname ?? ""} ${emp.UserLastname ?? ""}`.trim();
-    const initials  = [emp.UserFirstname?.[0], emp.UserLastname?.[0]]
-        .filter(Boolean).join("").toUpperCase() || "?";
-    const jobTitle  = emp.EmpDescription ?? "";
-    const phone     = emp.EmpPhonenumber ?? "";
-    const email     = emp.UserEmail      ?? "";
+// RENDER
 
-    // use a real photo if available, otherwise show initials circle
+function renderEmployee(emp, container) {
+    const fullName = `${emp.UserFirstname ?? ""} ${emp.UserLastname ?? ""}`.trim();
+    const initials = [emp.UserFirstname?.[0], emp.UserLastname?.[0]]
+        .filter(Boolean).join("").toUpperCase() || "?";
+    const jobTitle = emp.EmpDescription  ?? "";
+    const phone    = emp.EmpPhonenumber  ?? "";
+    const email    = emp.UserEmail       ?? "";
+
     const avatarHtml = emp.EmpPhotoPath
         ? `<img src="${emp.EmpPhotoPath}" alt="${fullName}" class="rounded-circle employee-avatar">`
         : `<div class="rounded-circle employee-avatar-placeholder">${initials}</div>`;

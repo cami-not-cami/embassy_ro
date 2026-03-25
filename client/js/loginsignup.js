@@ -1,23 +1,19 @@
 document.addEventListener("DOMContentLoaded", async () => {
+
+    //TOKEN
     const token = localStorage.getItem("token");
     if (token) {
         await checkUserRole(token);
     }
+
+    //ELEMENTS
     const formSignup = document.getElementById("formSignup");
+    const formLogin = document.getElementById("formLogin")
+    const btnLogOut = document.getElementById("btnLogOut");
+    const btnEdit = document.getElementById("btnEdit");
+    const formEdit = document.getElementById("formEditUser");
 
-    // async function getUserData(token) {
-    //     const res = await fetch("/api/userInfo", {
-    //         headers: {"Authorization": `Bearer ${token}`}
-    //     });
-    //
-    //     if (!res.ok) {
-    //         localStorage.removeItem("token");
-    //         return;
-    //     }
-    //
-    //     const data = await res.json();
-    // }
-
+    //SIGNUP
     formSignup.addEventListener('submit', async event => {
         const password = document.getElementById("inputSignupPassword").value
         const confirmField = document.getElementById("inputSignupConfirmPassword")
@@ -40,7 +36,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
 
     //LOGIN
-    const formLogin = document.getElementById("formLogin")
     formLogin.addEventListener("submit", async event => {
         event.preventDefault()
 
@@ -70,17 +65,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             })
             .catch(err => console.log("Request failed:", err));
     })
-    const btnLogOut = document.getElementById("btnLogOut");
 
-    if(btnLogOut) {
-        btnLogOut.addEventListener("click", async event => {
-            localStorage.removeItem("token");
-            window.location.href = "/";
-        })
-    }
+    //LOGOUT
+    btnLogOut.addEventListener("click", async event => {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    })
 
-    const btnEdit = document.getElementById("btnEdit");
+    //EDIT
     btnEdit.addEventListener("click", async () => {
+        //TOKEN FOR FETCHING USERINFO DONT REMOVE
         const token = localStorage.getItem("token");
         if (token) {
             await checkUserRole(token);
@@ -110,8 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     })
 
-    const formEdit = document.getElementById("formEditUser");
-
+    //INPUT VALUES IN EDIT FORM
     formEdit.addEventListener("submit", async event => {
         event.preventDefault();
 
